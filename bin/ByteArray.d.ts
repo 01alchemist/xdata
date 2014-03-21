@@ -1,4 +1,13 @@
-﻿declare module nid.utils {
+﻿/**
+* JavaScript ByteArray
+* version : 0.1
+* @author Nidin Vinayak | nidinthb@gmail.com
+*
+* ActionScript3 ByteArray implementation in JavaScript
+* limitation : size of ByteArray cannot be changed
+*
+*/
+declare module nid.utils {
     class ByteArray {
         static BIG_ENDIAN: string;
         static LITTLE_ENDIAN: string;
@@ -18,6 +27,7 @@
         public endian: string;
         constructor(buffer?: ArrayBuffer);
         public buffer : ArrayBuffer;
+        public dataView : DataView;
         public position : number;
         public length : number;
         public bytesAvailable : number;
@@ -144,6 +154,7 @@
         * @param	value	A 32-bit integer. The low 8 bits are written to the byte stream.
         */
         public writeByte(value: number): void;
+        public writeUnsignedByte(value: number): void;
         /**
         * Writes a sequence of length bytes from the
         * specified byte array, bytes,
@@ -197,6 +208,7 @@
         * @param	value	32-bit integer, whose low 16 bits are written to the byte stream.
         */
         public writeShort(value: number): void;
+        public writeUnsignedShort(value: number): void;
         /**
         * Writes a 32-bit unsigned integer to the byte stream.
         * @param	value	An unsigned integer to write to the byte stream.
@@ -257,6 +269,46 @@
         * @param	value	The Float64Array to be written.
         */
         public writeFloat64Array(bytes: Float64Array): void;
+        /**
+        * Read a Uint8Array from the byte stream.
+        * @param	length An unsigned short indicating the length of the Uint8Array.
+        */
+        public readUint8Array(length: number): Uint8Array;
+        /**
+        * Read a Uint16Array from the byte stream.
+        * @param	length An unsigned short indicating the length of the Uint16Array.
+        */
+        public readUint16Array(length: number): Uint16Array;
+        /**
+        * Read a Uint32Array from the byte stream.
+        * @param	length An unsigned short indicating the length of the Uint32Array.
+        */
+        public readUint32Array(length: number): Uint32Array;
+        /**
+        * Read a Int8Array from the byte stream.
+        * @param	length An unsigned short indicating the length of the Int8Array.
+        */
+        public readInt8Array(length: number): Int8Array;
+        /**
+        * Read a Int16Array from the byte stream.
+        * @param	length An unsigned short indicating the length of the Int16Array.
+        */
+        public readInt16Array(length: number): Int16Array;
+        /**
+        * Read a Int32Array from the byte stream.
+        * @param	length An unsigned short indicating the length of the Int32Array.
+        */
+        public readInt32Array(length: number): Int32Array;
+        /**
+        * Read a Float32Array from the byte stream.
+        * @param	length An unsigned short indicating the length of the Float32Array.
+        */
+        public readFloat32Array(length: number): Float32Array;
+        /**
+        * Read a Float64Array from the byte stream.
+        * @param	length An unsigned short indicating the length of the Float64Array.
+        */
+        public readFloat64Array(length: number): Float64Array;
         /**********************/
         private validate(len);
         private validateBuffer(len);

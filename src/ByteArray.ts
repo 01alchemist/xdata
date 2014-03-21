@@ -462,10 +462,10 @@ module nid.utils
 		 * @param	value	The Uint8Array to be written.
          */
         public writeUint8Array(bytes: Uint8Array):void {
-            this.validateBuffer(this.position + bytes.length);
+            this.validateBuffer(this._position + bytes.length);
 
             for (var i = 0; i < bytes.length; i++) {
-                this.data.setUint8(this.position++, bytes[i]);
+                this.data.setUint8(this._position++, bytes[i]);
             }
         }
 
@@ -474,11 +474,11 @@ module nid.utils
          * @param	value	The Uint16Array to be written.
          */
         public writeUint16Array(bytes: Uint16Array): void {
-            this.validateBuffer(this.position + bytes.length);
+            this.validateBuffer(this._position + bytes.length);
 
             for (var i = 0; i < bytes.length; i++) {
-                this.data.setUint16(this.position, bytes.get(i), this.endian === ByteArray.LITTLE_ENDIAN);
-                this.position += ByteArray.SIZE_OF_UINT16;
+                this.data.setUint16(this._position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
+                this._position += ByteArray.SIZE_OF_UINT16;
             }
         }
 
@@ -487,11 +487,11 @@ module nid.utils
          * @param	value	The Uint32Array to be written.
          */
         public writeUint32Array(bytes: Uint32Array): void {
-            this.validateBuffer(this.position + bytes.length);
+            this.validateBuffer(this._position + bytes.length);
 
             for (var i = 0; i < bytes.length; i++) {
-                this.data.setUint32(this.position, bytes.get(i), this.endian === ByteArray.LITTLE_ENDIAN);
-                this.position += ByteArray.SIZE_OF_UINT32;
+                this.data.setUint32(this._position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
+                this._position += ByteArray.SIZE_OF_UINT32;
             }
         }
 
@@ -503,7 +503,7 @@ module nid.utils
             this.validateBuffer(this.position + bytes.length);
 
             for (var i = 0; i < bytes.length; i++) {
-                this.data.setInt8(this.position++, bytes[i]);
+                this.data.setInt8(this._position++, bytes[i]);
             }
         }
 
@@ -515,8 +515,8 @@ module nid.utils
             this.validateBuffer(this.position + bytes.length);
 
             for (var i = 0; i < bytes.length; i++) {
-                this.data.setInt16(this.position, bytes.get(i), this.endian === ByteArray.LITTLE_ENDIAN);
-                this.position += ByteArray.SIZE_OF_INT16;
+                this.data.setInt16(this._position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
+                this._position += ByteArray.SIZE_OF_INT16;
             }
         }
 
@@ -528,8 +528,8 @@ module nid.utils
             this.validateBuffer(this.position + bytes.length);
 
             for (var i = 0; i < bytes.length; i++) {
-                this.data.setInt32(this.position, bytes.get(i), this.endian === ByteArray.LITTLE_ENDIAN);
-                this.position += ByteArray.SIZE_OF_INT32;
+                this.data.setInt32(this._position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
+                this._position += ByteArray.SIZE_OF_INT32;
             }
         }
 
@@ -541,8 +541,8 @@ module nid.utils
             this.validateBuffer(this.position + bytes.length);
 
             for (var i = 0; i < bytes.length; i++) {
-                this.data.setFloat32(this.position, bytes.get(i), this.endian === ByteArray.LITTLE_ENDIAN);
-                this.position += ByteArray.SIZE_OF_FLOAT32;
+                this.data.setFloat32(this._position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
+                this._position += ByteArray.SIZE_OF_FLOAT32;
             }
         }
 
@@ -554,10 +554,128 @@ module nid.utils
             this.validateBuffer(this.position + bytes.length);
 
             for (var i = 0; i < bytes.length; i++) {
-                this.data.setFloat64(this.position, bytes.get(i), this.endian === ByteArray.LITTLE_ENDIAN);
-                this.position += ByteArray.SIZE_OF_FLOAT64;
+                this.data.setFloat64(this._position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
+                this._position += ByteArray.SIZE_OF_FLOAT64;
             }
         }
+		
+		/**
+         * Read a Uint8Array from the byte stream.
+         * @param	length An unsigned short indicating the length of the Uint8Array.
+         */
+		public readUint8Array(length:number):Uint8Array{
+			if (!this.validate(length)) return null;
+			var result = new Uint8Array(new ArrayBuffer(length));
+			for (var i = 0; i < length; i++) {
+                result[i] = this.data.getUint8(this._position);
+                this.position += ByteArray.SIZE_OF_UINT8;
+            }
+			return result;
+		}
+		
+		/**
+         * Read a Uint16Array from the byte stream.
+         * @param	length An unsigned short indicating the length of the Uint16Array.
+         */
+		public readUint16Array(length:number):Uint16Array{
+			var size:number = length * ByteArray.SIZE_OF_UINT16;
+			if (!this.validate(size)) return null;
+			var result = new Uint16Array(new ArrayBuffer(size));
+			for (var i = 0; i < length; i++) {
+                result[i] = this.data.getUint16(this._position);
+                this.position += ByteArray.SIZE_OF_UINT16;
+            }
+			return result;
+		}
+		
+		/**
+         * Read a Uint32Array from the byte stream.
+         * @param	length An unsigned short indicating the length of the Uint32Array.
+         */
+		public readUint32Array(length:number):Uint32Array{
+			var size:number = length * ByteArray.SIZE_OF_UINT32;
+			if (!this.validate(size)) return null;
+			var result = new Uint32Array(new ArrayBuffer(size));
+			for (var i = 0; i < length; i++) {
+                result[i] = this.data.getUint32(this._position);
+                this.position += ByteArray.SIZE_OF_UINT32;
+            }
+			return result;
+		}
+		
+		/**
+         * Read a Int8Array from the byte stream.
+         * @param	length An unsigned short indicating the length of the Int8Array.
+         */
+		public readInt8Array(length:number):Int8Array{
+			if (!this.validate(length)) return null;
+			var result = new Int8Array(new ArrayBuffer(length));
+			for (var i = 0; i < length; i++) {
+                result[i] = this.data.getInt8(this._position);
+                this.position += ByteArray.SIZE_OF_INT8;
+            }
+			return result;
+		}
+		
+		/**
+         * Read a Int16Array from the byte stream.
+         * @param	length An unsigned short indicating the length of the Int16Array.
+         */
+		public readInt16Array(length:number):Int16Array{
+			var size:number =  length * ByteArray.SIZE_OF_INT16
+			if (!this.validate(size)) return null;
+			var result = new Int16Array(new ArrayBuffer(size));
+			for (var i = 0; i < length; i++) {
+                result[i] = this.data.getInt16(this._position);
+                this.position += ByteArray.SIZE_OF_INT16;
+            }
+			return result;
+		}
+		
+		/**
+         * Read a Int32Array from the byte stream.
+         * @param	length An unsigned short indicating the length of the Int32Array.
+         */
+		public readInt32Array(length:number):Int32Array{
+			var size:number =  length * ByteArray.SIZE_OF_INT32
+			if (!this.validate(size)) return null;
+			var result = new Int32Array(new ArrayBuffer(size));
+			for (var i = 0; i < length; i++) {
+                result[i] = this.data.getUint32(this._position);
+                this.position += ByteArray.SIZE_OF_INT32;
+            }
+			return result;
+		}
+		
+		/**
+         * Read a Float32Array from the byte stream.
+         * @param	length An unsigned short indicating the length of the Float32Array.
+         */
+		public readFloat32Array(length:number):Float32Array{
+			var size:number =  length * ByteArray.SIZE_OF_FLOAT32
+			if (!this.validate(size)) return null;
+			var result = new Float32Array(new ArrayBuffer(size));
+			for (var i = 0; i < length; i++) {
+                result[i] = this.data.getFloat32(this._position);
+                this.position += ByteArray.SIZE_OF_FLOAT32;
+            }
+			return result;
+		}
+		
+		/**
+         * Read a Float64Array from the byte stream.
+         * @param	length An unsigned short indicating the length of the Float64Array.
+         */
+		public readFloat64Array(length:number):Float64Array{
+			var size:number =  length * ByteArray.SIZE_OF_FLOAT64
+			if (!this.validate(size)) return null;
+			var result = new Float64Array(new ArrayBuffer(size));
+			for (var i = 0; i < length; i++) {
+                result[i] = this.data.getFloat64(this._position);
+                this.position += ByteArray.SIZE_OF_FLOAT64;
+            }
+			return result;
+		}
         /**********************/
         /*  PRIVATE METHODS   */
         /**********************/

@@ -118,6 +118,24 @@ module tsUnit {
                     '{' + (typeof b) + '} "' + b + '"';
             }
         }
+		areIdenticalArray(a: any, b: any): void {
+			
+			var r:boolean;
+			r = a.length == b.length;
+			if(r){
+				for(var i:number =0;i<a.length;i++){
+					if(a[i] != b[i]){
+						r = false;
+						break;
+					}
+				}
+			}
+            if (!r) {
+                throw 'areIdentical failed when passed ' +
+                    '{' + (typeof a) + '} "' + a + '" and ' +
+                    '{' + (typeof b) + '} "' + b + '"';
+            }
+        }
 
         areNotIdentical(a: any, b: any): void {
             if (a === b) {

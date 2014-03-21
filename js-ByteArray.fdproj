@@ -26,14 +26,14 @@
     <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand>"%APPDATA%\npm\tsc.cmd" --t "ES5" --out "bin/ByteArrayTest.js" "test/ByteArrayTest.ts"</preBuildCommand>
+  <preBuildCommand>build.bat "$(ToolsDir)\google\compiler.jar"</preBuildCommand>
   <!-- Executed after build -->
-  <postBuildCommand alwaysRun="False">java -jar "$(ToolsDir)\google\compiler.jar" --compilation_level SIMPLE_OPTIMIZATIONS --js  "bin/ByteArray.js" --js_output_file "bin/ByteArray.mini.js"</postBuildCommand>
+  <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->
   <options>
     <option showHiddenPaths="False" />
     <option testMovie="Webserver" />
-    <option testMovieCommand="bin/index.html" />
+    <option testMovieCommand="bin/index-test.html" />
   </options>
   <!-- Plugin storage -->
   <storage />

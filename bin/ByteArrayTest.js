@@ -27,8 +27,8 @@
                 this.endian = ByteArray.BIG_ENDIAN;
             }
             Object.defineProperty(ByteArray.prototype, "buffer", {
-                get: // getter setter
-                function () {
+                // getter setter
+                get: function () {
                     return this.data.buffer;
                 },
                 set: function (value) {
@@ -483,10 +483,10 @@
             * @param	value	The Uint8Array to be written.
             */
             ByteArray.prototype.writeUint8Array = function (bytes) {
-                this.validateBuffer(this.position + bytes.length);
+                this.validateBuffer(this._position + bytes.length);
 
                 for (var i = 0; i < bytes.length; i++) {
-                    this.data.setUint8(this.position++, bytes[i]);
+                    this.data.setUint8(this._position++, bytes[i]);
                 }
             };
 
@@ -495,11 +495,11 @@
             * @param	value	The Uint16Array to be written.
             */
             ByteArray.prototype.writeUint16Array = function (bytes) {
-                this.validateBuffer(this.position + bytes.length);
+                this.validateBuffer(this._position + bytes.length);
 
                 for (var i = 0; i < bytes.length; i++) {
-                    this.data.setUint16(this.position, bytes.get(i), this.endian === ByteArray.LITTLE_ENDIAN);
-                    this.position += ByteArray.SIZE_OF_UINT16;
+                    this.data.setUint16(this._position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
+                    this._position += ByteArray.SIZE_OF_UINT16;
                 }
             };
 
@@ -508,11 +508,11 @@
             * @param	value	The Uint32Array to be written.
             */
             ByteArray.prototype.writeUint32Array = function (bytes) {
-                this.validateBuffer(this.position + bytes.length);
+                this.validateBuffer(this._position + bytes.length);
 
                 for (var i = 0; i < bytes.length; i++) {
-                    this.data.setUint32(this.position, bytes.get(i), this.endian === ByteArray.LITTLE_ENDIAN);
-                    this.position += ByteArray.SIZE_OF_UINT32;
+                    this.data.setUint32(this._position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
+                    this._position += ByteArray.SIZE_OF_UINT32;
                 }
             };
 
@@ -524,7 +524,7 @@
                 this.validateBuffer(this.position + bytes.length);
 
                 for (var i = 0; i < bytes.length; i++) {
-                    this.data.setInt8(this.position++, bytes[i]);
+                    this.data.setInt8(this._position++, bytes[i]);
                 }
             };
 
@@ -536,8 +536,8 @@
                 this.validateBuffer(this.position + bytes.length);
 
                 for (var i = 0; i < bytes.length; i++) {
-                    this.data.setInt16(this.position, bytes.get(i), this.endian === ByteArray.LITTLE_ENDIAN);
-                    this.position += ByteArray.SIZE_OF_INT16;
+                    this.data.setInt16(this._position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
+                    this._position += ByteArray.SIZE_OF_INT16;
                 }
             };
 
@@ -549,8 +549,8 @@
                 this.validateBuffer(this.position + bytes.length);
 
                 for (var i = 0; i < bytes.length; i++) {
-                    this.data.setInt32(this.position, bytes.get(i), this.endian === ByteArray.LITTLE_ENDIAN);
-                    this.position += ByteArray.SIZE_OF_INT32;
+                    this.data.setInt32(this._position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
+                    this._position += ByteArray.SIZE_OF_INT32;
                 }
             };
 
@@ -562,8 +562,8 @@
                 this.validateBuffer(this.position + bytes.length);
 
                 for (var i = 0; i < bytes.length; i++) {
-                    this.data.setFloat32(this.position, bytes.get(i), this.endian === ByteArray.LITTLE_ENDIAN);
-                    this.position += ByteArray.SIZE_OF_FLOAT32;
+                    this.data.setFloat32(this._position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
+                    this._position += ByteArray.SIZE_OF_FLOAT32;
                 }
             };
 
@@ -575,9 +575,135 @@
                 this.validateBuffer(this.position + bytes.length);
 
                 for (var i = 0; i < bytes.length; i++) {
-                    this.data.setFloat64(this.position, bytes.get(i), this.endian === ByteArray.LITTLE_ENDIAN);
+                    this.data.setFloat64(this._position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
+                    this._position += ByteArray.SIZE_OF_FLOAT64;
+                }
+            };
+
+            /**
+            * Read a Uint8Array from the byte stream.
+            * @param	length An unsigned short indicating the length of the Uint8Array.
+            */
+            ByteArray.prototype.readUint8Array = function (length) {
+                if (!this.validate(length))
+                    return null;
+                var result = new Uint8Array(new ArrayBuffer(length));
+                for (var i = 0; i < length; i++) {
+                    result[i] = this.data.getUint8(this._position);
+                    this.position += ByteArray.SIZE_OF_UINT8;
+                }
+                return result;
+            };
+
+            /**
+            * Read a Uint16Array from the byte stream.
+            * @param	length An unsigned short indicating the length of the Uint16Array.
+            */
+            ByteArray.prototype.readUint16Array = function (length) {
+                var size = length * ByteArray.SIZE_OF_UINT16;
+                if (!this.validate(size))
+                    return null;
+                var result = new Uint16Array(new ArrayBuffer(size));
+                for (var i = 0; i < length; i++) {
+                    result[i] = this.data.getUint16(this._position);
+                    this.position += ByteArray.SIZE_OF_UINT16;
+                }
+                return result;
+            };
+
+            /**
+            * Read a Uint32Array from the byte stream.
+            * @param	length An unsigned short indicating the length of the Uint32Array.
+            */
+            ByteArray.prototype.readUint32Array = function (length) {
+                var size = length * ByteArray.SIZE_OF_UINT32;
+                if (!this.validate(size))
+                    return null;
+                var result = new Uint32Array(new ArrayBuffer(size));
+                for (var i = 0; i < length; i++) {
+                    result[i] = this.data.getUint32(this._position);
+                    this.position += ByteArray.SIZE_OF_UINT32;
+                }
+                return result;
+            };
+
+            /**
+            * Read a Int8Array from the byte stream.
+            * @param	length An unsigned short indicating the length of the Int8Array.
+            */
+            ByteArray.prototype.readInt8Array = function (length) {
+                if (!this.validate(length))
+                    return null;
+                var result = new Int8Array(new ArrayBuffer(length));
+                for (var i = 0; i < length; i++) {
+                    result[i] = this.data.getInt8(this._position);
+                    this.position += ByteArray.SIZE_OF_INT8;
+                }
+                return result;
+            };
+
+            /**
+            * Read a Int16Array from the byte stream.
+            * @param	length An unsigned short indicating the length of the Int16Array.
+            */
+            ByteArray.prototype.readInt16Array = function (length) {
+                var size = length * ByteArray.SIZE_OF_INT16;
+                if (!this.validate(size))
+                    return null;
+                var result = new Int16Array(new ArrayBuffer(size));
+                for (var i = 0; i < length; i++) {
+                    result[i] = this.data.getInt16(this._position);
+                    this.position += ByteArray.SIZE_OF_INT16;
+                }
+                return result;
+            };
+
+            /**
+            * Read a Int32Array from the byte stream.
+            * @param	length An unsigned short indicating the length of the Int32Array.
+            */
+            ByteArray.prototype.readInt32Array = function (length) {
+                var size = length * ByteArray.SIZE_OF_INT32;
+                if (!this.validate(size))
+                    return null;
+                var result = new Int32Array(new ArrayBuffer(size));
+                for (var i = 0; i < length; i++) {
+                    result[i] = this.data.getUint32(this._position);
+                    this.position += ByteArray.SIZE_OF_INT32;
+                }
+                return result;
+            };
+
+            /**
+            * Read a Float32Array from the byte stream.
+            * @param	length An unsigned short indicating the length of the Float32Array.
+            */
+            ByteArray.prototype.readFloat32Array = function (length) {
+                var size = length * ByteArray.SIZE_OF_FLOAT32;
+                if (!this.validate(size))
+                    return null;
+                var result = new Float32Array(new ArrayBuffer(size));
+                for (var i = 0; i < length; i++) {
+                    result[i] = this.data.getFloat32(this._position);
+                    this.position += ByteArray.SIZE_OF_FLOAT32;
+                }
+                return result;
+            };
+
+            /**
+            * Read a Float64Array from the byte stream.
+            * @param	length An unsigned short indicating the length of the Float64Array.
+            */
+            ByteArray.prototype.readFloat64Array = function (length) {
+                var size = length * ByteArray.SIZE_OF_FLOAT64;
+                if (!this.validate(size))
+                    return null;
+                var result = new Float64Array(new ArrayBuffer(size));
+                for (var i = 0; i < length; i++) {
+                    result[i] = this.data.getFloat64(this._position);
                     this.position += ByteArray.SIZE_OF_FLOAT64;
                 }
+                return result;
             };
 
             /**********************/
@@ -715,6 +841,7 @@
                         }
                     }
 
+                    //Decode string
                     if (code_point !== null && code_point !== this.EOF_code_point) {
                         if (code_point <= 0xFFFF) {
                             if (code_point > 0)
@@ -917,6 +1044,21 @@ var tsUnit;
                 throw 'areIdentical failed when passed ' + '{' + (typeof a) + '} "' + a + '" and ' + '{' + (typeof b) + '} "' + b + '"';
             }
         };
+        TestContext.prototype.areIdenticalArray = function (a, b) {
+            var r;
+            r = a.length == b.length;
+            if (r) {
+                for (var i = 0; i < a.length; i++) {
+                    if (a[i] != b[i]) {
+                        r = false;
+                        break;
+                    }
+                }
+            }
+            if (!r) {
+                throw 'areIdentical failed when passed ' + '{' + (typeof a) + '} "' + a + '" and ' + '{' + (typeof b) + '} "' + b + '"';
+            }
+        };
 
         TestContext.prototype.areNotIdentical = function (a, b) {
             if (a === b) {
@@ -1070,22 +1212,31 @@ var ByteArrayTest = (function (_super) {
         this.DOUBLE_MAX = Number.MAX_VALUE;
         this.DOUBLE_MIN = Number.MIN_VALUE;
         this.UTF_STR = "this is a utf8 encoded string";
+        this.SIZE_OF_BOOLEAN = nid.utils.ByteArray.SIZE_OF_BOOLEAN;
+        this.SIZE_OF_INT8 = nid.utils.ByteArray.SIZE_OF_INT8;
+        this.SIZE_OF_INT16 = nid.utils.ByteArray.SIZE_OF_INT16;
+        this.SIZE_OF_INT32 = nid.utils.ByteArray.SIZE_OF_INT32;
+        this.SIZE_OF_UINT8 = nid.utils.ByteArray.SIZE_OF_UINT8;
+        this.SIZE_OF_UINT16 = nid.utils.ByteArray.SIZE_OF_UINT16;
+        this.SIZE_OF_UINT32 = nid.utils.ByteArray.SIZE_OF_UINT32;
+        this.SIZE_OF_FLOAT32 = nid.utils.ByteArray.SIZE_OF_FLOAT32;
+        this.SIZE_OF_FLOAT64 = nid.utils.ByteArray.SIZE_OF_FLOAT64;
     }
     ByteArrayTest.prototype.writeAndReadBoolean = function () {
         //this.target.endian = nid.utils.ByteArray.LITTLE_ENDIAN;
         this.target.writeBoolean(true);
-        this.target.position = this.target.position - nid.utils.ByteArray.SIZE_OF_BOOLEAN;
+        this.target.position = this.target.position - this.SIZE_OF_BOOLEAN;
         var result = this.target.readBoolean();
         this.areIdentical(true, result);
         this.target.writeBoolean(false);
-        this.target.position = this.target.position - nid.utils.ByteArray.SIZE_OF_BOOLEAN;
+        this.target.position = this.target.position - this.SIZE_OF_BOOLEAN;
         var result = this.target.readBoolean();
         this.areIdentical(false, result);
     };
     ByteArrayTest.prototype.writeAndReadByte = function () {
         this.target.writeByte(this.BYTE_MAX);
         this.target.writeByte(this.BYTE_MIN);
-        this.target.position = this.target.position - (2 * nid.utils.ByteArray.SIZE_OF_INT8);
+        this.target.position = this.target.position - (2 * this.SIZE_OF_INT8);
         var result = this.target.readByte();
         this.areIdentical(this.BYTE_MAX, result);
         result = this.target.readByte();
@@ -1095,7 +1246,7 @@ var ByteArrayTest = (function (_super) {
     ByteArrayTest.prototype.writeAndReadUnsignedByte = function () {
         this.target.writeUnsignedByte(this.UBYTE_MAX);
         this.target.writeUnsignedByte(this.UBYTE_MIN);
-        this.target.position = this.target.position - (2 * nid.utils.ByteArray.SIZE_OF_INT8);
+        this.target.position = this.target.position - (2 * this.SIZE_OF_UINT8);
         var result = this.target.readUnsignedByte();
         this.areIdentical(this.UBYTE_MAX, result);
         result = this.target.readUnsignedByte();
@@ -1104,7 +1255,7 @@ var ByteArrayTest = (function (_super) {
     ByteArrayTest.prototype.writeAndReadDouble = function () {
         this.target.writeDouble(this.DOUBLE_MAX);
         this.target.writeDouble(this.DOUBLE_MIN);
-        this.target.position = this.target.position - (2 * nid.utils.ByteArray.SIZE_OF_FLOAT64);
+        this.target.position = this.target.position - (2 * this.SIZE_OF_FLOAT64);
         var result = this.target.readDouble();
         this.areIdentical(this.DOUBLE_MAX, result);
         result = this.target.readDouble();
@@ -1113,7 +1264,7 @@ var ByteArrayTest = (function (_super) {
     ByteArrayTest.prototype.writeAndReadFloat = function () {
         this.target.writeFloat(this.FLOAT_MAX);
         this.target.writeFloat(this.FLOAT_MIN);
-        this.target.position = this.target.position - (2 * nid.utils.ByteArray.SIZE_OF_FLOAT32);
+        this.target.position = this.target.position - (2 * this.SIZE_OF_FLOAT32);
         var result = this.target.readFloat();
         this.areIdentical(this.FLOAT_MAX, result);
         var result = this.target.readFloat();
@@ -1122,7 +1273,7 @@ var ByteArrayTest = (function (_super) {
     ByteArrayTest.prototype.writeAndReadInt = function () {
         this.target.writeInt(this.INT_MAX);
         this.target.writeInt(this.INT_MIN);
-        this.target.position = this.target.position - (2 * nid.utils.ByteArray.SIZE_OF_INT32);
+        this.target.position = this.target.position - (2 * this.SIZE_OF_INT32);
         var result = this.target.readInt();
         this.areIdentical(this.INT_MAX, result);
         result = this.target.readInt();
@@ -1131,7 +1282,7 @@ var ByteArrayTest = (function (_super) {
     ByteArrayTest.prototype.writeAndReadUnsignedInt = function () {
         this.target.writeUnsignedInt(this.UINT_MAX);
         this.target.writeUnsignedInt(this.UINT_MIN);
-        this.target.position = this.target.position - (2 * nid.utils.ByteArray.SIZE_OF_UINT32);
+        this.target.position = this.target.position - (2 * this.SIZE_OF_UINT32);
         var result = this.target.readUnsignedInt();
         this.areIdentical(this.UINT_MAX, result);
         result = this.target.readInt();
@@ -1140,7 +1291,7 @@ var ByteArrayTest = (function (_super) {
     ByteArrayTest.prototype.writeAndReadShort = function () {
         this.target.writeShort(this.SHORT_MAX);
         this.target.writeShort(this.SHORT_MIN);
-        this.target.position = this.target.position - (2 * nid.utils.ByteArray.SIZE_OF_INT16);
+        this.target.position = this.target.position - (2 * this.SIZE_OF_INT16);
         var result = this.target.readShort();
         this.areIdentical(this.SHORT_MAX, result);
         result = this.target.readShort();
@@ -1149,7 +1300,7 @@ var ByteArrayTest = (function (_super) {
     ByteArrayTest.prototype.writeAndReadUnsignedShort = function () {
         this.target.writeUnsignedShort(this.USHORT_MAX);
         this.target.writeUnsignedShort(this.USHORT_MIN);
-        this.target.position = this.target.position - (2 * nid.utils.ByteArray.SIZE_OF_UINT16);
+        this.target.position = this.target.position - (2 * this.SIZE_OF_UINT16);
         var result = this.target.readUnsignedShort();
         this.areIdentical(this.USHORT_MAX, result);
         result = this.target.readUnsignedShort();
@@ -1157,7 +1308,7 @@ var ByteArrayTest = (function (_super) {
     };
     ByteArrayTest.prototype.writeAndReadUTF = function () {
         this.target.writeUTF(this.UTF_STR);
-        this.target.position = this.target.position - (nid.utils.ByteArray.SIZE_OF_UINT16 + this.UTF_STR.length);
+        this.target.position = this.target.position - (this.SIZE_OF_UINT16 + this.UTF_STR.length);
         var result = this.target.readUTF();
         this.areIdentical(this.UTF_STR, result);
     };
@@ -1166,6 +1317,102 @@ var ByteArrayTest = (function (_super) {
         this.target.position = this.target.position - this.UTF_STR.length;
         var result = this.target.readUTFBytes(this.UTF_STR.length);
         this.areIdentical(this.UTF_STR, result);
+    };
+
+    //EXTAR JS API
+    ByteArrayTest.prototype.writeAndReadUint8Array = function () {
+        var _array = new Uint8Array(new ArrayBuffer(4));
+        _array[0] = 1;
+        _array[1] = 11;
+        _array[2] = 22;
+        _array[3] = 33;
+        this.target.writeUint8Array(_array);
+        this.target.position = this.target.position - _array.length;
+        var result = this.target.readUint8Array(_array.length);
+        this.areIdenticalArray(_array, result);
+    };
+    ByteArrayTest.prototype.writeAndReadUint16Array = function () {
+        var size = 4 * this.SIZE_OF_UINT16;
+        var _array = new Uint16Array(new ArrayBuffer(size));
+        _array[0] = 1;
+        _array[1] = 11;
+        _array[2] = 22;
+        _array[3] = 33;
+        this.target.writeUint16Array(_array);
+        this.target.position = this.target.position - size;
+        var result = this.target.readUint16Array(_array.length);
+        this.areIdenticalArray(_array, result);
+    };
+    ByteArrayTest.prototype.writeAndReadUint32Array = function () {
+        var size = 4 * this.SIZE_OF_UINT32;
+        var _array = new Uint32Array(new ArrayBuffer(size));
+        _array[0] = 1;
+        _array[1] = 11;
+        _array[2] = 22;
+        _array[3] = 33;
+        this.target.writeUint32Array(_array);
+        this.target.position = this.target.position - size;
+        var result = this.target.readUint32Array(_array.length);
+        this.areIdenticalArray(_array, result);
+    };
+    ByteArrayTest.prototype.writeAndReadInt8Array = function () {
+        var _array = new Int8Array(new ArrayBuffer(4));
+        _array[0] = 1;
+        _array[1] = 11;
+        _array[2] = 22;
+        _array[3] = 33;
+        this.target.writeInt8Array(_array);
+        this.target.position = this.target.position - _array.length;
+        var result = this.target.readInt8Array(_array.length);
+        this.areIdenticalArray(_array, result);
+    };
+    ByteArrayTest.prototype.writeAndReadInt16Array = function () {
+        var size = 4 * this.SIZE_OF_INT16;
+        var _array = new Int16Array(new ArrayBuffer(size));
+        _array[0] = 1;
+        _array[1] = 11;
+        _array[2] = 22;
+        _array[3] = 33;
+        this.target.writeInt16Array(_array);
+        this.target.position = this.target.position - size;
+        var result = this.target.readInt16Array(_array.length);
+        this.areIdenticalArray(_array, result);
+    };
+    ByteArrayTest.prototype.writeAndReadInt32Array = function () {
+        var size = 4 * this.SIZE_OF_INT32;
+        var _array = new Int32Array(new ArrayBuffer(size));
+        _array[0] = 1;
+        _array[1] = 11;
+        _array[2] = 22;
+        _array[3] = 33;
+        this.target.writeInt32Array(_array);
+        this.target.position = this.target.position - size;
+        var result = this.target.readInt32Array(_array.length);
+        this.areIdenticalArray(_array, result);
+    };
+    ByteArrayTest.prototype.writeAndReadFloat32Array = function () {
+        var size = 4 * this.SIZE_OF_FLOAT32;
+        var _array = new Float32Array(new ArrayBuffer(size));
+        _array[0] = 1.02563;
+        _array[1] = 11.056256;
+        _array[2] = 22.0165465;
+        _array[3] = 33.65486;
+        this.target.writeFloat32Array(_array);
+        this.target.position = this.target.position - size;
+        var result = this.target.readFloat32Array(_array.length);
+        this.areIdenticalArray(_array, result);
+    };
+    ByteArrayTest.prototype.writeAndReadFloat64Array = function () {
+        var size = 4 * this.SIZE_OF_FLOAT64;
+        var _array = new Float64Array(new ArrayBuffer(size));
+        _array[0] = 1.02563;
+        _array[1] = 11.056256;
+        _array[2] = 22.0165465;
+        _array[3] = 33.65486;
+        this.target.writeFloat64Array(_array);
+        this.target.position = this.target.position - size;
+        var result = this.target.readFloat64Array(_array.length);
+        this.areIdenticalArray(_array, result);
     };
     return ByteArrayTest;
 })(tsUnit.TestClass);
