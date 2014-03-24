@@ -833,7 +833,7 @@ module nid.utils
            throw {
                 name: 'EncodingError',
                 message: 'The code point ' + code_point + ' could not be encoded.',
-                code: 0
+                errorID: 0
             }
         }
         private decoderError(fatal, opt_code_point?): number {
@@ -841,7 +841,7 @@ module nid.utils
 				throw {
 					name: 'DecodingError',
 					message: 'DecodingError.',
-					code: 0
+					errorID: 0
 				}
 		   }
            return opt_code_point || 0xFFFD;
@@ -1269,20 +1269,24 @@ module nid.utils
 			}
 			var type = this.readByte();
 			switch(type) {
-				case this.UNDEFINED_TYPE : return undefined;
+				case this.UNDEFINED_TYPE 	: return undefined;
 				case this.NULL_TYPE 		: return null;
-				case this.FALSE_TYPE 	: return false;
+				case this.FALSE_TYPE 		: return false;
 				case this.TRUE_TYPE 		: return true;
-				case this.INTEGER_TYPE 	: return this.readInt();
-				case this.DOUBLE_TYPE 	: return this.readDouble();
-				case this.STRING_TYPE 	: return this.readString();
-				case this.XML_DOC_TYPE 	: return this.readXMLDoc();
+				case this.INTEGER_TYPE 		: return this.readInt();
+				case this.DOUBLE_TYPE 		: return this.readDouble();
+				case this.STRING_TYPE 		: return this.readString();
+				case this.XML_DOC_TYPE 		: return this.readXMLDoc();
 				case this.DATE_TYPE 		: return this.readDate();
-				case this.ARRAY_TYPE 	: return this.readArray();
-				case this.OBJECT_TYPE 	: return this.readAmfObject();
-				case this.XML_TYPE 		: return this.readXML();
-				case this.BYTE_ARRAY_TYPE : return this.readByteArray();
-				default: throw Error("AMF3::readAmfData - Error : Undefined AMF3 type encountered '" + type + "'");
+				case this.ARRAY_TYPE 		: return this.readArray();
+				case this.OBJECT_TYPE 		: return this.readAmfObject();
+				case this.XML_TYPE 			: return this.readXML();
+				case this.BYTE_ARRAY_TYPE 	: return this.readByteArray();
+				default: throw {
+					name:"Error",
+					message:"AMF3::readAmfData - Error : Undefined AMF3 type encountered '" + type + "'"
+					errorID:0
+				};
 			}
 		}
 		
@@ -1372,7 +1376,7 @@ module nid.utils
 			var index = this.readU29();
 			if ((index & 1) == 0) return this.getObjectReference(index >> 1);
 			
-			var arr:Array = [];
+			var arr = [];
 			this.readObjectCache.push(arr);
 			
 			// Associative values
