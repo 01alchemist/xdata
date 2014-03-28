@@ -640,7 +640,6 @@ module nid.utils
 			var size:number =  length * ByteArray.SIZE_OF_INT32
 			if (!this.validate(size)) return null;
 			var result = new Int32Array(new ArrayBuffer(size));
-			result.
 			for (var i = 0; i < length; i++) {
                 result[i] = this.data.getInt32(this._position, this.endian === ByteArray.LITTLE_ENDIAN);
                 this.position += ByteArray.SIZE_OF_INT32; 
