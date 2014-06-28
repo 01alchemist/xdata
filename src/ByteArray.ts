@@ -25,7 +25,7 @@ module nid.utils
         static SIZE_OF_FLOAT32: number = 4;
         static SIZE_OF_FLOAT64: number = 8;
 
-        private BUFFER_EXT_SIZE: number = 1024;//Buffer expansion szie
+        private BUFFER_EXT_SIZE: number = 1024;//Check size
 		
 		public data:DataView;
         private _position: number;
@@ -63,11 +63,16 @@ module nid.utils
             return this._position;
         }
         set position(value:number) {
+			if(this._position < value){
+				if(!this.validate(this._position-value)){
+					return;
+				}
+			}
             this._position = value;
             this.write_position = value > this.write_position ? value : this.write_position;
         }
         get length(): number {
-            return this.data.byteLength;
+            return this.write_position;
         }
         set length(value: number) {
             this.validateBuffer(value);
@@ -691,13 +696,11 @@ module nid.utils
             }
         }
         private validateBuffer(len: number): void {
+			this.write_position = len > this.write_position ? len : this.write_position;
             if (this.data.byteLength < len) {
-                var tmp: DataView = new DataView(new ArrayBuffer(len + this.BUFFER_EXT_SIZE));
-                for (var i = 0; i < this.data.byteLength; i++) {
-                    tmp.setUint8(i, this.data.getUint8(i));
-                }
-                this.data = null;
-                this.data = tmp;
+                var tmp:Uint8Array = new Uint8Array(new ArrayBuffer(len + this.BUFFER_EXT_SIZE));
+                tmp.set(new Uint8Array(data.buffer));
+                this.data.buffer = tmp.buffer;
             }
         }
 
