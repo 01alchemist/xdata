@@ -21,7 +21,7 @@ declare module nid.utils {
         static SIZE_OF_FLOAT32: number;
         static SIZE_OF_FLOAT64: number;
         private BUFFER_EXT_SIZE;
-        public data: DataView;
+        private data;
         private _position;
         public write_position: number;
         public endian: string;

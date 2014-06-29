@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>JavaScript ByteArray</title>
+	<script src="../build/LZMA.js"></script>
+	<script src="../build/ByteArray.js"></script>
+    <script>
+        var file;
+        var reader = new FileReader();
+        reader.onload = function(e){
+            /*var data = new Uint8Array(e.target.result);
+            var header = new nid.utils.ByteArray(new ArrayBuffer(12));
+            var inData = new nid.utils.ByteArray(data.buffer);
+            inData.offset = 12;
+            console.log(data.length);
+            var i;//int
+            for (i = 0; i < 13; i++){
+                header[i] = data[i];
+            }
+            data = null;
+            var unpackSize = 0;//UInt64
+            var unpackSizeDefined = false;
+            for (i = 0; i < 8; i++)
+            {
+                var b = header[5 + i];
+                if (b != 0xFF){
+                    unpackSizeDefined = true;
+                }
+                unpackSize |= b << (8 * i);
+            }
+            var outData = new nid.utils.ByteArray(new ArrayBuffer(unpackSizeDefined?unpackSize:1024));*/
+            //LZMA.decompress(header,inData,outData,unpackSize);
+            var decoder = new nid.lzma.LZMA();
+            var inData = new nid.utils.ByteArray(e.target.result);
+            console.log(inData.length);
+            var outData = decoder.decode(inData);
+            console.log(outData.length);
+        }
+        function init(){
+            var fileInput = document.getElementById("fileBrowser");
+            fileInput.onchange = function(e){
+                file = this.files[0];
+                reader.readAsArrayBuffer(file);
+            }
+        }
+    </script>
+</head>
+<body onload="init()">
+<input type="file" id="fileBrowser"/>
+</body>
+</html>
