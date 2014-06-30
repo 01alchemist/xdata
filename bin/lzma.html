@@ -34,8 +34,12 @@
             var decoder = new nid.lzma.LZMA();
             var inData = new nid.utils.ByteArray(e.target.result);
             console.log(inData.length);
+            var time = Date.now();
             var outData = decoder.decode(inData);
+            console.log('Decode time:'+(Date.now() - time)/1000);
             console.log(outData.length);
+            //outData.position = 0;
+            //console.log(outData.readUTFBytes(327));
         }
         function init(){
             var fileInput = document.getElementById("fileBrowser");

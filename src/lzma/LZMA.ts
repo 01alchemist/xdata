@@ -52,7 +52,7 @@ module nid.lzma
         constructor(){
             this.decoder = new LzmaDecoder();
         }
-        public decode(data:ByteArray):Uint8Array
+        public decode(data:ByteArray):ByteArray
         {
             this.data = data;
             var header:Uint8Array = data.readUint8Array(13);
@@ -123,7 +123,7 @@ module nid.lzma
             {
                 console.log("\nWarning: LZMA stream is corrupted\n");
             }
-            return this.ucdata;
+            return this.decoder.outWindow.outStream;
         }
     }
 }

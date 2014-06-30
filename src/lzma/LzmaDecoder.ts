@@ -7,6 +7,7 @@ module nid.lzma
 	 * @author Nidin Vinayakan | nidinthb@gmail.com
 	 */
     import ByteArray = nid.utils.ByteArray;
+    import MEMORY = nid.utils.MEMORY;
 
 	export class LzmaDecoder
 	{
@@ -37,6 +38,10 @@ module nid.lzma
         private lenDecoder:LenDecoder;
         private repLenDecoder:LenDecoder;
 
+        //Local registers
+        private loc1:number;
+        private loc2:number;
+
         constructor() {
             this.posSlotDecoder = BitTreeDecoder.constructArray(6,LZMA.kNumLenToPosStates);//6
             this.alignDecoder   = new BitTreeDecoder(LZMA.kNumAlignBits);
@@ -57,6 +62,9 @@ module nid.lzma
 
         public init():void
         {
+            this.loc1 = MEMORY.getUint32();
+            this.loc2 = MEMORY.getUint32();
+
             this.initLiterals();
             this.initDist();
 
@@ -126,16 +134,16 @@ module nid.lzma
                 return posSlot;
 
             var numDirectBits = ((posSlot >>> 1) - 1);//unsigned byte
-            var dist:number = ((2 | (posSlot & 1)) << numDirectBits);//UInt32
+            MEMORY.u32[this.loc1] = ((2 | (posSlot & 1)) << numDirectBits);//UInt32
             if (posSlot < LZMA.kEndPosModelIndex){
-                dist += LZMA.BitTreeReverseDecode(this.posDecoders, numDirectBits, this.rangeDec, dist - posSlot);
+                MEMORY.u32[this.loc1] += LZMA.BitTreeReverseDecode(this.posDecoders, numDirectBits, this.rangeDec, MEMORY.u32[this.loc1] - posSlot);
             }
             else
             {
-                dist += this.rangeDec.decodeDirectBits(numDirectBits - LZMA.kNumAlignBits) << LZMA.kNumAlignBits;
-                dist += this.alignDecoder.reverseDecode(this.rangeDec);
+                MEMORY.u32[this.loc1] += this.rangeDec.decodeDirectBits(numDirectBits - LZMA.kNumAlignBits) << LZMA.kNumAlignBits;
+                MEMORY.u32[this.loc1] += this.alignDecoder.reverseDecode(this.rangeDec);
             }
-            return dist;
+            return MEMORY.u32[this.loc1];
         }
         private initDist():void
         {
