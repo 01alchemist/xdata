@@ -24,7 +24,7 @@ module nid.lzma
         static kNumAlignBits:number                     =  4;
         static kStartPosModelIndex:number               =  4;
         static kEndPosModelIndex:number                 =  14;
-        static kNumFullDistances:number                 =  (1 << (LZMA.kEndPosModelIndex >> 1));
+        static kNumFullDistances:number                 =  (1 << (LZMA.kEndPosModelIndex >>> 1));
         static kMatchMinLen:number                      =  2;
 
         public decoder:LzmaDecoder;
@@ -32,7 +32,7 @@ module nid.lzma
         public ucdata:Uint8Array;
 
         static INIT_PROBS(p:Uint16Array):void{
-            for (var i:number = 0; i < p.length / 2; i++) {
+            for (var i:number = 0; i < p.length; i++) {
                 p[i] = this.PROB_INIT_VAL;
             }
         }

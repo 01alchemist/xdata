@@ -7,12 +7,12 @@ module nid.lzma
      */
     export class BitTreeDecoder
     {
-        public probs:Uint8Array;
+        public probs:Uint16Array;
         private numBits:number;
 
         constructor(numBits){
             this.numBits = numBits;
-            this.probs = new Uint8Array(1 << this.numBits);
+            this.probs = new Uint16Array(1 << this.numBits);
         }
         public init():void{
             LZMA.INIT_PROBS(this.probs);

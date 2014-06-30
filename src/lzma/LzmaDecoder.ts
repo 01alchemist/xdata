@@ -94,7 +94,7 @@ module nid.lzma
             prevByte = this.outWindow.getByte(1);
 
             var symbol:number = 1;
-            var litState:number = ((this.outWindow.totalPos & ((1 << this.lp) - 1)) << this.lc) + (prevByte >> (8 - this.lc));
+            var litState:number = ((this.outWindow.totalPos & ((1 << this.lp) - 1)) << this.lc) + (prevByte >>> (8 - this.lc));
             var probsOffset:number = 0x300 * litState;
 
             if (state >= 7)
@@ -102,7 +102,7 @@ module nid.lzma
                 var matchByte:number = this.outWindow.getByte(rep0 + 1);
                 do
                 {
-                    var matchBit:number = (matchByte >> 7) & 1;
+                    var matchBit:number = (matchByte >>> 7) & 1;
                     matchByte <<= 1;
                     var bit:number = this.rangeDec.decodeBit(this.litProbs,probsOffset + ((1 + matchBit) << 8) + symbol);
                     symbol = (symbol << 1) | bit;
@@ -125,7 +125,7 @@ module nid.lzma
             if (posSlot < 4)
                 return posSlot;
 
-            var numDirectBits = ((posSlot >> 1) - 1);//unsigned byte
+            var numDirectBits = ((posSlot >>> 1) - 1);//unsigned byte
             var dist:number = ((2 | (posSlot & 1)) << numDirectBits);//UInt32
             if (posSlot < LZMA.kEndPosModelIndex){
                 dist += LZMA.BitTreeReverseDecode(this.posDecoders, numDirectBits, this.rangeDec, dist - posSlot);

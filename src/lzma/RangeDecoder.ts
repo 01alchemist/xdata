@@ -67,9 +67,9 @@ module nid.lzma
             MEMORY.u32[this.loc1] = 0;//UInt32
             do
             {
-                MEMORY.u32[this.rangeI] >>= 1;
+                MEMORY.u32[this.rangeI] >>>= 1;
                 MEMORY.u32[this.codeI] -= MEMORY.u32[this.rangeI];
-                MEMORY.u32[this.loc2] = 0 - (MEMORY.u32[this.codeI] >> 31);
+                MEMORY.u32[this.loc2] = 0 - (MEMORY.u32[this.codeI] >>> 31);
                 MEMORY.u32[this.codeI] += MEMORY.u32[this.rangeI] & MEMORY.u32[this.loc2];
 
                 if (MEMORY.u32[this.codeI] == MEMORY.u32[this.rangeI]){
@@ -92,13 +92,13 @@ module nid.lzma
             var symbol:number;
             if (MEMORY.u32[this.codeI] < MEMORY.u32[this.loc1])
             {
-                v += ((1 << 11) - v) >> 5;
+                v += ((1 << 11) - v) >>> 5;
                 MEMORY.u32[this.rangeI] = MEMORY.u32[this.loc1];
                 symbol = 0;
             }
             else
             {
-                v -= v >> LZMA.kNumMoveBits;
+                v -= v >>> LZMA.kNumMoveBits;
                 MEMORY.u32[this.codeI] -= MEMORY.u32[this.loc1];
                 MEMORY.u32[this.rangeI] -= MEMORY.u32[this.loc1];
                 symbol = 1;

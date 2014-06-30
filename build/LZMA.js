@@ -1041,13 +1041,13 @@ var nid;
                     prevByte = this.outWindow.getByte(1);
 
                 var symbol = 1;
-                var litState = ((this.outWindow.totalPos & ((1 << this.lp) - 1)) << this.lc) + (prevByte >> (8 - this.lc));
+                var litState = ((this.outWindow.totalPos & ((1 << this.lp) - 1)) << this.lc) + (prevByte >>> (8 - this.lc));
                 var probsOffset = 0x300 * litState;
 
                 if (state >= 7) {
                     var matchByte = this.outWindow.getByte(rep0 + 1);
                     do {
-                        var matchBit = (matchByte >> 7) & 1;
+                        var matchBit = (matchByte >>> 7) & 1;
                         matchByte <<= 1;
                         var bit = this.rangeDec.decodeBit(this.litProbs, probsOffset + ((1 + matchBit) << 8) + symbol);
                         symbol = (symbol << 1) | bit;
@@ -1068,7 +1068,7 @@ var nid;
                 if (posSlot < 4)
                     return posSlot;
 
-                var numDirectBits = ((posSlot >> 1) - 1);
+                var numDirectBits = ((posSlot >>> 1) - 1);
                 var dist = ((2 | (posSlot & 1)) << numDirectBits);
                 if (posSlot < lzma.LZMA.kEndPosModelIndex) {
                     dist += lzma.LZMA.BitTreeReverseDecode(this.posDecoders, numDirectBits, this.rangeDec, dist - posSlot);
@@ -1325,9 +1325,9 @@ var nid;
             RangeDecoder.prototype.decodeDirectBits = function (numBits) {
                 MEMORY.u32[this.loc1] = 0; //UInt32
                 do {
-                    MEMORY.u32[this.rangeI] >>= 1;
+                    MEMORY.u32[this.rangeI] >>>= 1;
                     MEMORY.u32[this.codeI] -= MEMORY.u32[this.rangeI];
-                    MEMORY.u32[this.loc2] = 0 - (MEMORY.u32[this.codeI] >> 31);
+                    MEMORY.u32[this.loc2] = 0 - (MEMORY.u32[this.codeI] >>> 31);
                     MEMORY.u32[this.codeI] += MEMORY.u32[this.rangeI] & MEMORY.u32[this.loc2];
 
                     if (MEMORY.u32[this.codeI] == MEMORY.u32[this.rangeI]) {
@@ -1348,11 +1348,11 @@ var nid;
                 MEMORY.u32[this.loc1] = (MEMORY.u32[this.rangeI] >>> 11) * v;
                 var symbol;
                 if (MEMORY.u32[this.codeI] < MEMORY.u32[this.loc1]) {
-                    v += ((1 << 11) - v) >> 5;
+                    v += ((1 << 11) - v) >>> 5;
                     MEMORY.u32[this.rangeI] = MEMORY.u32[this.loc1];
                     symbol = 0;
                 } else {
-                    v -= v >> lzma.LZMA.kNumMoveBits;
+                    v -= v >>> lzma.LZMA.kNumMoveBits;
                     MEMORY.u32[this.codeI] -= MEMORY.u32[this.loc1];
                     MEMORY.u32[this.rangeI] -= MEMORY.u32[this.loc1];
                     symbol = 1;
@@ -1379,7 +1379,7 @@ var nid;
         var BitTreeDecoder = (function () {
             function BitTreeDecoder(numBits) {
                 this.numBits = numBits;
-                this.probs = new Uint8Array(1 << this.numBits);
+                this.probs = new Uint16Array(1 << this.numBits);
             }
             BitTreeDecoder.prototype.init = function () {
                 lzma.LZMA.INIT_PROBS(this.probs);
@@ -1453,7 +1453,7 @@ var nid;
                 this.decoder = new lzma.LzmaDecoder();
             }
             LZMA.INIT_PROBS = function (p) {
-                for (var i = 0; i < p.length / 2; i++) {
+                for (var i = 0; i < p.length; i++) {
                     p[i] = this.PROB_INIT_VAL;
                 }
             };
@@ -1551,7 +1551,7 @@ var nid;
             LZMA.kNumAlignBits = 4;
             LZMA.kStartPosModelIndex = 4;
             LZMA.kEndPosModelIndex = 14;
-            LZMA.kNumFullDistances = (1 << (LZMA.kEndPosModelIndex >> 1));
+            LZMA.kNumFullDistances = (1 << (LZMA.kEndPosModelIndex >>> 1));
             LZMA.kMatchMinLen = 2;
             return LZMA;
         })();
