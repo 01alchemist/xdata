@@ -30,7 +30,6 @@ module nid{
             var result = this.decoder.decode(new Uint8Array(data));
             (<any> postMessage)(LZMAWorker.DECODE);
             (<any> postMessage)(result.buffer,[result.buffer]);
-            //(<any> postMessage)(result.buffer);
         }
     }
 }

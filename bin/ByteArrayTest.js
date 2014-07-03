@@ -3,7 +3,7 @@
     /**
     * JavaScript ByteArray
     * version : 0.1
-    * @author Nidin Vinayak | nidinthb@gmail.com
+    * @author Nidin Vinayakan | nidinthb@gmail.com
     *
     * ActionScript3 ByteArray implementation in JavaScript
     * limitation : size of ByteArray cannot be changed

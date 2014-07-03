@@ -1,8 +1,9 @@
-﻿
+﻿///<reference path="lzma/LZMA.d.ts" />
+///<reference path="CompressionAlgorithm.ts" />
 /**
 * JavaScript ByteArray 
 * version : 0.1
-* @author Nidin Vinayak | nidinthb@gmail.com
+* @author Nidin Vinayakan | nidinthb@gmail.com
 *
 * ActionScript3 ByteArray implementation in JavaScript
 * limitation : size of ByteArray cannot be changed
@@ -88,8 +89,60 @@ module nid.utils
 		public clear():void{
 			this._position=0;
 		}
-		public compress(algorithm:string="zlib") : void{}
-		public uncompress(algorithm:string="zlib") : void{}
+		public compress(algorithm:string=CompressionAlgorithm.LZMA) : void{
+            if(algorithm == CompressionAlgorithm.LZMA) {
+
+            }else{
+                throw{
+                    name:"Compression error!",
+                    message:algorithm+" not implemented",
+                    errorID:0
+                }
+            }
+        }
+		public uncompress(algorithm:string=CompressionAlgorithm.LZMA) : void{
+            if(algorithm == CompressionAlgorithm.LZMA) {
+                try {
+                    this.buffer = LZMAHelper.decode(this.buffer);
+                } catch (e) {
+                    throw{
+                        name: "Uncompression error!",
+                        message: e.message,
+                        errorID: 0
+                    }
+                }
+            }else{
+                throw{
+                    name:"Uncompression error!",
+                    message:algorithm+" not implemented",
+                    errorID:0
+                }
+            }
+        }
+        public compressAsync(algorithm:string,callback) : void{
+            if(algorithm == CompressionAlgorithm.LZMA) {
+
+            }else{
+                throw{
+                    name:"Compression error!",
+                    message:algorithm+" not implemented",
+                    errorID:0
+                }
+            }
+        }
+        public uncompressAsync(algorithm:string=CompressionAlgorithm.LZMA,callback=null) : void{
+            if(algorithm == CompressionAlgorithm.LZMA){
+                LZMAHelper.decodeAsync(this.buffer,function(_data){
+                    this.buffer = _data;
+                })
+            }else{
+                throw{
+                    name:"Uncompression error!",
+                    message:algorithm+" not implemented",
+                    errorID:0
+                }
+            }
+        }
 		public deflate():void{}
         public inflate(): void{ }
         
