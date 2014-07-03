@@ -131,8 +131,9 @@ module nid
                 }
                 while (MEMORY.u16[this.symbolI] < 0x100);
             }
-            while (MEMORY.u16[this.symbolI] < 0x100)
+            while (MEMORY.u16[this.symbolI] < 0x100){
                 MEMORY.u16[this.symbolI] = (MEMORY.u16[this.symbolI] << 1) | this.rangeDec.decodeBit(this.litProbs,probsOffset + MEMORY.u16[this.symbolI]);
+            }
             this.outWindow.putByte(MEMORY.u16[this.symbolI] - 0x100);
         }
 

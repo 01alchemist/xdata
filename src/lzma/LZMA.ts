@@ -2,6 +2,7 @@
 ///<reference path="../ByteArray.ts" />
 module nid
 {
+    "use strict"
     /**
      * LZMA Decoder
      * @author Nidin Vinayakan | nidinthb@gmail.com

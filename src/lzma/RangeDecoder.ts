@@ -23,90 +23,127 @@ module nid
         private codeI:number = 1;
         private loc1:number = 2;
         private loc2:number = 3;
-        private m:Uint32Array;
+        private U32:Uint32Array;
+        private U16:Uint16Array;
 
         constructor(){
             this.in_pos = 13;
         }
         public isFinishedOK():boolean{
-            return this.m[this.codeI] == 0;
+            return this.U32[this.codeI] == 0;
         }
         public init():void
         {
-            this.m   = new Uint32Array(4);
+            this.U32   = new Uint32Array(4);
+            this.U16   = new Uint16Array(4);
             this.corrupted = false;
 
             if (this.inStream[this.in_pos++] != 0){
                 this.corrupted = true;
             }
 
-            this.m[this.rangeI] = 0xFFFFFFFF;
-            this.m[this.codeI] = 0;
+            this.U32[this.rangeI] = 0xFFFFFFFF;
+            this.U32[this.codeI] = 0;
 
             for (var i:number = 0; i < 4; i++){
-                this.m[this.codeI] = (this.m[this.codeI] << 8) | this.inStream[this.in_pos++];
+                this.U32[this.codeI] = (this.U32[this.codeI] << 8) | this.inStream[this.in_pos++];
             }
 
-            if (this.m[this.codeI] == this.m[this.rangeI]){
+            if (this.U32[this.codeI] == this.U32[this.rangeI]){
                 this.corrupted = true;
             }
         }
 
         public normalize()
         {
-            if (this.m[this.rangeI] < RangeDecoder.kTopValue)
+            if (this.U32[this.rangeI] < RangeDecoder.kTopValue)
             {
-                this.m[this.rangeI] <<= 8;
-                this.m[this.codeI] = (this.m[this.codeI] << 8) | this.inStream[this.in_pos++];
+                this.U32[this.rangeI] <<= 8;
+                this.U32[this.codeI] = (this.U32[this.codeI] << 8) | this.inStream[this.in_pos++];
             }
         }
 
         public decodeDirectBits(numBits:number):number
         {
-            this.m[this.loc1] = 0;//UInt32
+            this.U32[this.loc1] = 0;//UInt32
             do
             {
-                this.m[this.rangeI] >>>= 1;
-                this.m[this.codeI] -= this.m[this.rangeI];
-                this.m[this.loc2] = 0 - (this.m[this.codeI] >>> 31);
-                this.m[this.codeI] += this.m[this.rangeI] & this.m[this.loc2];
+                this.U32[this.rangeI] >>>= 1;
+                this.U32[this.codeI] -= this.U32[this.rangeI];
+                this.U32[this.loc2] = 0 - (this.U32[this.codeI] >>> 31);
+                this.U32[this.codeI] += this.U32[this.rangeI] & this.U32[this.loc2];
 
-                if (this.m[this.codeI] == this.m[this.rangeI]){
+                if (this.U32[this.codeI] == this.U32[this.rangeI]){
                     this.corrupted = true;
                 }
 
                 this.normalize();
-                this.m[this.loc1] <<= 1;
-                this.m[this.loc1] += this.m[this.loc2] + 1;
+                this.U32[this.loc1] <<= 1;
+                this.U32[this.loc1] += this.U32[this.loc2] + 1;
             }
             while (--numBits);
-            return this.m[this.loc1];
+            return this.U32[this.loc1];
         }
 
         public decodeBit(prob:Uint16Array,index:number):number
         {
+            this.U16[0] = prob[index];
+            //bound
+            this.U32[2] = (this.U32[0] >>> 11) * this.U16[0];
+            //var symbol:number;
+            if (this.U32[1] < this.U32[2])
+            {
+                this.U16[0] += ((1 << 11) - this.U16[0]) >>> 5;
+                this.U32[0] = this.U32[2];
+                this.U16[1] = 0;
+            }
+            else
+            {
+                //v -= v >>> LZMA.kNumMoveBits;
+                this.U16[0] -= this.U16[0] >>> 5;
+                this.U32[1] -= this.U32[2];
+                this.U32[0] -= this.U32[2];
+                this.U16[1] = 1;
+            }
+            prob[index] = this.U16[0];
+            //this.normalize();
+            if (this.U32[0] < 16777216)
+            {
+                this.U32[0] <<= 8;
+                this.U32[1] = (this.U32[1] << 8) | this.inStream[this.in_pos++];
+            }
+            return this.U16[1];
+        }
+        /*public decodeBit(prob:Uint16Array,index:number):number
+        {
             var v = prob[index];
             //bound
-            //this.m[this.loc1] = (this.m[this.rangeI] >>> 11) * v;
-            this.m[this.loc1] = (this.m[this.rangeI] >>> 11) * v;
+            //this.U32[this.loc1] = (this.U32[this.rangeI] >>> 11) * v;
+            this.U32[this.loc1] = (this.U32[this.rangeI] >>> 11) * v;
             var symbol:number;
-            if (this.m[this.codeI] < this.m[this.loc1])
+            if (this.U32[this.codeI] < this.U32[this.loc1])
             {
                 v += ((1 << 11) - v) >>> 5;
-                this.m[this.rangeI] = this.m[this.loc1];
+                this.U32[this.rangeI] = this.U32[this.loc1];
                 symbol = 0;
             }
             else
             {
-                v -= v >>> LZMA.kNumMoveBits;
-                this.m[this.codeI] -= this.m[this.loc1];
-                this.m[this.rangeI] -= this.m[this.loc1];
+                //v -= v >>> LZMA.kNumMoveBits;
+                v -= v >>> 5;
+                this.U32[this.codeI] -= this.U32[this.loc1];
+                this.U32[this.rangeI] -= this.U32[this.loc1];
                 symbol = 1;
             }
             prob[index] = v;
-            this.normalize();
+            //this.normalize();
+            if (this.U32[this.rangeI] < 16777216)
+            {
+                this.U32[this.rangeI] <<= 8;
+                this.U32[this.codeI] = (this.U32[this.codeI] << 8) | this.inStream[this.in_pos++];
+            }
             return symbol;
-        }
+        }*/
 
     }
 }
