@@ -26,7 +26,7 @@ module nid.utils
         }
         static getUint16():number{
             if(!MEMORY.u16){
-                MEMORY.allocateUint16(10);
+                MEMORY.allocateUint16(24);
             }
             return MEMORY.u16Index++;
         }

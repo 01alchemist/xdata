@@ -7,50 +7,74 @@
 	<script src="../build/ByteArray.js"></script>
     <script>
         var file;
+        var file2;
         var reader = new FileReader();
+        var reader2 = new FileReader();
+        var decoder = new Worker('../build/LZMAWorker.min.js');
+        var decoder2 = new nid.LZMA();
+        var ENCODE = 1;
+        var DECODE = 2;
+        var command = 0;
+        var command2 = 0;
+
         reader.onload = function(e){
-            /*var data = new Uint8Array(e.target.result);
-            var header = new nid.utils.ByteArray(new ArrayBuffer(12));
-            var inData = new nid.utils.ByteArray(data.buffer);
-            inData.offset = 12;
-            console.log(data.length);
-            var i;//int
-            for (i = 0; i < 13; i++){
-                header[i] = data[i];
-            }
-            data = null;
-            var unpackSize = 0;//UInt64
-            var unpackSizeDefined = false;
-            for (i = 0; i < 8; i++)
-            {
-                var b = header[5 + i];
-                if (b != 0xFF){
-                    unpackSizeDefined = true;
-                }
-                unpackSize |= b << (8 * i);
-            }
-            var outData = new nid.utils.ByteArray(new ArrayBuffer(unpackSizeDefined?unpackSize:1024));*/
-            //LZMA.decompress(header,inData,outData,unpackSize);
-            var decoder = new nid.lzma.LZMA();
-            var inData = new nid.utils.ByteArray(e.target.result);
+            //var decoder = new nid.lzma.LZMA();
+            //var inData = new nid.utils.ByteArray(e.target.result);
+            var inData = new Uint8Array(e.target.result);
             console.log(inData.length);
             var time = Date.now();
-            var outData = decoder.decode(inData);
-            console.log('Decode time:'+(Date.now() - time)/1000);
-            console.log(outData.length);
+            decode(inData,function(result){
+                var outData = new nid.utils.ByteArray(result);
+                console.log('Decode time:'+(Date.now() - time)/1000+' seconds');
+                console.log(outData.length);
+                //console.log(outData.readUTFBytes(327));
+            });
+
             //outData.position = 0;
             //console.log(outData.readUTFBytes(327));
         }
+        reader2.onload = function(e){
+            var inData = new Uint8Array(e.target.result);
+            console.log(inData.length);
+            var time = Date.now();
+            var result = decoder2.decode(inData);
+            var outData = new nid.utils.ByteArray(result.buffer);
+            console.log('Decode time:'+(Date.now() - time)/1000+' seconds');
+            console.log(outData.length);
+        }
+        function decode(data,callback){
+
+            decoder.onmessage = function(e){
+                if(command == 0){
+                    command = e.data;
+                }else if(command == ENCODE){
+                    command == 0;//encode not implemented
+                }else if(command == DECODE){
+                    command == 0;
+                    callback(e.data);
+                }
+            }
+
+            decoder.postMessage(DECODE)
+            decoder.postMessage(data.buffer,[data.buffer]);
+            //decoder.postMessage(data.buffer);
+        }
         function init(){
             var fileInput = document.getElementById("fileBrowser");
+            var fileInput2 = document.getElementById("fileBrowser2");
             fileInput.onchange = function(e){
                 file = this.files[0];
                 reader.readAsArrayBuffer(file);
+            }
+            fileInput2.onchange = function(e){
+                file2 = this.files[0];
+                reader2.readAsArrayBuffer(file2);
             }
         }
     </script>
 </head>
 <body onload="init()">
-<input type="file" id="fileBrowser"/>
+With worker:<input type="file" id="fileBrowser"/> <br>
+With out worker:<input type="file" id="fileBrowser2"/>
 </body>
 </html>

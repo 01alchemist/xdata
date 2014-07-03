@@ -1,5 +1,5 @@
 ///<reference path="LZMA.d.ts" />
-module nid
+module nid.lzma
 {
     /**
      * LZMA Decoder
@@ -12,11 +12,10 @@ module nid
     {
         static kTopValue:number = (1 << 24);
 
-        //public inStream:ByteArray;
-        public inStream:Uint8Array;
+        public inStream:ByteArray;
         public corrupted:boolean;
 
-        public in_pos:number;
+        private in_pos:number;
         private range:number;//UInt32
         private code:number;//UInt32
         private rangeI:number = 0;
@@ -26,17 +25,20 @@ module nid
         private m:Uint32Array;
 
         constructor(){
-            this.in_pos = 13;
+            this.in_pos = 0;
         }
         public isFinishedOK():boolean{
             return this.m[this.codeI] == 0;
         }
         public init():void
         {
+            /*this.rangeI = MEMORY.getUint32();
+            this.codeI  = MEMORY.getUint32();
+            this.loc1   = MEMORY.getUint32();
+            this.loc2   = MEMORY.getUint32();*/
             this.m   = new Uint32Array(4);
             this.corrupted = false;
-
-            if (this.inStream[this.in_pos++] != 0){
+            if (this.inStream.readUnsignedByte() != 0){
                 this.corrupted = true;
             }
 
@@ -44,7 +46,7 @@ module nid
             this.m[this.codeI] = 0;
 
             for (var i:number = 0; i < 4; i++){
-                this.m[this.codeI] = (this.m[this.codeI] << 8) | this.inStream[this.in_pos++];
+                this.m[this.codeI] = (this.m[this.codeI] << 8) | this.inStream.readUnsignedByte();
             }
 
             if (this.m[this.codeI] == this.m[this.rangeI]){
@@ -57,7 +59,7 @@ module nid
             if (this.m[this.rangeI] < RangeDecoder.kTopValue)
             {
                 this.m[this.rangeI] <<= 8;
-                this.m[this.codeI] = (this.m[this.codeI] << 8) | this.inStream[this.in_pos++];
+                this.m[this.codeI] = (this.m[this.codeI] << 8) | this.inStream.readUnsignedByte();
             }
         }
 

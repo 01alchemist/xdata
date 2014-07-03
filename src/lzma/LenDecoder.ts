@@ -1,5 +1,5 @@
 ///<reference path="LZMA.d.ts" />
-module nid.lzma {
+module nid {
     /**
      * LZMA Decoder
      * @author Nidin Vinayakan | nidinthb@gmail.com

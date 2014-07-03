@@ -41,12 +41,6 @@ module nid
         //Local registers
         private loc1:number;
         private loc2:number;
-        private matchBitI:number;
-        private matchByteI:number;
-        private bitI:number;
-        private symbolI:number;
-        private prevByteI:number;
-        private litStateI:number;
 
         constructor() {
             this.posSlotDecoder = BitTreeDecoder.constructArray(6,LZMA.kNumLenToPosStates);//6
@@ -68,14 +62,8 @@ module nid
 
         public init():void
         {
-            this.loc1 = MEMORY.getUint32() | 0;
-            this.loc2 = MEMORY.getUint32() | 0;
-            this.matchBitI = MEMORY.getUint16() | 0;
-            this.matchByteI = MEMORY.getUint16() | 0;
-            this.bitI = MEMORY.getUint16() | 0;
-            this.symbolI = MEMORY.getUint16() | 0;
-            this.prevByteI = MEMORY.getUint16() | 0;
-            this.litStateI = MEMORY.getUint16() | 0;
+            this.loc1 = MEMORY.getUint32();
+            this.loc2 = MEMORY.getUint32();
 
             this.initLiterals();
             this.initDist();
@@ -109,54 +97,53 @@ module nid
         }
         private decodeLiteral(state, rep0):void//unsigned , UInt32
         {
-            MEMORY.u16[this.prevByteI] = 0;//unsigned byte
+            var prevByte = 0;//unsigned byte
             if (!this.outWindow.isEmpty())
-            MEMORY.u16[this.prevByteI] = this.outWindow.getByte(1);
+            prevByte = this.outWindow.getByte(1);
 
-            MEMORY.u16[this.symbolI] = 1;
-            MEMORY.u16[this.litStateI] = ((this.outWindow.totalPos & ((1 << this.lp) - 1)) << this.lc) + (MEMORY.u16[this.prevByteI] >>> (8 - this.lc));
-            var probsOffset:number = (0x300 * MEMORY.u16[this.litStateI]) | 0;
+            var symbol:number = 1;
+            var litState:number = ((this.outWindow.totalPos & ((1 << this.lp) - 1)) << this.lc) + (prevByte >>> (8 - this.lc));
+            var probsOffset:number = 0x300 * litState;
 
             if (state >= 7)
             {
-                MEMORY.u16[this.matchByteI] = this.outWindow.getByte(rep0 + 1);
+                var matchByte:number = this.outWindow.getByte(rep0 + 1);
                 do
                 {
-                    MEMORY.u16[this.matchBitI] = (MEMORY.u16[this.matchByteI] >>> 7) & 1;
-                    MEMORY.u16[this.matchByteI] <<= 1;
-                    MEMORY.u16[this.bitI] = this.rangeDec.decodeBit(this.litProbs,probsOffset + ((1 + MEMORY.u16[this.matchBitI]) << 8) + MEMORY.u16[this.symbolI]);
-                    MEMORY.u16[this.symbolI] = (MEMORY.u16[this.symbolI] << 1) | MEMORY.u16[this.bitI];
-                    if (MEMORY.u16[this.matchBitI] != MEMORY.u16[this.bitI])
+                    var matchBit:number = (matchByte >>> 7) & 1;
+                    matchByte <<= 1;
+                    var bit:number = this.rangeDec.decodeBit(this.litProbs,probsOffset + ((1 + matchBit) << 8) + symbol);
+                    symbol = (symbol << 1) | bit;
+                    if (matchBit != bit)
                     break;
                 }
-                while (MEMORY.u16[this.symbolI] < 0x100);
+                while (symbol < 0x100);
             }
-            while (MEMORY.u16[this.symbolI] < 0x100)
-                MEMORY.u16[this.symbolI] = (MEMORY.u16[this.symbolI] << 1) | this.rangeDec.decodeBit(this.litProbs,probsOffset + MEMORY.u16[this.symbolI]);
-            this.outWindow.putByte(MEMORY.u16[this.symbolI] - 0x100);
+            while (symbol < 0x100)
+                symbol = (symbol << 1) | this.rangeDec.decodeBit(this.litProbs,probsOffset + symbol);
+            this.outWindow.putByte(symbol - 0x100);
         }
-
         private decodeDistance(len):number//unsigned byte
         {
             var lenState:number = len;//unsigned byte
             if (lenState > LZMA.kNumLenToPosStates - 1)
                 lenState = LZMA.kNumLenToPosStates - 1;
 
-            var posSlot = this.posSlotDecoder[lenState].decode(this.rangeDec);//unsigned byte
+            var posSlot:number = this.posSlotDecoder[lenState].decode(this.rangeDec) | 0;//unsigned byte
             if (posSlot < 4)
                 return posSlot;
 
-            var numDirectBits = ((posSlot >>> 1) - 1);//unsigned byte
-            MEMORY.u32[this.loc1] = ((2 | (posSlot & 1)) << numDirectBits);//UInt32
+            var numDirectBits:number = ((posSlot >>> 1) - 1) | 0;//unsigned byte
+            var dist:number = ((2 | (posSlot & 1)) << numDirectBits) | 0;//UInt32
             if (posSlot < LZMA.kEndPosModelIndex){
-                MEMORY.u32[this.loc1] += LZMA.BitTreeReverseDecode(this.posDecoders, numDirectBits, this.rangeDec, MEMORY.u32[this.loc1] - posSlot);
+                dist += LZMA.BitTreeReverseDecode(this.posDecoders, numDirectBits, this.rangeDec, dist - posSlot);
             }
             else
             {
-                MEMORY.u32[this.loc1] += this.rangeDec.decodeDirectBits(numDirectBits - LZMA.kNumAlignBits) << LZMA.kNumAlignBits;
-                MEMORY.u32[this.loc1] += this.alignDecoder.reverseDecode(this.rangeDec);
+                dist += this.rangeDec.decodeDirectBits(numDirectBits - LZMA.kNumAlignBits) << LZMA.kNumAlignBits;
+                dist += this.alignDecoder.reverseDecode(this.rangeDec);
             }
-            return MEMORY.u32[this.loc1];
+            return dist;
         }
         private initDist():void
         {

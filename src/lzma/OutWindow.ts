@@ -1,5 +1,5 @@
 ///<reference path="../ByteArray.ts" />
-module nid.lzma
+module nid
 {
     /**
      * LZMA Decoder
@@ -10,11 +10,12 @@ module nid.lzma
     export class OutWindow
     {
         public totalPos:number;
-        public outStream:ByteArray;
+        //public outStream:ByteArray;
+        public outStream:Uint8Array;
 
         private buf:Uint8Array;
         private pos:number;
-        private out_pos:number;
+        public out_pos:number;
         private size:number;
         private isFull:boolean;
 
@@ -39,7 +40,8 @@ module nid.lzma
                 this.pos = 0;
                 this.isFull = true;
             }
-            this.outStream.writeUnsignedByte(b);
+            //this.outStream.writeUnsignedByte(b);
+            this.outStream[this.out_pos++] = b;
         }
 
         public getByte(dist:number)//UInt32

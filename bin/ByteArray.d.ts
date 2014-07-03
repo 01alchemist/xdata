@@ -23,9 +23,10 @@ declare module nid.utils {
         private BUFFER_EXT_SIZE;
         private data;
         private _position;
+        public offset: number;
         public write_position: number;
         public endian: string;
-        constructor(buffer?: ArrayBuffer);
+        constructor(buffer?: ArrayBuffer, offset?: number);
         public buffer : ArrayBuffer;
         public dataView : DataView;
         public position : number;

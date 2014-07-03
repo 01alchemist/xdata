@@ -1,6 +1,6 @@
 ///<reference path="LZMA.d.ts" />
 ///<reference path="../ByteArray.ts" />
-module nid.lzma
+module nid
 {
     /**
      * LZMA Decoder
@@ -28,8 +28,12 @@ module nid.lzma
         static kMatchMinLen:number                      =  2;
 
         public decoder:LzmaDecoder;
-        public data:ByteArray;
+        public data:Uint8Array;
         public ucdata:Uint8Array;
+
+        //Local registers
+        private loc1:number;
+        private loc2:number;
 
         static INIT_PROBS(p:Uint16Array):void{
             for (var i:number = 0; i < p.length; i++) {
@@ -52,14 +56,15 @@ module nid.lzma
         constructor(){
             this.decoder = new LzmaDecoder();
         }
-        public decode(data:ByteArray):ByteArray
+        public decode(data:Uint8Array):Uint8Array
         {
             this.data = data;
-            var header:Uint8Array = data.readUint8Array(13);
+            //var header:Uint8Array = data.readUint8Array(13);
+            var header:Uint8Array = new Uint8Array(13);
             var i:number;//int
-            /*for (i = 0; i < 13; i++){
+            for (i = 0; i < 13; i++){
                 header[i] = data[i];
-            }*/
+            }
 
             this.decoder.decodeProperties(header);
 
@@ -93,8 +98,8 @@ module nid.lzma
             // we support the streams that have uncompressed size and marker.
             var res:number = this.decoder.decode(unpackSizeDefined, unpackSize); //int
 
-            console.log("Read    ", data.position);
-            console.log("Written ", this.decoder.outWindow.outStream.position);
+            console.log("Read    ", this.decoder.rangeDec.in_pos);
+            console.log("Written ", this.decoder.outWindow.out_pos);
 
             if (res == LZMA.LZMA_RES_ERROR){
                 throw "LZMA decoding error";
@@ -106,7 +111,7 @@ module nid.lzma
             {
                 if (unpackSizeDefined)
                 {
-                    if (this.decoder.outWindow.outStream.position != unpackSize){
+                    if (this.decoder.outWindow.out_pos != unpackSize){
                         throw "Finished with end marker before than specified size";
                     }
                     console.log("Warning: ");
