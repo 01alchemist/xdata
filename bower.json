@@ -1,0 +1,35 @@
+{
+  "name": "ByteArray",
+  "version": "1.0.0",
+  "homepage": "https://github.com/nidin/js-ByteArray",
+  "authors": [
+    "Nidin Vinayakan <nidinthb@gmail.com>"
+  ],
+  "description": "ActionScript3 ByteArray API for JavaScript",
+  "main": "src/ByteArray.ts",
+  "moduleType": [
+    "es6"
+  ],
+  "keywords": [
+    "bytearray",
+    "typedarray",
+    "buffer",
+    "arraybuffer",
+    "bytes",
+    "binary",
+    "binaryreader",
+    "binarywriter",
+    "compression",
+    "lzma",
+    "zlib",
+    "amf"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

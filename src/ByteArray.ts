@@ -1,7 +1,9 @@
-﻿/**
+﻿///<reference path="lzma/LZMA.d.ts" />
+///<reference path="CompressionAlgorithm.ts" />
+/**
 * JavaScript ByteArray 
 * version : 0.1
-* @author Nidin Vinayak | nidinthb@gmail.com
+* @author Nidin Vinayakan | nidinthb@gmail.com
 *
 * ActionScript3 ByteArray implementation in JavaScript
 * limitation : size of ByteArray cannot be changed
@@ -25,14 +27,15 @@ module nid.utils
         static SIZE_OF_FLOAT32: number = 4;
         static SIZE_OF_FLOAT64: number = 8;
 
-        private BUFFER_EXT_SIZE: number = 1024;//Buffer expansion szie
+        private BUFFER_EXT_SIZE: number = 1024;//Check size
 		
-		public data:DataView;
+		private data:DataView;
         private _position: number;
+        public offset: number = 0;
         public write_position: number;
         public endian: string;
 
-		constructor(buffer?:ArrayBuffer){
+		constructor(buffer?:ArrayBuffer,offset:number=0){
             
             if (typeof (buffer) === "undefined") {
                 buffer = new ArrayBuffer(this.BUFFER_EXT_SIZE);
@@ -42,7 +45,7 @@ module nid.utils
             }
 			this.data = new DataView(buffer);
             this._position = 0;
-           
+            this.offset = offset;
 			this.endian = ByteArray.BIG_ENDIAN;
         }
         
@@ -60,29 +63,86 @@ module nid.utils
             this.data = value; 
         }
         get position(): number {
-            return this._position;
+            return this._position + this.offset;
         }
         set position(value:number) {
+			if(this._position < value){
+				if(!this.validate(this._position-value)){
+					return;
+				}
+			}
             this._position = value;
             this.write_position = value > this.write_position ? value : this.write_position;
         }
         get length(): number {
-            return this.data.byteLength;
+            return this.write_position;
         }
         set length(value: number) {
             this.validateBuffer(value);
         }
 		
         get bytesAvailable():number {
-            return this.data.byteLength - this._position;
+            return this.data.byteLength - this.position;
         }
         //end 
 
 		public clear():void{
 			this._position=0;
 		}
-		public compress(algorithm:string="zlib") : void{}
-		public uncompress(algorithm:string="zlib") : void{}
+		public compress(algorithm:string=CompressionAlgorithm.LZMA) : void{
+            if(algorithm == CompressionAlgorithm.LZMA) {
+
+            }else{
+                throw{
+                    name:"Compression error!",
+                    message:algorithm+" not implemented",
+                    errorID:0
+                }
+            }
+        }
+		public uncompress(algorithm:string=CompressionAlgorithm.LZMA) : void{
+            if(algorithm == CompressionAlgorithm.LZMA) {
+                try {
+                    this.buffer = LZMAHelper.decode(this.buffer);
+                } catch (e) {
+                    throw{
+                        name: "Uncompression error!",
+                        message: e.message,
+                        errorID: 0
+                    }
+                }
+            }else{
+                throw{
+                    name:"Uncompression error!",
+                    message:algorithm+" not implemented",
+                    errorID:0
+                }
+            }
+        }
+        public compressAsync(algorithm:string,callback) : void{
+            if(algorithm == CompressionAlgorithm.LZMA) {
+
+            }else{
+                throw{
+                    name:"Compression error!",
+                    message:algorithm+" not implemented",
+                    errorID:0
+                }
+            }
+        }
+        public uncompressAsync(algorithm:string=CompressionAlgorithm.LZMA,callback=null) : void{
+            if(algorithm == CompressionAlgorithm.LZMA){
+                LZMAHelper.decodeAsync(this.buffer,function(_data){
+                    this.buffer = _data;
+                })
+            }else{
+                throw{
+                    name:"Uncompression error!",
+                    message:algorithm+" not implemented",
+                    errorID:0
+                }
+            }
+        }
 		public deflate():void{}
         public inflate(): void{ }
         
@@ -95,7 +155,7 @@ module nid.utils
         public readBoolean(): boolean{
             if (!this.validate(ByteArray.SIZE_OF_BOOLEAN)) return null;
 
-            return this.data.getUint8(this._position++) != 0;
+            return this.data.getUint8(this.position++) != 0;
         }
 
         /**
@@ -106,7 +166,7 @@ module nid.utils
         public readByte(): number{
             if (!this.validate(ByteArray.SIZE_OF_INT8)) return null;
 
-            return this.data.getInt8(this._position++);
+            return this.data.getInt8(this.position++);
         }
 
         /**
@@ -119,11 +179,11 @@ module nid.utils
          */
         public readBytes(bytes: ByteArray, offset: number= 0, length: number= 0): void{
             if (!this.validate(length)) return;
-			var tmp_data:any = new DataView(this.data.buffer,this._position,length);
-			this._position += length;
+			var tmp_data:any = new DataView(this.data.buffer,this.position,length);
+			this.position += length;
 			//This method is expensive
 			//for(var i=0; i < length;i++){
-				//tmp_data.setUint8(i,this.data.getUint8(this._position++));
+				//tmp_data.setUint8(i,this.data.getUint8(this.position++));
 			//}
 			bytes.dataView = tmp_data;
         }
@@ -135,8 +195,8 @@ module nid.utils
         public readDouble(): number{
             if (!this.validate(ByteArray.SIZE_OF_FLOAT64)) return null;
 
-            var value:number  = this.data.getFloat64(this._position);
-            this._position += ByteArray.SIZE_OF_FLOAT64;
+            var value:number  = this.data.getFloat64(this.position);
+            this.position += ByteArray.SIZE_OF_FLOAT64;
             return value;
         }
 
@@ -147,8 +207,8 @@ module nid.utils
         public readFloat(): number{
             if (!this.validate(ByteArray.SIZE_OF_FLOAT32)) return null;
 
-            var value: number = this.data.getFloat32(this._position);
-            this._position += ByteArray.SIZE_OF_FLOAT32;
+            var value: number = this.data.getFloat32(this.position);
+            this.position += ByteArray.SIZE_OF_FLOAT32;
             return value;
         }
 
@@ -161,8 +221,8 @@ module nid.utils
         public readInt(): number{
             if (!this.validate(ByteArray.SIZE_OF_INT32)) return null;
 
-			var value = this.data.getInt32(this._position,this.endian == ByteArray.LITTLE_ENDIAN);
-            this._position += ByteArray.SIZE_OF_INT32;
+			var value = this.data.getInt32(this.position,this.endian == ByteArray.LITTLE_ENDIAN);
+            this.position += ByteArray.SIZE_OF_INT32;
 			return value;
         }
 
@@ -194,6 +254,7 @@ module nid.utils
 		 * @return	The deserialized object.
          */
 		public readObject():any{
+			//return this.readAmfObject();
 			return null;
         }
 
@@ -206,8 +267,8 @@ module nid.utils
         public readShort(): number{
             if (!this.validate(ByteArray.SIZE_OF_INT16)) return null;
 
-            var value = this.data.getInt16(this._position, this.endian == ByteArray.LITTLE_ENDIAN);
-            this._position += ByteArray.SIZE_OF_INT16;
+            var value = this.data.getInt16(this.position, this.endian == ByteArray.LITTLE_ENDIAN);
+            this.position += ByteArray.SIZE_OF_INT16;
             return value;
         }
 
@@ -220,7 +281,7 @@ module nid.utils
         public readUnsignedByte(): number{
             if (!this.validate(ByteArray.SIZE_OF_UINT8)) return null;
 
-            return this.data.getUint8(this._position++);
+            return this.data.getUint8(this.position++);
         }
 
         /**
@@ -232,8 +293,8 @@ module nid.utils
 		public readUnsignedInt():number{
             if (!this.validate(ByteArray.SIZE_OF_UINT32)) return null;
 
-			var value = this.data.getUint32(this._position,this.endian == ByteArray.LITTLE_ENDIAN);
-            this._position += ByteArray.SIZE_OF_UINT32;
+			var value = this.data.getUint32(this.position,this.endian == ByteArray.LITTLE_ENDIAN);
+            this.position += ByteArray.SIZE_OF_UINT32;
 			return value;
         }
 
@@ -246,8 +307,8 @@ module nid.utils
 		public readUnsignedShort():number{
             if (!this.validate(ByteArray.SIZE_OF_UINT16)) return null;
 
-            var value = this.data.getUint16(this._position, this.endian == ByteArray.LITTLE_ENDIAN);
-            this._position += ByteArray.SIZE_OF_UINT16;
+            var value = this.data.getUint16(this.position, this.endian == ByteArray.LITTLE_ENDIAN);
+            this.position += ByteArray.SIZE_OF_UINT16;
             return value;
         }
 
@@ -260,8 +321,8 @@ module nid.utils
         public readUTF(): string{
             if (!this.validate(ByteArray.SIZE_OF_UINT16)) return null;
 
-            var length: number = this.data.getUint16(this._position, this.endian == ByteArray.LITTLE_ENDIAN);
-			this._position += ByteArray.SIZE_OF_UINT16;
+            var length: number = this.data.getUint16(this.position, this.endian == ByteArray.LITTLE_ENDIAN);
+			this.position += ByteArray.SIZE_OF_UINT16;
 			
             if (length > 0) {
                 return this.readUTFBytes(length);
@@ -281,7 +342,7 @@ module nid.utils
 
             var bytes: Uint8Array = new Uint8Array(new ArrayBuffer(length));
             for (var i = 0; i < length; i++) {
-                bytes[i] = this.data.getUint8(this._position++);
+                bytes[i] = this.data.getUint8(this.position++);
             }
             return this.decodeUTF8(bytes);
         }
@@ -295,7 +356,7 @@ module nid.utils
         public writeBoolean(value: boolean): void{
             this.validateBuffer(ByteArray.SIZE_OF_BOOLEAN);
 
-            this.data.setUint8(this._position++, value ? 1 : 0);
+            this.data.setUint8(this.position++, value ? 1 : 0);
         }
 
         /**
@@ -307,12 +368,12 @@ module nid.utils
         public writeByte(value: number): void{
             this.validateBuffer(ByteArray.SIZE_OF_INT8);
 
-            this.data.setInt8(this._position++, value);
+            this.data.setInt8(this.position++, value);
         }
 		public writeUnsignedByte(value: number):void{
             this.validateBuffer(ByteArray.SIZE_OF_UINT8);
 
-            this.data.setUint8(this._position++, value);
+            this.data.setUint8(this.position++, value);
         }
         /**
 		 * Writes a sequence of length bytes from the
@@ -336,7 +397,7 @@ module nid.utils
 
             var tmp_data = new DataView(bytes.buffer);
 			for(var i=0; i < bytes.length;i++){
-				this.data.setUint8(this._position++,tmp_data.getUint8(i));
+				this.data.setUint8(this.position++,tmp_data.getUint8(i));
 			}
         }
 
@@ -347,8 +408,8 @@ module nid.utils
         public writeDouble(value: number): void{
             this.validateBuffer(ByteArray.SIZE_OF_FLOAT64);
 
-            this.data.setFloat64(this._position, value, this.endian == ByteArray.LITTLE_ENDIAN);
-            this._position += ByteArray.SIZE_OF_FLOAT64;
+            this.data.setFloat64(this.position, value, this.endian == ByteArray.LITTLE_ENDIAN);
+            this.position += ByteArray.SIZE_OF_FLOAT64;
         }
 
         /**
@@ -358,8 +419,8 @@ module nid.utils
         public writeFloat(value: number): void{
             this.validateBuffer(ByteArray.SIZE_OF_FLOAT32);
 
-            this.data.setFloat32(this._position, value, this.endian == ByteArray.LITTLE_ENDIAN);
-            this._position += ByteArray.SIZE_OF_FLOAT32;
+            this.data.setFloat32(this.position, value, this.endian == ByteArray.LITTLE_ENDIAN);
+            this.position += ByteArray.SIZE_OF_FLOAT32;
         }
 
         /**
@@ -369,8 +430,8 @@ module nid.utils
 		public writeInt(value:number):void{
             this.validateBuffer(ByteArray.SIZE_OF_INT32);
 
-            this.data.setInt32(this._position, value, this.endian == ByteArray.LITTLE_ENDIAN);
-			this._position += ByteArray.SIZE_OF_INT32;
+            this.data.setInt32(this.position, value, this.endian == ByteArray.LITTLE_ENDIAN);
+			this.position += ByteArray.SIZE_OF_INT32;
         }
 
         /**
@@ -381,7 +442,7 @@ module nid.utils
 		 *   For a complete list, see Supported Character Sets.
          */
         public writeMultiByte(value: string, charSet: string): void{
-
+			
         }
 
         /**
@@ -390,7 +451,7 @@ module nid.utils
 		 * @param	object	The object to serialize.
          */
         public writeObject(value: any): void{
-
+			
         }
 
         /**
@@ -401,14 +462,14 @@ module nid.utils
         public writeShort(value: number): void{
             this.validateBuffer(ByteArray.SIZE_OF_INT16);
 
-            this.data.setInt16(this._position, value, this.endian == ByteArray.LITTLE_ENDIAN);
-            this._position += ByteArray.SIZE_OF_INT16;
+            this.data.setInt16(this.position, value, this.endian == ByteArray.LITTLE_ENDIAN);
+            this.position += ByteArray.SIZE_OF_INT16;
         }        
 		public writeUnsignedShort(value: number): void{
             this.validateBuffer(ByteArray.SIZE_OF_UINT16);
 
-            this.data.setUint16(this._position, value, this.endian == ByteArray.LITTLE_ENDIAN);
-            this._position += ByteArray.SIZE_OF_UINT16;
+            this.data.setUint16(this.position, value, this.endian == ByteArray.LITTLE_ENDIAN);
+            this.position += ByteArray.SIZE_OF_UINT16;
         }
 
         /**
@@ -418,8 +479,8 @@ module nid.utils
         public writeUnsignedInt(value: number): void{
             this.validateBuffer(ByteArray.SIZE_OF_UINT32);
 
-            this.data.setUint32(this._position, value, this.endian == ByteArray.LITTLE_ENDIAN);
-            this._position += ByteArray.SIZE_OF_UINT32;
+            this.data.setUint32(this.position, value, this.endian == ByteArray.LITTLE_ENDIAN);
+            this.position += ByteArray.SIZE_OF_UINT32;
         }
 
         /**
@@ -434,8 +495,8 @@ module nid.utils
 
             this.validateBuffer(ByteArray.SIZE_OF_UINT16 + length);
 
-            this.data.setUint16(this._position, length, this.endian === ByteArray.LITTLE_ENDIAN);
-			this._position += ByteArray.SIZE_OF_UINT16;
+            this.data.setUint16(this.position, length, this.endian === ByteArray.LITTLE_ENDIAN);
+			this.position += ByteArray.SIZE_OF_UINT16;
             this.writeUint8Array(utf8bytes);
         }
 
@@ -462,10 +523,10 @@ module nid.utils
 		 * @param	value	The Uint8Array to be written.
          */
         public writeUint8Array(bytes: Uint8Array):void {
-            this.validateBuffer(this._position + bytes.length);
+            this.validateBuffer(this.position + bytes.length);
 
             for (var i = 0; i < bytes.length; i++) {
-                this.data.setUint8(this._position++, bytes[i]);
+                this.data.setUint8(this.position++, bytes[i]);
             }
         }
 
@@ -474,11 +535,11 @@ module nid.utils
          * @param	value	The Uint16Array to be written.
          */
         public writeUint16Array(bytes: Uint16Array): void {
-            this.validateBuffer(this._position + bytes.length);
+            this.validateBuffer(this.position + bytes.length);
 
             for (var i = 0; i < bytes.length; i++) {
-                this.data.setUint16(this._position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
-                this._position += ByteArray.SIZE_OF_UINT16;
+                this.data.setUint16(this.position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
+                this.position += ByteArray.SIZE_OF_UINT16;
             }
         }
 
@@ -487,11 +548,11 @@ module nid.utils
          * @param	value	The Uint32Array to be written.
          */
         public writeUint32Array(bytes: Uint32Array): void {
-            this.validateBuffer(this._position + bytes.length);
+            this.validateBuffer(this.position + bytes.length);
 
             for (var i = 0; i < bytes.length; i++) {
-                this.data.setUint32(this._position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
-                this._position += ByteArray.SIZE_OF_UINT32;
+                this.data.setUint32(this.position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
+                this.position += ByteArray.SIZE_OF_UINT32;
             }
         }
 
@@ -503,7 +564,7 @@ module nid.utils
             this.validateBuffer(this.position + bytes.length);
 
             for (var i = 0; i < bytes.length; i++) {
-                this.data.setInt8(this._position++, bytes[i]);
+                this.data.setInt8(this.position++, bytes[i]);
             }
         }
 
@@ -515,8 +576,8 @@ module nid.utils
             this.validateBuffer(this.position + bytes.length);
 
             for (var i = 0; i < bytes.length; i++) {
-                this.data.setInt16(this._position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
-                this._position += ByteArray.SIZE_OF_INT16;
+                this.data.setInt16(this.position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
+                this.position += ByteArray.SIZE_OF_INT16;
             }
         }
 
@@ -528,8 +589,8 @@ module nid.utils
             this.validateBuffer(this.position + bytes.length);
 
             for (var i = 0; i < bytes.length; i++) {
-                this.data.setInt32(this._position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
-                this._position += ByteArray.SIZE_OF_INT32;
+                this.data.setInt32(this.position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
+                this.position += ByteArray.SIZE_OF_INT32;
             }
         }
 
@@ -541,8 +602,8 @@ module nid.utils
             this.validateBuffer(this.position + bytes.length);
 
             for (var i = 0; i < bytes.length; i++) {
-                this.data.setFloat32(this._position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
-                this._position += ByteArray.SIZE_OF_FLOAT32;
+                this.data.setFloat32(this.position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
+                this.position += ByteArray.SIZE_OF_FLOAT32;
             }
         }
 
@@ -554,8 +615,8 @@ module nid.utils
             this.validateBuffer(this.position + bytes.length);
 
             for (var i = 0; i < bytes.length; i++) {
-                this.data.setFloat64(this._position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
-                this._position += ByteArray.SIZE_OF_FLOAT64;
+                this.data.setFloat64(this.position, bytes[i], this.endian === ByteArray.LITTLE_ENDIAN);
+                this.position += ByteArray.SIZE_OF_FLOAT64;
             }
         }
 		
@@ -567,7 +628,7 @@ module nid.utils
 			if (!this.validate(length)) return null;
 			var result = new Uint8Array(new ArrayBuffer(length));
 			for (var i = 0; i < length; i++) {
-                result[i] = this.data.getUint8(this._position);
+                result[i] = this.data.getUint8(this.position);
                 this.position += ByteArray.SIZE_OF_UINT8;
             }
 			return result;
@@ -582,7 +643,7 @@ module nid.utils
 			if (!this.validate(size)) return null;
 			var result = new Uint16Array(new ArrayBuffer(size));
 			for (var i = 0; i < length; i++) {
-                result[i] = this.data.getUint16(this._position);
+                result[i] = this.data.getUint16(this.position);
                 this.position += ByteArray.SIZE_OF_UINT16;
             }
 			return result;
@@ -597,7 +658,7 @@ module nid.utils
 			if (!this.validate(size)) return null;
 			var result = new Uint32Array(new ArrayBuffer(size));
 			for (var i = 0; i < length; i++) {
-                result[i] = this.data.getUint32(this._position);
+                result[i] = this.data.getUint32(this.position);
                 this.position += ByteArray.SIZE_OF_UINT32;
             }
 			return result;
@@ -611,7 +672,7 @@ module nid.utils
 			if (!this.validate(length)) return null;
 			var result = new Int8Array(new ArrayBuffer(length));
 			for (var i = 0; i < length; i++) {
-                result[i] = this.data.getInt8(this._position);
+                result[i] = this.data.getInt8(this.position);
                 this.position += ByteArray.SIZE_OF_INT8;
             }
 			return result;
@@ -626,7 +687,7 @@ module nid.utils
 			if (!this.validate(size)) return null;
 			var result = new Int16Array(new ArrayBuffer(size));
 			for (var i = 0; i < length; i++) {
-                result[i] = this.data.getInt16(this._position);
+                result[i] = this.data.getInt16(this.position);
                 this.position += ByteArray.SIZE_OF_INT16;
             }
 			return result;
@@ -641,7 +702,7 @@ module nid.utils
 			if (!this.validate(size)) return null;
 			var result = new Int32Array(new ArrayBuffer(size));
 			for (var i = 0; i < length; i++) {
-                result[i] = this.data.getUint32(this._position);
+                result[i] = this.data.getUint32(this.position);
                 this.position += ByteArray.SIZE_OF_INT32;
             }
 			return result;
@@ -656,7 +717,7 @@ module nid.utils
 			if (!this.validate(size)) return null;
 			var result = new Float32Array(new ArrayBuffer(size));
 			for (var i = 0; i < length; i++) {
-                result[i] = this.data.getFloat32(this._position);
+                result[i] = this.data.getFloat32(this.position);
                 this.position += ByteArray.SIZE_OF_FLOAT32;
             }
 			return result;
@@ -671,7 +732,7 @@ module nid.utils
 			if (!this.validate(size)) return null;
 			var result = new Float64Array(new ArrayBuffer(size));
 			for (var i = 0; i < length; i++) {
-                result[i] = this.data.getFloat64(this._position);
+                result[i] = this.data.getFloat64(this.position);
                 this.position += ByteArray.SIZE_OF_FLOAT64;
             }
 			return result;
@@ -680,6 +741,7 @@ module nid.utils
         /*  PRIVATE METHODS   */
         /**********************/
         private validate(len:number): boolean {
+            len += this.offset;
             if (this.data.byteLength > 0 && this._position + len <= this.data.byteLength) {
                 return true;
             } else {
@@ -691,13 +753,11 @@ module nid.utils
             }
         }
         private validateBuffer(len: number): void {
+			this.write_position = len > this.write_position ? len : this.write_position;
             if (this.data.byteLength < len) {
-                var tmp: DataView = new DataView(new ArrayBuffer(len + this.BUFFER_EXT_SIZE));
-                for (var i = 0; i < this.data.byteLength; i++) {
-                    tmp.setUint8(i, this.data.getUint8(i));
-                }
-                this.data = null;
-                this.data = tmp;
+                var tmp:Uint8Array = new Uint8Array(new ArrayBuffer(len + this.BUFFER_EXT_SIZE));
+                tmp.set(new Uint8Array(this.data.buffer));
+                this.data.buffer = tmp.buffer;
             }
         }
 
@@ -833,7 +893,7 @@ module nid.utils
            throw {
                 name: 'EncodingError',
                 message: 'The code point ' + code_point + ' could not be encoded.',
-                code: 0
+                errorID: 0
             }
         }
         private decoderError(fatal, opt_code_point?): number {
@@ -841,7 +901,7 @@ module nid.utils
 				throw {
 					name: 'DecodingError',
 					message: 'DecodingError.',
-					code: 0
+					errorID: 0
 				}
 		   }
            return opt_code_point || 0xFFFD;
