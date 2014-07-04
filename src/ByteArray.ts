@@ -1,8 +1,6 @@
-﻿///<reference path="lzma/LZMA.d.ts" />
-///<reference path="CompressionAlgorithm.ts" />
-/**
+﻿/**
 * JavaScript ByteArray 
-* version : 0.1
+* version : 0.2
 * @author Nidin Vinayakan | nidinthb@gmail.com
 *
 * ActionScript3 ByteArray implementation in JavaScript
@@ -27,9 +25,9 @@ module nid.utils
         static SIZE_OF_FLOAT32: number = 4;
         static SIZE_OF_FLOAT64: number = 8;
 
-        private BUFFER_EXT_SIZE: number = 1024;//Check size
+        private BUFFER_EXT_SIZE: number = 1024;//Buffer expansion szie
 		
-		private data:DataView;
+		public data:DataView;
         private _position: number;
         public offset: number = 0;
         public write_position: number;
@@ -643,7 +641,7 @@ module nid.utils
 			if (!this.validate(size)) return null;
 			var result = new Uint16Array(new ArrayBuffer(size));
 			for (var i = 0; i < length; i++) {
-                result[i] = this.data.getUint16(this.position);
+                result[i] = this.data.getUint16(this.position, this.endian === ByteArray.LITTLE_ENDIAN);
                 this.position += ByteArray.SIZE_OF_UINT16;
             }
 			return result;
@@ -658,7 +656,7 @@ module nid.utils
 			if (!this.validate(size)) return null;
 			var result = new Uint32Array(new ArrayBuffer(size));
 			for (var i = 0; i < length; i++) {
-                result[i] = this.data.getUint32(this.position);
+                result[i] = this.data.getUint32(this.position, this.endian === ByteArray.LITTLE_ENDIAN);
                 this.position += ByteArray.SIZE_OF_UINT32;
             }
 			return result;
@@ -687,7 +685,7 @@ module nid.utils
 			if (!this.validate(size)) return null;
 			var result = new Int16Array(new ArrayBuffer(size));
 			for (var i = 0; i < length; i++) {
-                result[i] = this.data.getInt16(this.position);
+                result[i] = this.data.getInt16(this.position, this.endian === ByteArray.LITTLE_ENDIAN);
                 this.position += ByteArray.SIZE_OF_INT16;
             }
 			return result;
@@ -702,8 +700,8 @@ module nid.utils
 			if (!this.validate(size)) return null;
 			var result = new Int32Array(new ArrayBuffer(size));
 			for (var i = 0; i < length; i++) {
-                result[i] = this.data.getUint32(this.position);
-                this.position += ByteArray.SIZE_OF_INT32;
+                result[i] = this.data.getInt32(this.position, this.endian === ByteArray.LITTLE_ENDIAN);
+                this.position += ByteArray.SIZE_OF_INT32; 
             }
 			return result;
 		}
@@ -717,7 +715,7 @@ module nid.utils
 			if (!this.validate(size)) return null;
 			var result = new Float32Array(new ArrayBuffer(size));
 			for (var i = 0; i < length; i++) {
-                result[i] = this.data.getFloat32(this.position);
+                result[i] = this.data.getFloat32(this.position, this.endian === ByteArray.LITTLE_ENDIAN);
                 this.position += ByteArray.SIZE_OF_FLOAT32;
             }
 			return result;
@@ -732,7 +730,7 @@ module nid.utils
 			if (!this.validate(size)) return null;
 			var result = new Float64Array(new ArrayBuffer(size));
 			for (var i = 0; i < length; i++) {
-                result[i] = this.data.getFloat64(this.position);
+                result[i] = this.data.getFloat64(this.position, this.endian === ByteArray.LITTLE_ENDIAN);
                 this.position += ByteArray.SIZE_OF_FLOAT64;
             }
 			return result;
