@@ -1,4 +1,6 @@
-﻿/**
+﻿///<reference path="./lzma/LZMA.d.ts" />
+///<reference path="CompressionAlgorithm.ts" />
+/**
 * JavaScript ByteArray 
 * version : 0.2
 * @author Nidin Vinayakan | nidinthb@gmail.com
@@ -9,7 +11,6 @@
 */
 module nid.utils
 {
-	
 	export class ByteArray
 	{
 		static BIG_ENDIAN:string = "bigEndian";
