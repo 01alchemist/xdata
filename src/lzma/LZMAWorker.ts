@@ -1,5 +1,4 @@
 ///<reference path="LZMA.ts" />
-///<reference path="../ByteArray.ts" />
 module nid{
     "use strict"
     export class LZMAWorker

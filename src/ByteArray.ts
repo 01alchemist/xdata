@@ -1,5 +1,5 @@
 ﻿///<reference path="./ctypes/ctypes.d.ts" />
-///<reference path="./lzma/LZMA.lib.d.ts" />
+///<reference path="./LZMAHelper.ts" />
 ///<reference path="CompressionAlgorithm.ts" />
 /**
 * JavaScript ByteArray 
@@ -103,7 +103,7 @@ module nid.utils
                 }
             }
         }
-		public uncompress(algorithm:string=CompressionAlgorithm.LZMA) : void{
+		/*public uncompress(algorithm:string=CompressionAlgorithm.LZMA) : void{
             if(algorithm == CompressionAlgorithm.LZMA) {
                 try {
                     this.buffer = LZMAHelper.decode(this.buffer);
@@ -121,7 +121,7 @@ module nid.utils
                     errorID:0
                 }
             }
-        }
+        }*/
         public compressAsync(algorithm:string,callback) : void{
             if(algorithm == CompressionAlgorithm.LZMA) {
 

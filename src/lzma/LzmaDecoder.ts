@@ -1,12 +1,10 @@
 ///<reference path="LZMA.lib.d.ts" />
-///<reference path="../ByteArray.ts" />
 module nid
 {
 	/**
 	 * LZMA Decoder
 	 * @author Nidin Vinayakan | nidinthb@gmail.com
 	 */
-    import ByteArray = nid.utils.ByteArray;
     import MEMORY = nid.utils.MEMORY;
 
 	export class LzmaDecoder
@@ -210,7 +208,6 @@ module nid
             this.rangeDec.init();
 
             if(unpackSizeDefined){
-                //this.outWindow.outStream = new ByteArray(new ArrayBuffer(unpackSize));
                 this.outWindow.outStream = new Uint8Array(new ArrayBuffer(unpackSize));
             }
 

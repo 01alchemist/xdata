@@ -1,16 +1,13 @@
-///<reference path="../ByteArray.ts" />
 module nid
 {
     /**
      * LZMA Decoder
      * @author Nidin Vinayakan | nidinthb@gmail.com
      */
-    import ByteArray = nid.utils.ByteArray;
 
     export class OutWindow
     {
         public totalPos:number;
-        //public outStream:ByteArray;
         public outStream:Uint8Array;
 
         private buf:Uint8Array;

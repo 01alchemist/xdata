@@ -5,14 +5,12 @@ module nid
      * LZMA Decoder
      * @author Nidin Vinayakan | nidinthb@gmail.com
      */
-    import ByteArray = nid.utils.ByteArray;
     import MEMORY = nid.utils.MEMORY;
 
     export class RangeDecoder
     {
         static kTopValue:number = (1 << 24);
 
-        //public inStream:ByteArray;
         public inStream:Uint8Array;
         public corrupted:boolean;
 

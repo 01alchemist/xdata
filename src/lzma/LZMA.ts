@@ -1,5 +1,4 @@
 ///<reference path="LZMA.lib.d.ts" />
-///<reference path="../ByteArray.ts" />
 module nid
 {
     "use strict"
@@ -7,7 +6,6 @@ module nid
      * LZMA Decoder
      * @author Nidin Vinayakan | nidinthb@gmail.com
      */
-	import ByteArray = nid.utils.ByteArray;
 
     export class LZMA
     {
