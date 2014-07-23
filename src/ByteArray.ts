@@ -1,4 +1,4 @@
-﻿///<reference path="./lzma/LZMA.d.ts" />
+﻿///<reference path="./lzma/LZMA.lib.d.ts" />
 ///<reference path="CompressionAlgorithm.ts" />
 /**
 * JavaScript ByteArray 

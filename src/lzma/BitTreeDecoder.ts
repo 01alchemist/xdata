@@ -1,4 +1,4 @@
-///<reference path="LZMA.d.ts" />
+///<reference path="LZMA.lib.d.ts" />
 module nid
 {
     /**

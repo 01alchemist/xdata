@@ -42,9 +42,31 @@
 })(nid || (nid = {}));
 var nid;
 (function (nid) {
+    (function (utils) {
+        /**
+        * JavaScript ByteArray
+        * version : 0.2
+        * @author Nidin Vinayakan | nidinthb@gmail.com
+        */
+        var CompressionAlgorithm = (function () {
+            function CompressionAlgorithm() {
+            }
+            CompressionAlgorithm.DEFLATE = "deflate";
+            CompressionAlgorithm.LZMA = "lzma";
+            CompressionAlgorithm.ZLIB = "zlib";
+            return CompressionAlgorithm;
+        })();
+        utils.CompressionAlgorithm = CompressionAlgorithm;
+    })(nid.utils || (nid.utils = {}));
+    var utils = nid.utils;
+})(nid || (nid = {}));
+var nid;
+(function (nid) {
+    ///<reference path="./lzma/LZMA.lib.d.ts" />
+    ///<reference path="CompressionAlgorithm.ts" />
     /**
     * JavaScript ByteArray
-    * version : 0.1
+    * version : 0.2
     * @author Nidin Vinayakan | nidinthb@gmail.com
     *
     * ActionScript3 ByteArray implementation in JavaScript
@@ -131,10 +153,60 @@ var nid;
                 this._position = 0;
             };
             ByteArray.prototype.compress = function (algorithm) {
-                if (typeof algorithm === "undefined") { algorithm = "zlib"; }
+                if (typeof algorithm === "undefined") { algorithm = nid.utils.CompressionAlgorithm.LZMA; }
+                if (algorithm == nid.utils.CompressionAlgorithm.LZMA) {
+                } else {
+                    throw {
+                        name: "Compression error!",
+                        message: algorithm + " not implemented",
+                        errorID: 0
+                    };
+                }
             };
             ByteArray.prototype.uncompress = function (algorithm) {
-                if (typeof algorithm === "undefined") { algorithm = "zlib"; }
+                if (typeof algorithm === "undefined") { algorithm = nid.utils.CompressionAlgorithm.LZMA; }
+                if (algorithm == nid.utils.CompressionAlgorithm.LZMA) {
+                    try  {
+                        this.buffer = nid.utils.LZMAHelper.decode(this.buffer);
+                    } catch (e) {
+                        throw {
+                            name: "Uncompression error!",
+                            message: e.message,
+                            errorID: 0
+                        };
+                    }
+                } else {
+                    throw {
+                        name: "Uncompression error!",
+                        message: algorithm + " not implemented",
+                        errorID: 0
+                    };
+                }
+            };
+            ByteArray.prototype.compressAsync = function (algorithm, callback) {
+                if (algorithm == nid.utils.CompressionAlgorithm.LZMA) {
+                } else {
+                    throw {
+                        name: "Compression error!",
+                        message: algorithm + " not implemented",
+                        errorID: 0
+                    };
+                }
+            };
+            ByteArray.prototype.uncompressAsync = function (algorithm, callback) {
+                if (typeof algorithm === "undefined") { algorithm = nid.utils.CompressionAlgorithm.LZMA; }
+                if (typeof callback === "undefined") { callback = null; }
+                if (algorithm == nid.utils.CompressionAlgorithm.LZMA) {
+                    nid.utils.LZMAHelper.decodeAsync(this.buffer, function (_data) {
+                        this.buffer = _data;
+                    });
+                } else {
+                    throw {
+                        name: "Uncompression error!",
+                        message: algorithm + " not implemented",
+                        errorID: 0
+                    };
+                }
             };
             ByteArray.prototype.deflate = function () {
             };
@@ -655,7 +727,7 @@ var nid;
                     return null;
                 var result = new Uint16Array(new ArrayBuffer(size));
                 for (var i = 0; i < length; i++) {
-                    result[i] = this.data.getUint16(this.position);
+                    result[i] = this.data.getUint16(this.position, this.endian === ByteArray.LITTLE_ENDIAN);
                     this.position += ByteArray.SIZE_OF_UINT16;
                 }
                 return result;
@@ -671,7 +743,7 @@ var nid;
                     return null;
                 var result = new Uint32Array(new ArrayBuffer(size));
                 for (var i = 0; i < length; i++) {
-                    result[i] = this.data.getUint32(this.position);
+                    result[i] = this.data.getUint32(this.position, this.endian === ByteArray.LITTLE_ENDIAN);
                     this.position += ByteArray.SIZE_OF_UINT32;
                 }
                 return result;
@@ -702,7 +774,7 @@ var nid;
                     return null;
                 var result = new Int16Array(new ArrayBuffer(size));
                 for (var i = 0; i < length; i++) {
-                    result[i] = this.data.getInt16(this.position);
+                    result[i] = this.data.getInt16(this.position, this.endian === ByteArray.LITTLE_ENDIAN);
                     this.position += ByteArray.SIZE_OF_INT16;
                 }
                 return result;
@@ -718,7 +790,7 @@ var nid;
                     return null;
                 var result = new Int32Array(new ArrayBuffer(size));
                 for (var i = 0; i < length; i++) {
-                    result[i] = this.data.getUint32(this.position);
+                    result[i] = this.data.getInt32(this.position, this.endian === ByteArray.LITTLE_ENDIAN);
                     this.position += ByteArray.SIZE_OF_INT32;
                 }
                 return result;
@@ -734,7 +806,7 @@ var nid;
                     return null;
                 var result = new Float32Array(new ArrayBuffer(size));
                 for (var i = 0; i < length; i++) {
-                    result[i] = this.data.getFloat32(this.position);
+                    result[i] = this.data.getFloat32(this.position, this.endian === ByteArray.LITTLE_ENDIAN);
                     this.position += ByteArray.SIZE_OF_FLOAT32;
                 }
                 return result;
@@ -750,7 +822,7 @@ var nid;
                     return null;
                 var result = new Float64Array(new ArrayBuffer(size));
                 for (var i = 0; i < length; i++) {
-                    result[i] = this.data.getFloat64(this.position);
+                    result[i] = this.data.getFloat64(this.position, this.endian === ByteArray.LITTLE_ENDIAN);
                     this.position += ByteArray.SIZE_OF_FLOAT64;
                 }
                 return result;
@@ -977,7 +1049,7 @@ var nid;
     })(nid.utils || (nid.utils = {}));
     var utils = nid.utils;
 })(nid || (nid = {}));
-///<reference path="LZMA.d.ts" />
+///<reference path="LZMA.lib.d.ts" />
 ///<reference path="../ByteArray.ts" />
 var nid;
 (function (nid) {
@@ -1240,6 +1312,59 @@ var nid;
     })();
     nid.LzmaDecoder = LzmaDecoder;
 })(nid || (nid = {}));
+var nid;
+(function (nid) {
+    ///<reference path="LZMA.lib.d.ts" />
+    (function (utils) {
+        var LZMA = nid.LZMA;
+
+        var LZMAHelper = (function () {
+            function LZMAHelper() {
+            }
+            LZMAHelper.init = function () {
+                var command = 0;
+                LZMAHelper.decoderAsync.onmessage = function (e) {
+                    if (command == 0) {
+                        command = e.data;
+                    } else if (command == LZMAHelper.ENCODE) {
+                        command = 0; //encode not implemented
+                    } else if (command == LZMAHelper.DECODE) {
+                        command = 0;
+                        LZMAHelper.callback(e.data);
+                        LZMAHelper.callback = null;
+                    }
+                };
+            };
+
+            LZMAHelper.encode = function (data) {
+                return null;
+            };
+            LZMAHelper.decode = function (data) {
+                return LZMAHelper.decoder.decode(new Uint8Array(data)).buffer;
+            };
+            LZMAHelper.encodeAsync = function (data, _callback) {
+            };
+            LZMAHelper.decodeAsync = function (data, _callback) {
+                if (LZMAHelper.callback == null) {
+                    LZMAHelper.callback = _callback;
+                    LZMAHelper.decoderAsync.postMessage(LZMAHelper.DECODE);
+                    LZMAHelper.decoderAsync.postMessage(data, [data]);
+                } else {
+                    console.log('Warning! Another LZMA decoding is running...');
+                }
+            };
+            LZMAHelper.decoder = new LZMA();
+            LZMAHelper.decoderAsync = new Worker('LZMAWorker.min.js');
+
+            LZMAHelper.ENCODE = 1;
+            LZMAHelper.DECODE = 2;
+            return LZMAHelper;
+        })();
+        utils.LZMAHelper = LZMAHelper;
+    })(nid.utils || (nid.utils = {}));
+    var utils = nid.utils;
+})(nid || (nid = {}));
+nid.utils.LZMAHelper.init();
 ///<reference path="../ByteArray.ts" />
 var nid;
 (function (nid) {
@@ -1294,7 +1419,7 @@ var nid;
     })();
     nid.OutWindow = OutWindow;
 })(nid || (nid = {}));
-///<reference path="LZMA.d.ts" />
+///<reference path="LZMA.lib.d.ts" />
 var nid;
 (function (nid) {
     /**
@@ -1394,7 +1519,7 @@ var nid;
     })();
     nid.RangeDecoder = RangeDecoder;
 })(nid || (nid = {}));
-///<reference path="LZMA.d.ts" />
+///<reference path="LZMA.lib.d.ts" />
 var nid;
 (function (nid) {
     /**
@@ -1429,7 +1554,7 @@ var nid;
     })();
     nid.BitTreeDecoder = BitTreeDecoder;
 })(nid || (nid = {}));
-///<reference path="LZMA.d.ts" />
+///<reference path="LZMA.lib.d.ts" />
 var nid;
 (function (nid) {
     /**
@@ -1463,7 +1588,7 @@ var nid;
     })();
     nid.LenDecoder = LenDecoder;
 })(nid || (nid = {}));
-///<reference path="LZMA.d.ts" />
+///<reference path="LZMA.lib.d.ts" />
 ///<reference path="../ByteArray.ts" />
 var nid;
 (function (nid) {
@@ -1591,13 +1716,11 @@ var nid;
 var nid;
 (function (nid) {
     "use strict";
-    var LZMA = nid.LZMA;
-
     var LZMAWorker = (function () {
         function LZMAWorker() {
             this.command = 0;
             var _this = this;
-            this.decoder = new LZMA();
+            this.decoder = new nid.LZMA();
 
             addEventListener('message', function (e) {
                 if (_this.command == 0) {
@@ -1613,7 +1736,6 @@ var nid;
             var result = this.decoder.decode(new Uint8Array(data));
             postMessage(LZMAWorker.DECODE);
             postMessage(result.buffer, [result.buffer]);
-            //(<any> postMessage)(result.buffer);
         };
         LZMAWorker.ENCODE = 1;
         LZMAWorker.DECODE = 2;

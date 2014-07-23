@@ -2,8 +2,6 @@
 ///<reference path="../ByteArray.ts" />
 module nid{
     "use strict"
-    import LZMA = nid.LZMA;
-
     export class LZMAWorker
     {
         static ENCODE:number = 1;
@@ -16,7 +14,7 @@ module nid{
             var _this = this;
             this.decoder = new LZMA();
 
-            addEventListener('message', (e) => {
+            addEventListener('message', (e:any) => {
                 if(_this.command == 0){
                     _this.command = e.data;
                 }else if(_this.command == 1){

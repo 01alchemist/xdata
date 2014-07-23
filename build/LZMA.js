@@ -62,7 +62,7 @@ var nid;
 })(nid || (nid = {}));
 var nid;
 (function (nid) {
-    ///<reference path="lzma/LZMA.d.ts" />
+    ///<reference path="lzma/LZMA.lib.d.ts" />
     ///<reference path="CompressionAlgorithm.ts" />
     /**
     * JavaScript ByteArray
@@ -1049,7 +1049,7 @@ var nid;
     })(nid.utils || (nid.utils = {}));
     var utils = nid.utils;
 })(nid || (nid = {}));
-///<reference path="LZMA.d.ts" />
+///<reference path="LZMA.lib.d.ts" />
 ///<reference path="../ByteArray.ts" />
 var nid;
 (function (nid) {
@@ -1344,7 +1344,7 @@ var nid;
 var w = new nid.LZMAWorker();
 var nid;
 (function (nid) {
-    ///<reference path="LZMA.d.ts" />
+    ///<reference path="LZMA.lib.d.ts" />
     (function (utils) {
         var LZMA = nid.LZMA;
 
@@ -1443,7 +1443,7 @@ var nid;
     })();
     nid.OutWindow = OutWindow;
 })(nid || (nid = {}));
-///<reference path="LZMA.d.ts" />
+///<reference path="LZMA.lib.d.ts" />
 var nid;
 (function (nid) {
     var RangeDecoder = (function () {
@@ -1536,7 +1536,7 @@ var nid;
     })();
     nid.RangeDecoder = RangeDecoder;
 })(nid || (nid = {}));
-///<reference path="LZMA.d.ts" />
+///<reference path="LZMA.lib.d.ts" />
 var nid;
 (function (nid) {
     /**
@@ -1571,7 +1571,7 @@ var nid;
     })();
     nid.BitTreeDecoder = BitTreeDecoder;
 })(nid || (nid = {}));
-///<reference path="LZMA.d.ts" />
+///<reference path="LZMA.lib.d.ts" />
 var nid;
 (function (nid) {
     /**
@@ -1605,7 +1605,7 @@ var nid;
     })();
     nid.LenDecoder = LenDecoder;
 })(nid || (nid = {}));
-///<reference path="LZMA.d.ts" />
+///<reference path="LZMA.lib.d.ts" />
 ///<reference path="../ByteArray.ts" />
 var nid;
 (function (nid) {
