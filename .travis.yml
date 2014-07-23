@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - "0.11"
+install:
+  - "npm install -g typescript"
+  - "npm install -g closure-compiler"
+script:
+  - 'echo Compiling src/ByteArray.ts ...'
+  - 'tsc -t "ES5" --declaration --out "build/ByteArray.js" "src/ByteArray.ts" --sourcemap'
