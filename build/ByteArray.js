@@ -1,4 +1,44 @@
-﻿var nid;
+﻿/**
+* JavaScript Uint64
+* version : 0.1
+* @author Nidin Vinayakan | nidinthb@gmail.com
+*
+*/
+var ctypes;
+(function (ctypes) {
+    var Uint64 = (function () {
+        function Uint64(low, high) {
+            this.low = low;
+            this.high = high;
+        }
+        Uint64.prototype.value = function () {
+            return (this.high << 32) | this.low;
+        };
+        return Uint64;
+    })();
+    ctypes.Uint64 = Uint64;
+})(ctypes || (ctypes = {}));
+/**
+* JavaScript Int64
+* version : 0.1
+* @author Nidin Vinayakan | nidinthb@gmail.com
+*
+*/
+var ctypes;
+(function (ctypes) {
+    var Int64 = (function () {
+        function Int64(low, high) {
+            this.low = low;
+            this.high = high;
+        }
+        Int64.prototype.value = function () {
+            return (this.high << 32) | this.low;
+        };
+        return Int64;
+    })();
+    ctypes.Int64 = Int64;
+})(ctypes || (ctypes = {}));
+var nid;
 (function (nid) {
     (function (utils) {
         var MEMORY = (function () {
@@ -44,6 +84,11 @@
 ///<reference path="../ByteArray.ts" />
 var nid;
 (function (nid) {
+    /**
+    * LZMA Decoder
+    * @author Nidin Vinayakan | nidinthb@gmail.com
+    */
+    var ByteArray = nid.utils.ByteArray;
     var MEMORY = nid.utils.MEMORY;
 
     var LzmaDecoder = (function () {
@@ -304,6 +349,12 @@ var nid;
 (function (nid) {
     "use strict";
 
+    /**
+    * LZMA Decoder
+    * @author Nidin Vinayakan | nidinthb@gmail.com
+    */
+    var ByteArray = nid.utils.ByteArray;
+
     var LZMA = (function () {
         function LZMA() {
             this.decoder = new nid.LzmaDecoder();
@@ -420,13 +471,11 @@ var nid;
 var nid;
 (function (nid) {
     "use strict";
-    var LZMA = nid.LZMA;
-
     var LZMAWorker = (function () {
         function LZMAWorker() {
             this.command = 0;
             var _this = this;
-            this.decoder = new LZMA();
+            this.decoder = new nid.LZMA();
 
             addEventListener('message', function (e) {
                 if (_this.command == 0) {
@@ -506,6 +555,12 @@ nid.utils.LZMAHelper.init();
 ///<reference path="../ByteArray.ts" />
 var nid;
 (function (nid) {
+    /**
+    * LZMA Decoder
+    * @author Nidin Vinayakan | nidinthb@gmail.com
+    */
+    var ByteArray = nid.utils.ByteArray;
+
     var OutWindow = (function () {
         function OutWindow() {
             this.out_pos = 0;
@@ -554,6 +609,13 @@ var nid;
 ///<reference path="LZMA.lib.d.ts" />
 var nid;
 (function (nid) {
+    /**
+    * LZMA Decoder
+    * @author Nidin Vinayakan | nidinthb@gmail.com
+    */
+    var ByteArray = nid.utils.ByteArray;
+    var MEMORY = nid.utils.MEMORY;
+
     var RangeDecoder = (function () {
         function RangeDecoder() {
             this.rangeI = 0;
@@ -735,6 +797,7 @@ var nid;
 })(nid || (nid = {}));
 var nid;
 (function (nid) {
+    ///<reference path="./ctypes/ctypes.d.ts" />
     ///<reference path="./lzma/LZMA.lib.d.ts" />
     ///<reference path="CompressionAlgorithm.ts" />
     /**
@@ -747,6 +810,9 @@ var nid;
     *
     */
     (function (utils) {
+        var Uint64 = ctypes.Uint64;
+        var Int64 = ctypes.Int64;
+
         var ByteArray = (function () {
             function ByteArray(buffer, offset) {
                 if (typeof offset === "undefined") { offset = 0; }
@@ -826,8 +892,8 @@ var nid;
                 this._position = 0;
             };
             ByteArray.prototype.compress = function (algorithm) {
-                if (typeof algorithm === "undefined") { algorithm = utils.CompressionAlgorithm.LZMA; }
-                if (algorithm == utils.CompressionAlgorithm.LZMA) {
+                if (typeof algorithm === "undefined") { algorithm = nid.utils.CompressionAlgorithm.LZMA; }
+                if (algorithm == nid.utils.CompressionAlgorithm.LZMA) {
                 } else {
                     throw {
                         name: "Compression error!",
@@ -837,10 +903,10 @@ var nid;
                 }
             };
             ByteArray.prototype.uncompress = function (algorithm) {
-                if (typeof algorithm === "undefined") { algorithm = utils.CompressionAlgorithm.LZMA; }
-                if (algorithm == utils.CompressionAlgorithm.LZMA) {
+                if (typeof algorithm === "undefined") { algorithm = nid.utils.CompressionAlgorithm.LZMA; }
+                if (algorithm == nid.utils.CompressionAlgorithm.LZMA) {
                     try  {
-                        this.buffer = utils.LZMAHelper.decode(this.buffer);
+                        this.buffer = nid.utils.LZMAHelper.decode(this.buffer);
                     } catch (e) {
                         throw {
                             name: "Uncompression error!",
@@ -857,7 +923,7 @@ var nid;
                 }
             };
             ByteArray.prototype.compressAsync = function (algorithm, callback) {
-                if (algorithm == utils.CompressionAlgorithm.LZMA) {
+                if (algorithm == nid.utils.CompressionAlgorithm.LZMA) {
                 } else {
                     throw {
                         name: "Compression error!",
@@ -867,10 +933,10 @@ var nid;
                 }
             };
             ByteArray.prototype.uncompressAsync = function (algorithm, callback) {
-                if (typeof algorithm === "undefined") { algorithm = utils.CompressionAlgorithm.LZMA; }
+                if (typeof algorithm === "undefined") { algorithm = nid.utils.CompressionAlgorithm.LZMA; }
                 if (typeof callback === "undefined") { callback = null; }
-                if (algorithm == utils.CompressionAlgorithm.LZMA) {
-                    utils.LZMAHelper.decodeAsync(this.buffer, function (_data) {
+                if (algorithm == nid.utils.CompressionAlgorithm.LZMA) {
+                    nid.utils.LZMAHelper.decodeAsync(this.buffer, function (_data) {
                         this.buffer = _data;
                     });
                 } else {
@@ -976,6 +1042,23 @@ var nid;
             };
 
             /**
+            * Reads a signed 64-bit integer from the byte stream.
+            *
+            *   The returned value is in the range −(2^63) to 2^63 − 1
+            * @return	A 64-bit signed integer between −(2^63) to 2^63 − 1
+            */
+            ByteArray.prototype.readInt64 = function () {
+                if (!this.validate(ByteArray.SIZE_OF_UINT32))
+                    return null;
+
+                var low = this.data.getInt32(this.position, this.endian == ByteArray.LITTLE_ENDIAN);
+                this.position += ByteArray.SIZE_OF_INT32;
+                var high = this.data.getInt32(this.position, this.endian == ByteArray.LITTLE_ENDIAN);
+                this.position += ByteArray.SIZE_OF_INT32;
+                return new Int64(low, high);
+            };
+
+            /**
             * Reads a multibyte string of specified length from the byte stream using the
             * specified character set.
             * @param	length	The number of bytes from the byte stream to read.
@@ -1049,6 +1132,23 @@ var nid;
                 var value = this.data.getUint32(this.position, this.endian == ByteArray.LITTLE_ENDIAN);
                 this.position += ByteArray.SIZE_OF_UINT32;
                 return value;
+            };
+
+            /**
+            * Reads an unsigned 64-bit integer from the byte stream.
+            *
+            *   The returned value is in the range 0 to 2^64 − 1.
+            * @return	A 64-bit unsigned integer between 0 and 2^64 − 1
+            */
+            ByteArray.prototype.readUnsignedInt64 = function () {
+                if (!this.validate(ByteArray.SIZE_OF_UINT32))
+                    return null;
+
+                var low = this.data.getUint32(this.position, this.endian == ByteArray.LITTLE_ENDIAN);
+                this.position += ByteArray.SIZE_OF_UINT32;
+                var high = this.data.getUint32(this.position, this.endian == ByteArray.LITTLE_ENDIAN);
+                this.position += ByteArray.SIZE_OF_UINT32;
+                return new Uint64(low, high);
             };
 
             /**
