@@ -1,4 +1,5 @@
-﻿///<reference path="./lzma/LZMA.lib.d.ts" />
+﻿///<reference path="./ctypes/ctypes.d.ts" />
+///<reference path="./lzma/LZMA.lib.d.ts" />
 ///<reference path="CompressionAlgorithm.ts" />
 /**
 * JavaScript ByteArray 
@@ -11,6 +12,9 @@
 */
 module nid.utils
 {
+    import Uint64   = ctypes.Uint64;
+    import Int64    = ctypes.Int64;
+
 	export class ByteArray
 	{
 		static BIG_ENDIAN:string = "bigEndian";
@@ -224,6 +228,21 @@ module nid.utils
             this.position += ByteArray.SIZE_OF_INT32;
 			return value;
         }
+        /**
+		 * Reads a signed 64-bit integer from the byte stream.
+		 *
+		 *   The returned value is in the range −(2^63) to 2^63 − 1
+		 * @return	A 64-bit signed integer between −(2^63) to 2^63 − 1
+         */
+        public readInt64():Int64{
+            if (!this.validate(ByteArray.SIZE_OF_UINT32)) return null;
+
+            var low = this.data.getInt32(this.position,this.endian == ByteArray.LITTLE_ENDIAN);
+            this.position += ByteArray.SIZE_OF_INT32;
+            var high = this.data.getInt32(this.position,this.endian == ByteArray.LITTLE_ENDIAN);
+            this.position += ByteArray.SIZE_OF_INT32;
+            return new Int64(low,high);
+        }
 
         /**
 		 * Reads a multibyte string of specified length from the byte stream using the
@@ -295,6 +314,21 @@ module nid.utils
 			var value = this.data.getUint32(this.position,this.endian == ByteArray.LITTLE_ENDIAN);
             this.position += ByteArray.SIZE_OF_UINT32;
 			return value;
+        }
+        /**
+		 * Reads an unsigned 64-bit integer from the byte stream.
+		 *
+		 *   The returned value is in the range 0 to 2^64 − 1.
+		 * @return	A 64-bit unsigned integer between 0 and 2^64 − 1
+         */
+		public readUnsignedInt64():Uint64{
+            if (!this.validate(ByteArray.SIZE_OF_UINT32)) return null;
+
+			var low = this.data.getUint32(this.position,this.endian == ByteArray.LITTLE_ENDIAN);
+            this.position += ByteArray.SIZE_OF_UINT32;
+            var high = this.data.getUint32(this.position,this.endian == ByteArray.LITTLE_ENDIAN);
+            this.position += ByteArray.SIZE_OF_UINT32;
+			return new Uint64(low,high);
         }
 
         /**
