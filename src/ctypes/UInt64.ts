@@ -10,6 +10,7 @@ module ctypes
     {
         public low:number;
         public high:number;
+        public _value:number;
 
         constructor(low:number=0,high:number=0){
             this.low    = low;
@@ -17,7 +18,8 @@ module ctypes
         }
         public value():number
         {
-            return (this.high << 32) | this.low;
+            this._value = (this.high << 32) | this.low;
+            return this._value;
         }
 
     }
