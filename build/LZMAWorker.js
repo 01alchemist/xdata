@@ -354,12 +354,6 @@ var nid;
 ///<reference path="LZMA.lib.d.ts" />
 var nid;
 (function (nid) {
-    /**
-    * LZMA Decoder
-    * @author Nidin Vinayakan | nidinthb@gmail.com
-    */
-    var MEMORY = nid.utils.MEMORY;
-
     var RangeDecoder = (function () {
         function RangeDecoder() {
             this.rangeI = 0;

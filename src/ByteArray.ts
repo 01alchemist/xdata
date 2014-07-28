@@ -12,7 +12,7 @@
 */
 module nid.utils
 {
-    import Uint64   = ctypes.Uint64;
+    import UInt64   = ctypes.UInt64;
     import Int64    = ctypes.Int64;
 
 	export class ByteArray
@@ -321,14 +321,14 @@ module nid.utils
 		 *   The returned value is in the range 0 to 2^64 − 1.
 		 * @return	A 64-bit unsigned integer between 0 and 2^64 − 1
          */
-		public readUnsignedInt64():Uint64{
+		public readUnsignedInt64():UInt64{
             if (!this.validate(ByteArray.SIZE_OF_UINT32)) return null;
 
 			var low = this.data.getUint32(this.position,this.endian == ByteArray.LITTLE_ENDIAN);
             this.position += ByteArray.SIZE_OF_UINT32;
             var high = this.data.getUint32(this.position,this.endian == ByteArray.LITTLE_ENDIAN);
             this.position += ByteArray.SIZE_OF_UINT32;
-			return new Uint64(low,high);
+			return new UInt64(low,high);
         }
 
         /**

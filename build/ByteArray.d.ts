@@ -186,7 +186,7 @@ declare module nid.utils {
         *   The returned value is in the range 0 to 2^64 − 1.
         * @return	A 64-bit unsigned integer between 0 and 2^64 − 1
         */
-        public readUnsignedInt64(): ctypes.Uint64;
+        public readUnsignedInt64(): ctypes.UInt64;
         /**
         * Reads an unsigned 16-bit integer from the byte stream.
         *
