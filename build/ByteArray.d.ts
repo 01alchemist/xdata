@@ -1,15 +1,16 @@
 /// <reference path="../src/ctypes/ctypes.d.ts" />
 /**
-* JavaScript Uint64
+* JavaScript UInt64
 * version : 0.1
 * @author Nidin Vinayakan | nidinthb@gmail.com
 *
 */
 declare module ctypes {
-    class Uint64 {
+    class UInt64 {
         public low: number;
         public high: number;
-        constructor(low: number, high: number);
+        public _value: number;
+        constructor(low?: number, high?: number);
         public value(): number;
     }
 }
@@ -23,6 +24,7 @@ declare module ctypes {
     class Int64 {
         public low: number;
         public high: number;
+        public _value: number;
         constructor(low: number, high: number);
         public value(): number;
     }
