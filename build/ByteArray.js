@@ -14,7 +14,23 @@ var ctypes;
             this.high = high;
         }
         UInt64.prototype.value = function () {
-            return (this.high << 32) | this.low;
+            //this._value = (this.low | (this.high << 32));
+            var _h = this.high.toString(16);
+            var _hd = _h.length - 8;
+            if (_hd > 0) {
+                for (var i = 0; i < _hd; i++) {
+                    _h = '0' + _h;
+                }
+            }
+            var _l = this.low.toString(16);
+            var _ld = _l.length - 8;
+            if (_ld > 0) {
+                for (i = 0; i < _ld; i++) {
+                    _l = '0' + _l;
+                }
+            }
+            this._value = Number('0x' + _h + _l);
+            return this._value;
         };
         return UInt64;
     })();
@@ -34,7 +50,23 @@ var ctypes;
             this.high = high;
         }
         Int64.prototype.value = function () {
-            return (this.high << 32) | this.low;
+            //this._value = (this.low | (this.high << 32));
+            var _h = this.high.toString(16);
+            var _hd = _h.length - 8;
+            if (_hd > 0) {
+                for (var i = 0; i < _hd; i++) {
+                    _h = '0' + _h;
+                }
+            }
+            var _l = this.low.toString(16);
+            var _ld = _l.length - 8;
+            if (_ld > 0) {
+                for (i = 0; i < _ld; i++) {
+                    _l = '0' + _l;
+                }
+            }
+            this._value = Number('0x' + _h + _l);
+            return this._value;
         };
         return Int64;
     })();
@@ -206,8 +238,8 @@ var nid;
                 this._position = 0;
             };
             ByteArray.prototype.compress = function (algorithm) {
-                if (typeof algorithm === "undefined") { algorithm = utils.CompressionAlgorithm.LZMA; }
-                if (algorithm == utils.CompressionAlgorithm.LZMA) {
+                if (typeof algorithm === "undefined") { algorithm = nid.utils.CompressionAlgorithm.LZMA; }
+                if (algorithm == nid.utils.CompressionAlgorithm.LZMA) {
                 } else {
                     throw {
                         name: "Compression error!",
@@ -237,7 +269,7 @@ var nid;
             }
             }*/
             ByteArray.prototype.compressAsync = function (algorithm, callback) {
-                if (algorithm == utils.CompressionAlgorithm.LZMA) {
+                if (algorithm == nid.utils.CompressionAlgorithm.LZMA) {
                 } else {
                     throw {
                         name: "Compression error!",
@@ -247,10 +279,10 @@ var nid;
                 }
             };
             ByteArray.prototype.uncompressAsync = function (algorithm, callback) {
-                if (typeof algorithm === "undefined") { algorithm = utils.CompressionAlgorithm.LZMA; }
+                if (typeof algorithm === "undefined") { algorithm = nid.utils.CompressionAlgorithm.LZMA; }
                 if (typeof callback === "undefined") { callback = null; }
-                if (algorithm == utils.CompressionAlgorithm.LZMA) {
-                    utils.LZMAHelper.decodeAsync(this.buffer, function (_data) {
+                if (algorithm == nid.utils.CompressionAlgorithm.LZMA) {
+                    nid.utils.LZMAHelper.decodeAsync(this.buffer, function (_data) {
                         this.buffer = _data;
                     });
                 } else {

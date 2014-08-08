@@ -18,7 +18,22 @@ module ctypes
         }
         public value():number
         {
-            this._value = (this.high << 32) | this.low;
+            //this._value = (this.low | (this.high << 32));
+            var _h:string = this.high.toString(16);
+            var _hd:number = _h.length - 8;
+            if(_hd > 0){
+                for(var i=0;i<_hd;i++){
+                    _h = '0'+_h;
+                }
+            }
+            var _l:string = this.low.toString(16);
+            var _ld:number = _l.length - 8;
+            if(_ld > 0){
+                for(i=0;i<_ld;i++){
+                    _l = '0'+_l;
+                }
+            }
+            this._value = Number('0x' + _h + _l);
             return this._value;
         }
 
