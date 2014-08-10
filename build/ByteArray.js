@@ -1,4 +1,4 @@
-﻿﻿/**
+﻿/**
 * JavaScript UInt64
 * version : 0.1
 * @author Nidin Vinayakan | nidinthb@gmail.com
@@ -16,14 +16,14 @@ var ctypes;
         UInt64.prototype.value = function () {
             //this._value = (this.low | (this.high << 32));
             var _h = this.high.toString(16);
-            var _hd = _h.length - 8;
+            var _hd = 8 - _h.length;
             if (_hd > 0) {
                 for (var i = 0; i < _hd; i++) {
                     _h = '0' + _h;
                 }
             }
             var _l = this.low.toString(16);
-            var _ld = _l.length - 8;
+            var _ld = 8 - _l.length;
             if (_ld > 0) {
                 for (i = 0; i < _ld; i++) {
                     _l = '0' + _l;
@@ -52,14 +52,14 @@ var ctypes;
         Int64.prototype.value = function () {
             //this._value = (this.low | (this.high << 32));
             var _h = this.high.toString(16);
-            var _hd = _h.length - 8;
+            var _hd = 8 - _h.length;
             if (_hd > 0) {
                 for (var i = 0; i < _hd; i++) {
                     _h = '0' + _h;
                 }
             }
             var _l = this.low.toString(16);
-            var _ld = _l.length - 8;
+            var _ld = 8 - _l.length;
             if (_ld > 0) {
                 for (i = 0; i < _ld; i++) {
                     _l = '0' + _l;
@@ -238,8 +238,8 @@ var nid;
                 this._position = 0;
             };
             ByteArray.prototype.compress = function (algorithm) {
-                if (typeof algorithm === "undefined") { algorithm = nid.utils.CompressionAlgorithm.LZMA; }
-                if (algorithm == nid.utils.CompressionAlgorithm.LZMA) {
+                if (typeof algorithm === "undefined") { algorithm = utils.CompressionAlgorithm.LZMA; }
+                if (algorithm == utils.CompressionAlgorithm.LZMA) {
                 } else {
                     throw {
                         name: "Compression error!",
@@ -269,7 +269,7 @@ var nid;
             }
             }*/
             ByteArray.prototype.compressAsync = function (algorithm, callback) {
-                if (algorithm == nid.utils.CompressionAlgorithm.LZMA) {
+                if (algorithm == utils.CompressionAlgorithm.LZMA) {
                 } else {
                     throw {
                         name: "Compression error!",
@@ -279,10 +279,10 @@ var nid;
                 }
             };
             ByteArray.prototype.uncompressAsync = function (algorithm, callback) {
-                if (typeof algorithm === "undefined") { algorithm = nid.utils.CompressionAlgorithm.LZMA; }
+                if (typeof algorithm === "undefined") { algorithm = utils.CompressionAlgorithm.LZMA; }
                 if (typeof callback === "undefined") { callback = null; }
-                if (algorithm == nid.utils.CompressionAlgorithm.LZMA) {
-                    nid.utils.LZMAHelper.decodeAsync(this.buffer, function (_data) {
+                if (algorithm == utils.CompressionAlgorithm.LZMA) {
+                    utils.LZMAHelper.decodeAsync(this.buffer, function (_data) {
                         this.buffer = _data;
                     });
                 } else {
