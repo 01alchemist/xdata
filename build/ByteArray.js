@@ -238,14 +238,10 @@ var nid;
                 this._position = 0;
             };
             ByteArray.prototype.compress = function (algorithm) {
-                if (typeof algorithm === "undefined") { algorithm = utils.CompressionAlgorithm.LZMA; }
-                if (algorithm == utils.CompressionAlgorithm.LZMA) {
+                if (typeof algorithm === "undefined") { algorithm = nid.utils.CompressionAlgorithm.LZMA; }
+                if (algorithm == nid.utils.CompressionAlgorithm.LZMA) {
                 } else {
-                    throw {
-                        name: "Compression error!",
-                        message: algorithm + " not implemented",
-                        errorID: 0
-                    };
+                    throw "Compression error! " + algorithm + " not implemented";
                 }
             };
 
@@ -254,43 +250,27 @@ var nid;
             try {
             this.buffer = LZMAHelper.decode(this.buffer);
             } catch (e) {
-            throw{
-            name: "Uncompression error!",
-            message: e.message,
-            errorID: 0
-            }
+            throw "Uncompression error! "+algorithm+" not implemented";
             }
             }else{
-            throw{
-            name:"Uncompression error!",
-            message:algorithm+" not implemented",
-            errorID:0
-            }
+            throw "Uncompression error! "+algorithm+" not implemented";
             }
             }*/
             ByteArray.prototype.compressAsync = function (algorithm, callback) {
-                if (algorithm == utils.CompressionAlgorithm.LZMA) {
+                if (algorithm == nid.utils.CompressionAlgorithm.LZMA) {
                 } else {
-                    throw {
-                        name: "Compression error!",
-                        message: algorithm + " not implemented",
-                        errorID: 0
-                    };
+                    throw "Compression error! " + algorithm + " not implemented";
                 }
             };
             ByteArray.prototype.uncompressAsync = function (algorithm, callback) {
-                if (typeof algorithm === "undefined") { algorithm = utils.CompressionAlgorithm.LZMA; }
+                if (typeof algorithm === "undefined") { algorithm = nid.utils.CompressionAlgorithm.LZMA; }
                 if (typeof callback === "undefined") { callback = null; }
-                if (algorithm == utils.CompressionAlgorithm.LZMA) {
-                    utils.LZMAHelper.decodeAsync(this.buffer, function (_data) {
+                if (algorithm == nid.utils.CompressionAlgorithm.LZMA) {
+                    nid.utils.LZMAHelper.decodeAsync(this.buffer, function (_data) {
                         this.buffer = _data;
                     });
                 } else {
-                    throw {
-                        name: "Uncompression error!",
-                        message: algorithm + " not implemented",
-                        errorID: 0
-                    };
+                    throw "Uncompression error! " + algorithm + " not implemented";
                 }
             };
             ByteArray.prototype.deflate = function () {
@@ -343,6 +323,8 @@ var nid;
                 //for(var i=0; i < length;i++){
                 //tmp_data.setUint8(i,this.data.getUint8(this.position++));
                 //}
+                bytes.length = length;
+                bytes.bytesAvailable = length;
                 bytes.dataView = tmp_data;
             };
 
@@ -955,11 +937,7 @@ var nid;
                 if (this.data.byteLength > 0 && this._position + len <= this.data.byteLength) {
                     return true;
                 } else {
-                    throw {
-                        name: 'Error',
-                        message: 'Error #2030: End of file was encountered.',
-                        errorID: 2030
-                    };
+                    throw 'Error #2030: End of file was encountered.';
                 }
             };
             ByteArray.prototype.validateBuffer = function (len) {
@@ -1096,19 +1074,11 @@ var nid;
                 return result;
             };
             ByteArray.prototype.encoderError = function (code_point) {
-                throw {
-                    name: 'EncodingError',
-                    message: 'The code point ' + code_point + ' could not be encoded.',
-                    errorID: 0
-                };
+                throw 'EncodingError! The code point ' + code_point + ' could not be encoded.';
             };
             ByteArray.prototype.decoderError = function (fatal, opt_code_point) {
                 if (fatal) {
-                    throw {
-                        name: 'DecodingError',
-                        message: 'DecodingError.',
-                        errorID: 0
-                    };
+                    throw 'DecodingError';
                 }
                 return opt_code_point || 0xFFFD;
             };

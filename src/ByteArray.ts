@@ -96,11 +96,7 @@ module nid.utils
             if(algorithm == CompressionAlgorithm.LZMA) {
 
             }else{
-                throw{
-                    name:"Compression error!",
-                    message:algorithm+" not implemented",
-                    errorID:0
-                }
+                throw "Compression error! "+algorithm+" not implemented";
             }
         }
 		/*public uncompress(algorithm:string=CompressionAlgorithm.LZMA) : void{
@@ -108,29 +104,17 @@ module nid.utils
                 try {
                     this.buffer = LZMAHelper.decode(this.buffer);
                 } catch (e) {
-                    throw{
-                        name: "Uncompression error!",
-                        message: e.message,
-                        errorID: 0
-                    }
+                    throw "Uncompression error! "+algorithm+" not implemented";
                 }
             }else{
-                throw{
-                    name:"Uncompression error!",
-                    message:algorithm+" not implemented",
-                    errorID:0
-                }
+                throw "Uncompression error! "+algorithm+" not implemented";
             }
         }*/
         public compressAsync(algorithm:string,callback) : void{
             if(algorithm == CompressionAlgorithm.LZMA) {
 
             }else{
-                throw{
-                    name:"Compression error!",
-                    message:algorithm+" not implemented",
-                    errorID:0
-                }
+                throw "Compression error! "+algorithm+" not implemented";
             }
         }
         public uncompressAsync(algorithm:string=CompressionAlgorithm.LZMA,callback=null) : void{
@@ -139,11 +123,7 @@ module nid.utils
                     this.buffer = _data;
                 })
             }else{
-                throw{
-                    name:"Uncompression error!",
-                    message:algorithm+" not implemented",
-                    errorID:0
-                }
+                throw "Uncompression error! "+algorithm+" not implemented";
             }
         }
 		public deflate():void{}
@@ -188,6 +168,8 @@ module nid.utils
 			//for(var i=0; i < length;i++){
 				//tmp_data.setUint8(i,this.data.getUint8(this.position++));
 			//}
+            bytes.length = length;
+            bytes.bytesAvailable = length;
 			bytes.dataView = tmp_data;
         }
 
@@ -778,11 +760,7 @@ module nid.utils
             if (this.data.byteLength > 0 && this._position + len <= this.data.byteLength) {
                 return true;
             } else {
-                throw {
-                    name: 'Error',
-                    message: 'Error #2030: End of file was encountered.',
-                    errorID: 2030 
-                };
+                throw 'Error #2030: End of file was encountered.';
             }
         }
         private validateBuffer(len: number): void {
@@ -923,19 +901,11 @@ module nid.utils
             return result;
         }
         private encoderError(code_point) {
-           throw {
-                name: 'EncodingError',
-                message: 'The code point ' + code_point + ' could not be encoded.',
-                errorID: 0
-            }
+           throw 'EncodingError! The code point ' + code_point + ' could not be encoded.';
         }
         private decoderError(fatal, opt_code_point?): number {
            if(fatal){
-				throw {
-					name: 'DecodingError',
-					message: 'DecodingError.',
-					errorID: 0
-				}
+				throw 'DecodingError';
 		   }
            return opt_code_point || 0xFFFD;
         }
