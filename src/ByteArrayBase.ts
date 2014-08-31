@@ -37,8 +37,11 @@ module nid.utils
 
 		constructor(buffer?:ArrayBuffer,offset:number=0,length:number=0){
             
-            if (typeof (buffer) === "undefined") {
+            if (buffer == undefined) {
                 buffer = new ArrayBuffer(this.BUFFER_EXT_SIZE);
+                this.write_position = 0;
+            }
+            else if (buffer == null) {
                 this.write_position = 0;
             } else {
                 this.write_position = buffer.byteLength;
@@ -125,18 +128,20 @@ module nid.utils
 		 * @param	offset	The offset (_position) in bytes at which the read data should be written.
 		 * @param	length	The number of bytes to read.  The default value of 0 causes all available data to be read.
          */
-        public readBytes(bytes: ByteArrayBase, offset: number= 0, length: number= 0,createNewBuffer:boolean=false): void{
+        public readBytes(bytes: ByteArrayBase=null, offset: number= 0, length: number= 0,createNewBuffer:boolean=false): ByteArrayBase{
             if(length == 0){
                 length = this.bytesAvailable;
             }
             else if (!this.validate(length)) return;
 
+            bytes = bytes == null?new ByteArrayBase(new ArrayBuffer(length)):bytes;
+
             var tmp_data:DataView;
             if(createNewBuffer){
                 //This method is expensive
-                tmp_data = new DataView(new ArrayBuffer(length));
-                for(var i=0; i < length;i++){
-                    tmp_data.setUint8(i,this.data.getUint8(this.position++));
+                //tmp_data = new DataView(new ArrayBuffer(length));
+                for(var i=offset; i < length;i++){
+                    bytes.data.setUint8(i,this.data.getUint8(this.position++));
                 }
             }else{
                 tmp_data = new DataView(this.data.buffer,this.position,length);
@@ -144,6 +149,7 @@ module nid.utils
             }
 
 			bytes.dataView = tmp_data;
+            return bytes;
         }
 
 		/**
@@ -318,10 +324,12 @@ module nid.utils
         public readUTFBytes(length: number): string{
             if (!this.validate(length)) return null;
 
-            var bytes: Uint8Array = new Uint8Array(new ArrayBuffer(length));
+            var bytes: Uint8Array = new Uint8Array(this.buffer,this.position,length);
+            this.position += length;
+            /*var bytes: Uint8Array = new Uint8Array(new ArrayBuffer(length));
             for (var i = 0; i < length; i++) {
                 bytes[i] = this.data.getUint8(this.position++);
-            }
+            }*/
             return this.decodeUTF8(bytes);
         }
 
@@ -595,12 +603,14 @@ module nid.utils
          */
 		public readUint8Array(length:number):Uint8Array{
 			if (!this.validate(length)) return null;
-			var result = new Uint8Array(new ArrayBuffer(length));
-			for (var i = 0; i < length; i++) {
+            var bytes: Uint8Array = new Uint8Array(this.buffer,this.position,length);
+            this.position += length;
+            /*var result = new Uint8Array(new ArrayBuffer(length));
+            for (var i = 0; i < length; i++) {
                 result[i] = this.data.getUint8(this.position);
                 this.position += ByteArrayBase.SIZE_OF_UINT8;
-            }
-			return result;
+            }*/
+            return bytes;
 		}
 		
 		/**
