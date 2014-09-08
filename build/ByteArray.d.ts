@@ -86,7 +86,7 @@ declare module nid.utils {
         * @param	offset	The offset (_position) in bytes at which the read data should be written.
         * @param	length	The number of bytes to read.  The default value of 0 causes all available data to be read.
         */
-        public readBytes(bytes: ByteArrayBase, offset?: number, length?: number, createNewBuffer?: boolean): void;
+        public readBytes(bytes?: ByteArrayBase, offset?: number, length?: number, createNewBuffer?: boolean): ByteArrayBase;
         /**
         * Reads an IEEE 754 double-precision (64-bit) floating-point number from the byte stream.
         * @return	A double-precision (64-bit) floating-point number.
@@ -304,44 +304,44 @@ declare module nid.utils {
         * Read a Uint8Array from the byte stream.
         * @param	length An unsigned short indicating the length of the Uint8Array.
         */
-        public readUint8Array(length: number): Uint8Array;
+        public readUint8Array(length: number, createNewBuffer?: boolean): Uint8Array;
         /**
         * Read a Uint16Array from the byte stream.
         * @param	length An unsigned short indicating the length of the Uint16Array.
         */
-        public readUint16Array(length: number): Uint16Array;
+        public readUint16Array(length: number, createNewBuffer?: boolean): Uint16Array;
         /**
         * Read a Uint32Array from the byte stream.
         * @param	length An unsigned short indicating the length of the Uint32Array.
         */
-        public readUint32Array(length: number): Uint32Array;
+        public readUint32Array(length: number, createNewBuffer?: boolean): Uint32Array;
         /**
         * Read a Int8Array from the byte stream.
         * @param	length An unsigned short indicating the length of the Int8Array.
         */
-        public readInt8Array(length: number): Int8Array;
+        public readInt8Array(length: number, createNewBuffer?: boolean): Int8Array;
         /**
         * Read a Int16Array from the byte stream.
         * @param	length An unsigned short indicating the length of the Int16Array.
         */
-        public readInt16Array(length: number): Int16Array;
+        public readInt16Array(length: number, createNewBuffer?: boolean): Int16Array;
         /**
         * Read a Int32Array from the byte stream.
         * @param	length An unsigned short indicating the length of the Int32Array.
         */
-        public readInt32Array(length: number): Int32Array;
+        public readInt32Array(length: number, createNewBuffer?: boolean): Int32Array;
         /**
         * Read a Float32Array from the byte stream.
         * @param	length An unsigned short indicating the length of the Float32Array.
         */
-        public readFloat32Array(length: number): Float32Array;
+        public readFloat32Array(length: number, createNewBuffer?: boolean): Float32Array;
         /**
         * Read a Float64Array from the byte stream.
         * @param	length An unsigned short indicating the length of the Float64Array.
         */
-        public readFloat64Array(length: number): Float64Array;
+        public readFloat64Array(length: number, createNewBuffer?: boolean): Float64Array;
+        public validate(len: number): boolean;
         /**********************/
-        private validate(len);
         private validateBuffer(len);
         /**
         * UTF-8 Encoding/Decoding
@@ -390,7 +390,7 @@ declare module nid.utils {
 *
 */
 declare module nid.utils {
-    class ByteArray extends ByteArrayBase {
+    class ByteArray extends utils.ByteArrayBase {
         static BIG_ENDIAN: string;
         static LITTLE_ENDIAN: string;
         constructor(buffer?: ArrayBuffer, offset?: number, length?: number);

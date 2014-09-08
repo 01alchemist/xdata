@@ -46,7 +46,9 @@ module nid.utils
             } else {
                 this.write_position = buffer.byteLength;
             }
-			this.data = new DataView(buffer,offset,length>0?length:buffer.byteLength);
+			if(buffer){
+                this.data = new DataView(buffer,offset,length>0?length:buffer.byteLength);
+            }
             this._position = 0;
 			this.endian = ByteArrayBase.BIG_ENDIAN;
         }
@@ -62,7 +64,8 @@ module nid.utils
             return this.data;
         }
         set dataView(value: DataView) { 
-            this.data = value; 
+            this.data = value;
+            this.write_position = value.byteLength;
         }
         get phyPosition(): number {
             return this._position + this.data.byteOffset;
@@ -132,23 +135,21 @@ module nid.utils
             if(length == 0){
                 length = this.bytesAvailable;
             }
-            else if (!this.validate(length)) return;
+            else if (!this.validate(length)) return null;
 
-            bytes = bytes == null?new ByteArrayBase(new ArrayBuffer(length)):bytes;
-
-            var tmp_data:DataView;
             if(createNewBuffer){
+                bytes = bytes == null?new ByteArrayBase(new ArrayBuffer(length)):bytes;
                 //This method is expensive
-                //tmp_data = new DataView(new ArrayBuffer(length));
                 for(var i=offset; i < length;i++){
                     bytes.data.setUint8(i,this.data.getUint8(this.position++));
                 }
             }else{
-                tmp_data = new DataView(this.data.buffer,this.position,length);
+                //Offset argument ignored
+                bytes = bytes == null?new ByteArrayBase(null):bytes;
+                bytes.dataView = new DataView(this.data.buffer,this.position,length);
                 this.position += length;
             }
 
-			bytes.dataView = tmp_data;
             return bytes;
         }
 
@@ -331,6 +332,17 @@ module nid.utils
                 bytes[i] = this.data.getUint8(this.position++);
             }*/
             return this.decodeUTF8(bytes);
+        }
+        public readStandardString(length: number): string{
+            if (!this.validate(length)) return null;
+
+            var str:string = "";
+
+
+            for (var i = 0; i < length; i++) {
+                str += String.fromCharCode(this.data.getUint8(this.position++));
+            }
+            return str;
         }
 
         /**
@@ -601,29 +613,38 @@ module nid.utils
          * Read a Uint8Array from the byte stream.
          * @param	length An unsigned short indicating the length of the Uint8Array.
          */
-		public readUint8Array(length:number):Uint8Array{
+		public readUint8Array(length:number,createNewBuffer:boolean=true):Uint8Array{
 			if (!this.validate(length)) return null;
-            var bytes: Uint8Array = new Uint8Array(this.buffer,this.position,length);
-            this.position += length;
-            /*var result = new Uint8Array(new ArrayBuffer(length));
-            for (var i = 0; i < length; i++) {
-                result[i] = this.data.getUint8(this.position);
-                this.position += ByteArrayBase.SIZE_OF_UINT8;
-            }*/
-            return bytes;
+            if(!createNewBuffer) {
+                var result:Uint8Array = new Uint8Array(this.buffer, this.position, length);
+                this.position += length;
+            }else {
+                result = new Uint8Array(new ArrayBuffer(length));
+                for (var i = 0; i < length; i++) {
+                    result[i] = this.data.getUint8(this.position);
+                    this.position += ByteArrayBase.SIZE_OF_UINT8;
+                }
+            }
+            return result;
 		}
 		
 		/**
          * Read a Uint16Array from the byte stream.
          * @param	length An unsigned short indicating the length of the Uint16Array.
          */
-		public readUint16Array(length:number):Uint16Array{
+		public readUint16Array(length:number,createNewBuffer:boolean=true):Uint16Array{
 			var size:number = length * ByteArrayBase.SIZE_OF_UINT16;
 			if (!this.validate(size)) return null;
-			var result = new Uint16Array(new ArrayBuffer(size));
-			for (var i = 0; i < length; i++) {
-                result[i] = this.data.getUint16(this.position, this.endian === ByteArrayBase.LITTLE_ENDIAN);
-                this.position += ByteArrayBase.SIZE_OF_UINT16;
+            if(!createNewBuffer) {
+                var result:Uint16Array = new Uint16Array(this.buffer, this.position, length);
+                this.position += size;
+            }
+            else {
+                result = new Uint16Array(new ArrayBuffer(size));
+                for (var i = 0; i < length; i++) {
+                    result[i] = this.data.getUint16(this.position, this.endian === ByteArrayBase.LITTLE_ENDIAN);
+                    this.position += ByteArrayBase.SIZE_OF_UINT16;
+                }
             }
 			return result;
 		}
@@ -632,13 +653,19 @@ module nid.utils
          * Read a Uint32Array from the byte stream.
          * @param	length An unsigned short indicating the length of the Uint32Array.
          */
-		public readUint32Array(length:number):Uint32Array{
+		public readUint32Array(length:number,createNewBuffer:boolean=true):Uint32Array{
 			var size:number = length * ByteArrayBase.SIZE_OF_UINT32;
 			if (!this.validate(size)) return null;
-			var result = new Uint32Array(new ArrayBuffer(size));
-			for (var i = 0; i < length; i++) {
-                result[i] = this.data.getUint32(this.position, this.endian === ByteArrayBase.LITTLE_ENDIAN);
-                this.position += ByteArrayBase.SIZE_OF_UINT32;
+            if(!createNewBuffer) {
+                var result:Uint32Array = new Uint32Array(this.buffer, this.position, length);
+                this.position += size;
+            }
+            else {
+                result = new Uint32Array(new ArrayBuffer(size));
+                for (var i = 0; i < length; i++) {
+                    result[i] = this.data.getUint32(this.position, this.endian === ByteArrayBase.LITTLE_ENDIAN);
+                    this.position += ByteArrayBase.SIZE_OF_UINT32;
+                }
             }
 			return result;
 		}
@@ -647,12 +674,18 @@ module nid.utils
          * Read a Int8Array from the byte stream.
          * @param	length An unsigned short indicating the length of the Int8Array.
          */
-		public readInt8Array(length:number):Int8Array{
+		public readInt8Array(length:number,createNewBuffer:boolean=true):Int8Array{
 			if (!this.validate(length)) return null;
-			var result = new Int8Array(new ArrayBuffer(length));
-			for (var i = 0; i < length; i++) {
-                result[i] = this.data.getInt8(this.position);
-                this.position += ByteArrayBase.SIZE_OF_INT8;
+            if(!createNewBuffer) {
+                var result:Int8Array = new Int8Array(this.buffer, this.position, length);
+                this.position += length;
+            }
+            else {
+                result = new Int8Array(new ArrayBuffer(length));
+                for (var i = 0; i < length; i++) {
+                    result[i] = this.data.getInt8(this.position);
+                    this.position += ByteArrayBase.SIZE_OF_INT8;
+                }
             }
 			return result;
 		}
@@ -661,13 +694,19 @@ module nid.utils
          * Read a Int16Array from the byte stream.
          * @param	length An unsigned short indicating the length of the Int16Array.
          */
-		public readInt16Array(length:number):Int16Array{
+		public readInt16Array(length:number,createNewBuffer:boolean=true):Int16Array{
 			var size:number =  length * ByteArrayBase.SIZE_OF_INT16
 			if (!this.validate(size)) return null;
-			var result = new Int16Array(new ArrayBuffer(size));
-			for (var i = 0; i < length; i++) {
-                result[i] = this.data.getInt16(this.position, this.endian === ByteArrayBase.LITTLE_ENDIAN);
-                this.position += ByteArrayBase.SIZE_OF_INT16;
+            if(!createNewBuffer) {
+                var result:Int16Array = new Int16Array(this.buffer, this.position, length);
+                this.position += size;
+            }
+            else {
+                result = new Int16Array(new ArrayBuffer(size));
+                for (var i = 0; i < length; i++) {
+                    result[i] = this.data.getInt16(this.position, this.endian === ByteArrayBase.LITTLE_ENDIAN);
+                    this.position += ByteArrayBase.SIZE_OF_INT16;
+                }
             }
 			return result;
 		}
@@ -676,13 +715,19 @@ module nid.utils
          * Read a Int32Array from the byte stream.
          * @param	length An unsigned short indicating the length of the Int32Array.
          */
-		public readInt32Array(length:number):Int32Array{
+		public readInt32Array(length:number,createNewBuffer:boolean=true):Int32Array{
 			var size:number =  length * ByteArrayBase.SIZE_OF_INT32
 			if (!this.validate(size)) return null;
-			var result = new Int32Array(new ArrayBuffer(size));
-			for (var i = 0; i < length; i++) {
-                result[i] = this.data.getInt32(this.position, this.endian === ByteArrayBase.LITTLE_ENDIAN);
-                this.position += ByteArrayBase.SIZE_OF_INT32; 
+            if(!createNewBuffer) {
+                var result:Int32Array = new Int32Array(this.buffer, this.position, length);
+                this.position += size;
+            }
+            else {
+                result = new Int32Array(new ArrayBuffer(size));
+                for (var i = 0; i < length; i++) {
+                    result[i] = this.data.getInt32(this.position, this.endian === ByteArrayBase.LITTLE_ENDIAN);
+                    this.position += ByteArrayBase.SIZE_OF_INT32;
+                }
             }
 			return result;
 		}
@@ -691,13 +736,20 @@ module nid.utils
          * Read a Float32Array from the byte stream.
          * @param	length An unsigned short indicating the length of the Float32Array.
          */
-		public readFloat32Array(length:number):Float32Array{
+		public readFloat32Array(length:number,createNewBuffer:boolean=true):Float32Array{
 			var size:number =  length * ByteArrayBase.SIZE_OF_FLOAT32
 			if (!this.validate(size)) return null;
-			var result = new Float32Array(new ArrayBuffer(size));
-			for (var i = 0; i < length; i++) {
-                result[i] = this.data.getFloat32(this.position, this.endian === ByteArrayBase.LITTLE_ENDIAN);
-                this.position += ByteArrayBase.SIZE_OF_FLOAT32;
+            if(!createNewBuffer) {
+                var result:Float32Array = new Float32Array(this.buffer, this.position, length);
+                this.position += size;
+            }
+			else {
+                result = new Float32Array(new ArrayBuffer(size));
+
+                for (var i = 0; i < length; i++) {
+                    result[i] = this.data.getFloat32(this.position, this.endian === ByteArrayBase.LITTLE_ENDIAN);
+                    this.position += ByteArrayBase.SIZE_OF_FLOAT32;
+                }
             }
 			return result;
 		}
@@ -706,20 +758,22 @@ module nid.utils
          * Read a Float64Array from the byte stream.
          * @param	length An unsigned short indicating the length of the Float64Array.
          */
-		public readFloat64Array(length:number):Float64Array{
+		public readFloat64Array(length:number,createNewBuffer:boolean=true):Float64Array{
 			var size:number =  length * ByteArrayBase.SIZE_OF_FLOAT64
 			if (!this.validate(size)) return null;
-			var result = new Float64Array(new ArrayBuffer(size));
-			for (var i = 0; i < length; i++) {
-                result[i] = this.data.getFloat64(this.position, this.endian === ByteArrayBase.LITTLE_ENDIAN);
-                this.position += ByteArrayBase.SIZE_OF_FLOAT64;
+            if(!createNewBuffer) {
+                var result:Float64Array = new Float64Array(this.buffer, this.position, length);
+                this.position += size;
+            }else {
+                result = new Float64Array(new ArrayBuffer(size));
+                for (var i = 0; i < length; i++) {
+                    result[i] = this.data.getFloat64(this.position, this.endian === ByteArrayBase.LITTLE_ENDIAN);
+                    this.position += ByteArrayBase.SIZE_OF_FLOAT64;
+                }
             }
 			return result;
 		}
-        /**********************/
-        /*  PRIVATE METHODS   */
-        /**********************/
-        private validate(len:number): boolean {
+        public validate(len:number): boolean {
             //len += this.data.byteOffset;
             if (this.data.byteLength > 0 && this._position + len <= this.data.byteLength) {
                 return true;
@@ -727,6 +781,9 @@ module nid.utils
                 throw 'Error #2030: End of file was encountered.';
             }
         }
+        /**********************/
+        /*  PRIVATE METHODS   */
+        /**********************/
         private validateBuffer(len: number): void {
 			this.write_position = len > this.write_position ? len : this.write_position;
             if (this.data.byteLength < len) {

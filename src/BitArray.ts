@@ -1,8 +1,8 @@
-﻿///<reference path="ByteArray.ts" />
+﻿///<reference path="ByteArrayBase.ts" />
 
 module nid.utils
 {
-	export class BitArray extends nid.utils.ByteArray
+	export class BitArray extends ByteArrayBase
 	{
 		private bitsPending:number = 0;
 		constructor(buffer?:ArrayBuffer){
