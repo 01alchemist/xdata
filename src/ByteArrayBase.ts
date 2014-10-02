@@ -30,6 +30,7 @@ module nid.utils
 
         private BUFFER_EXT_SIZE: number = 1024;//Buffer expansion size
 		
+		public array:Uint8Array = null;
 		public data:DataView;
         private _position: number;
         public write_position: number;
@@ -57,8 +58,8 @@ module nid.utils
         get buffer(): ArrayBuffer {
             return this.data.buffer;
         }
-        set buffer(value: ArrayBuffer) { 
-            this.data = new DataView(value); 
+        set buffer(value: ArrayBuffer) {
+            this.data = new DataView(value);
         }
         get dataView(): DataView {
             return this.data;
@@ -99,7 +100,12 @@ module nid.utils
 		public clear():void{
 			this._position=0;
 		}
-        
+        public getArray():Uint8Array{
+            if(this.array == null){
+                this.array = new Uint8Array(this.data.buffer,this.data.byteOffset,this.data.byteLength);
+            }
+            return this.array;
+        }
         /**
          * Reads a Boolean value from the byte stream. A single byte is read,
 		 * and true is returned if the byte is nonzero,
@@ -737,7 +743,7 @@ module nid.utils
          * @param	length An unsigned short indicating the length of the Float32Array.
          */
 		public readFloat32Array(length:number,createNewBuffer:boolean=true):Float32Array{
-			var size:number =  length * ByteArrayBase.SIZE_OF_FLOAT32
+			var size:number =  length * ByteArrayBase.SIZE_OF_FLOAT32;
 			if (!this.validate(size)) return null;
             if(!createNewBuffer) {
                 var result:Float32Array = new Float32Array(this.buffer, this.position, length);
