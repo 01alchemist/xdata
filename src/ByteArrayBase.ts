@@ -166,7 +166,7 @@ module nid.utils
         public readDouble(): number{
             if (!this.validate(ByteArrayBase.SIZE_OF_FLOAT64)) return null;
 
-            var value:number  = this.data.getFloat64(this.position);
+            var value:number  = this.data.getFloat64(this.position, this.endian == ByteArrayBase.LITTLE_ENDIAN);
             this.position += ByteArrayBase.SIZE_OF_FLOAT64;
             return value;
         }
@@ -178,7 +178,7 @@ module nid.utils
         public readFloat(): number{
             if (!this.validate(ByteArrayBase.SIZE_OF_FLOAT32)) return null;
 
-            var value: number = this.data.getFloat32(this.position);
+            var value: number = this.data.getFloat32(this.position, this.endian == ByteArrayBase.LITTLE_ENDIAN);
             this.position += ByteArrayBase.SIZE_OF_FLOAT32;
             return value;
         }
