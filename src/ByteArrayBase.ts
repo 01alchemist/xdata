@@ -45,7 +45,7 @@ module nid.utils
             else if (buffer == null) {
                 this.write_position = 0;
             } else {
-                this.write_position = buffer.byteLength;
+                this.write_position = length>0?length:buffer.byteLength;
             }
 			if(buffer){
                 this.data = new DataView(buffer,offset,length>0?length:buffer.byteLength);
@@ -344,9 +344,21 @@ module nid.utils
 
             var str:string = "";
 
-
             for (var i = 0; i < length; i++) {
                 str += String.fromCharCode(this.data.getUint8(this.position++));
+            }
+            return str;
+        }
+        public readStringTillNull(): string{
+
+            var str:string = "";
+            while(this.bytesAvailable > 0) {
+                var byte:number = this.data.getUint8(this.position++);
+                if(byte != 0){
+                    str += String.fromCharCode(byte);
+                }else{
+                    break;
+                }
             }
             return str;
         }

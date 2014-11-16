@@ -52,6 +52,7 @@ declare module nid.utils {
         static SIZE_OF_FLOAT32: number;
         static SIZE_OF_FLOAT64: number;
         private BUFFER_EXT_SIZE;
+        public array: Uint8Array;
         public data: DataView;
         private _position;
         public write_position: number;
@@ -65,6 +66,7 @@ declare module nid.utils {
         public length : number;
         public bytesAvailable : number;
         public clear(): void;
+        public getArray(): Uint8Array;
         /**
         * Reads a Boolean value from the byte stream. A single byte is read,
         * and true is returned if the byte is nonzero,
@@ -177,6 +179,7 @@ declare module nid.utils {
         * @return	A string composed of the UTF-8 bytes of the specified length.
         */
         public readUTFBytes(length: number): string;
+        public readStandardString(length: number): string;
         /**
         * Writes a Boolean value. A single byte is written according to the value parameter,
         * either 1 if true or 0 if false.
@@ -390,7 +393,7 @@ declare module nid.utils {
 *
 */
 declare module nid.utils {
-    class ByteArray extends utils.ByteArrayBase {
+    class ByteArray extends ByteArrayBase {
         static BIG_ENDIAN: string;
         static LITTLE_ENDIAN: string;
         constructor(buffer?: ArrayBuffer, offset?: number, length?: number);
