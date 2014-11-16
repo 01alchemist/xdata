@@ -166,7 +166,7 @@ module nid.utils
         public readDouble(): number{
             if (!this.validate(ByteArrayBase.SIZE_OF_FLOAT64)) return null;
 
-            var value:number  = this.data.getFloat64(this.position);
+            var value:number  = this.data.getFloat64(this.position, this.endian == ByteArrayBase.LITTLE_ENDIAN);
             this.position += ByteArrayBase.SIZE_OF_FLOAT64;
             return value;
         }
@@ -178,7 +178,7 @@ module nid.utils
         public readFloat(): number{
             if (!this.validate(ByteArrayBase.SIZE_OF_FLOAT32)) return null;
 
-            var value: number = this.data.getFloat32(this.position);
+            var value: number = this.data.getFloat32(this.position, this.endian == ByteArrayBase.LITTLE_ENDIAN);
             this.position += ByteArrayBase.SIZE_OF_FLOAT32;
             return value;
         }
@@ -758,8 +758,17 @@ module nid.utils
 			var size:number =  length * ByteArrayBase.SIZE_OF_FLOAT32;
 			if (!this.validate(size)) return null;
             if(!createNewBuffer) {
-                var result:Float32Array = new Float32Array(this.buffer, this.position, length);
-                this.position += size;
+                if(this.position % 4 == 0){
+                    var result:Float32Array = new Float32Array(this.buffer, this.position, length);
+                    this.position += size;
+                }else{
+                    var tmp:Uint8Array = new Uint8Array(new ArrayBuffer(size));
+                    for (var i = 0; i < size; i++) {
+                        tmp[i] = this.data.getUint8(this.position);
+                        this.position += ByteArrayBase.SIZE_OF_UINT8;
+                    }
+                    result = new Float32Array(tmp.buffer);
+                }
             }
 			else {
                 result = new Float32Array(new ArrayBuffer(size));
