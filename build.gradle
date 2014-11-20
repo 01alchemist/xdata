@@ -21,13 +21,13 @@ task clean(dependsOn:"createBuild") {
 
 task build(type: Exec, dependsOn:"clean") {
 	def tsc = "tsc"
-	workingDir "src/"
+	workingDir "./"
 
 	if (System.properties['os.name'].toLowerCase().contains('mac')) {
 		tsc = "/usr/local/bin/tsc"
 	}
 
-	commandLine tsc, "-t", "ES5", "--declaration", "--out", "/build/"+mainClass+".js", workingDir + mainClass+".ts", "--sourcemap"
+	commandLine tsc, "-t", "ES5", "--declaration", "--out", "build/"+mainClass+".js", "src/"+mainClass+".ts", "--sourcemap"
 }
 
 task composite(type: Exec, dependsOn:["build", "jasmine"]) {
