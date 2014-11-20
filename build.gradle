@@ -1,0 +1,54 @@
+defaultTasks "build"
+
+// Change this to name of your starting script file in the src dir.
+def mainClass = "ByteArray"
+def node_mods = "node_modules"
+def phantomjs = node_mods+"/phantomjs/bin/phantomjs"
+def requirejs = node_mods+"/requirejs/bin/r.js"
+
+task removeBuild(type:Delete) {
+	delete "build/"
+}
+
+task createBuild(type:Exec, dependsOn:"removeBuild") {
+	commandLine "mkdir", "build"
+}
+
+task clean(dependsOn:"createBuild") {
+	FileTree tree = fileTree('src').include('**/*.js')
+	tree.each { File file -> delete file }
+}
+
+task build(type: Exec, dependsOn:"clean") {
+	def tsc = "tsc"
+	workingDir "src/"
+
+	if (System.properties['os.name'].toLowerCase().contains('mac')) {
+		tsc = "/usr/local/bin/tsc"
+	}
+
+	commandLine tsc, "--module", "amd", mainClass + ".ts", "--target", "ES5"
+}
+
+task composite(type: Exec, dependsOn:["build", "jasmine"]) {
+	workingDir "./"
+	commandLine "node", requirejs, "-o", "name=" + mainClass, "out=build/" + mainClass + ".js", "baseUrl=src/", "optimize=none"
+}
+
+task minify(type: Exec, dependsOn:["composite"]) {
+	workingDir "./"
+	commandLine "node", requirejs, "-o", "name=" + mainClass, "out=build/" + mainClass + ".min.js", "baseUrl=src/"
+}
+
+task prepForJUnit () {
+	doLast {
+		File outputDir = file("./build/junit")
+		outputDir.mkdirs()
+	}
+}
+
+task jasmine(type: Exec, dependsOn:["prepForJUnit", "build"], description: "Runs Jasmine through PhantomJS"){
+
+	//commandLine = [phantomjs, "./test/run_jasmine_test.coffee", "index.html"]
+	commandLine = [phantomjs, "./test/phantomjs-testrunner.js", file("index.html").absolutePath]
+}
