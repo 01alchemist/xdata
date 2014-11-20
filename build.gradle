@@ -27,7 +27,7 @@ task build(type: Exec, dependsOn:"clean") {
 		tsc = "/usr/local/bin/tsc"
 	}
 
-	commandLine tsc, "--module", "amd", mainClass + ".ts", "--target", "ES5"
+	commandLine tsc, "-t", "ES5", "--declaration", "--out", "/build/"+mainClass+".js", workingDir + mainClass+".ts", "--sourcemap"
 }
 
 task composite(type: Exec, dependsOn:["build", "jasmine"]) {
