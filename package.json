@@ -1,0 +1,33 @@
+{
+  "name": "TS-ByteArray",
+  "version": "1.0.0",
+  "description": "ActionScript3 ByteArray API for JavaScript",
+  "main": "gulpfile.js",
+  "bin": {
+    "TS-ByteArray": "ByteArrayTest.js"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nidin/TS-ByteArray.git"
+  },
+  "keywords": [
+    "javascript",
+    "typescript",
+    "bytearray"
+  ],
+  "author": "Nidin Vinayakan <nidinthb@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nidin/TS-ByteArray/issues"
+  },
+  "homepage": "https://github.com/nidin/TS-ByteArray",
+  "devDependencies": {
+    "intern": "^2.1.1"
+  }
+}
