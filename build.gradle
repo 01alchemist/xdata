@@ -1,7 +1,7 @@
 defaultTasks "build"
 
 // Change this to name of your starting script file in the src dir.
-def targetClassList = ["BitArray","ByteArray","ByteArrayBase"]
+def targetClassList = ["BitArray","ByteArrayBase","ByteArray"]
 def node_mods = "node_modules"
 def phantomjs = node_mods+"/phantomjs/bin/phantomjs"
 def requirejs = node_mods+"/requirejs/bin/r.js"
@@ -28,7 +28,7 @@ task build(type: Exec, dependsOn:"clean") {
 	}
 
 	targetClassList.each(){
-		mainClass ->
-		commandLine tsc, "-t", "ES5", "--declaration", "--out", "build/"+mainClass+".js", "src/"+mainClass+".ts", "--sourcemap"
+		targetClass ->
+		commandLine tsc, "-t", "ES5", "--declaration", "--out", "build/"+targetClass+".js", "src/"+targetClass+".ts", "--sourcemap"
 	}
 }
