@@ -29,6 +29,7 @@ task build(type: Exec, dependsOn:"clean") {
 
 	targetClassList.each(){
 		targetClass ->
+		println "Compiling "+targetClass
 		commandLine tsc, "-t", "ES5", "--declaration", "--out", "build/"+targetClass+".js", "src/"+targetClass+".ts", "--sourcemap"
 	}
 }
