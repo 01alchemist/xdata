@@ -1,5 +1,5 @@
-﻿///<reference path="./ByteArrayBase.ts" />
-///<reference path="./LZMAHelper.ts" />
+﻿///<reference path="ByteArrayBase.ts" />
+///<reference path="LZMAHelper.ts" />
 ///<reference path="CompressionAlgorithm.ts" />
 /**
 * JavaScript ByteArray 

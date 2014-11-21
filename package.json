@@ -2,7 +2,7 @@
   "name": "TS-ByteArray",
   "version": "1.0.0",
   "description": "ActionScript3 ByteArray API for JavaScript",
-  "main": "gulpfile.js",
+  "main": "src/ByteArray.ts",
   "bin": {
     "TS-ByteArray": "ByteArrayTest.js"
   },

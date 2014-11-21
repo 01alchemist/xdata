@@ -1,7 +1,7 @@
 defaultTasks "build"
 
 // Change this to name of your starting script file in the src dir.
-def mainClass = "ByteArray"
+def targetClassList = ["BitArray","ByteArray","ByteArrayBase"]
 def node_mods = "node_modules"
 def phantomjs = node_mods+"/phantomjs/bin/phantomjs"
 def requirejs = node_mods+"/requirejs/bin/r.js"
@@ -27,28 +27,8 @@ task build(type: Exec, dependsOn:"clean") {
 		tsc = "/usr/local/bin/tsc"
 	}
 
-	commandLine tsc, "-t", "ES5", "--declaration", "--out", "build/"+mainClass+".js", "src/"+mainClass+".ts", "--sourcemap"
-}
-
-task composite(type: Exec, dependsOn:["build", "jasmine"]) {
-	workingDir "./"
-	commandLine "node", requirejs, "-o", "name=" + mainClass, "out=build/" + mainClass + ".js", "baseUrl=src/", "optimize=none"
-}
-
-task minify(type: Exec, dependsOn:["composite"]) {
-	workingDir "./"
-	commandLine "node", requirejs, "-o", "name=" + mainClass, "out=build/" + mainClass + ".min.js", "baseUrl=src/"
-}
-
-task prepForJUnit () {
-	doLast {
-		File outputDir = file("./build/junit")
-		outputDir.mkdirs()
+	targetClassList.each(){
+		mainClass ->
+		commandLine tsc, "-t", "ES5", "--declaration", "--out", "build/"+mainClass+".js", "src/"+mainClass+".ts", "--sourcemap"
 	}
-}
-
-task jasmine(type: Exec, dependsOn:["prepForJUnit", "build"], description: "Runs Jasmine through PhantomJS"){
-
-	//commandLine = [phantomjs, "./test/run_jasmine_test.coffee", "index.html"]
-	commandLine = [phantomjs, "./test/phantomjs-testrunner.js", file("index.html").absolutePath]
 }
