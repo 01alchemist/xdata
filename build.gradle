@@ -27,9 +27,12 @@ task build(type: Exec, dependsOn:"clean") {
 		tsc = "/usr/local/bin/tsc"
 	}
 
-	targetClassList.each(){
-		targetClass ->
-		println "Compiling "+targetClass
-		commandLine tsc, "-t", "ES5", "--declaration", "--out", "build/"+targetClass+".js", "src/"+targetClass+".ts", "--sourcemap"
-	}
+
+	for (targetClass in targetClassList ) {
+		  println "Compiling file ${targetClass}..."
+				exec {
+					executable "sh"
+					args tsc, "-t", "ES5", "--declaration", "--out", "build/"+targetClass+".js", "src/"+targetClass+".ts", "--sourcemap"
+				}
+   }
 }
