@@ -19,7 +19,7 @@ task clean(dependsOn:"createBuild") {
 	tree.each { File file -> delete file }
 }
 
-task build(type:Exec) {
+task build(dependsOn:"clean") {
 	def tsc = "tsc"
 	//workingDir "./"
 
@@ -27,8 +27,6 @@ task build(type:Exec) {
 		tsc = "/usr/local/bin/tsc"
 	}
 
-	delete "build/"
-	commandLine "mkdir", "build"
 
 	for (targetClass in targetClassList ) {
 		  println "Compiling file ${targetClass}..."
