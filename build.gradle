@@ -21,7 +21,7 @@ task clean(dependsOn:"createBuild") {
 
 task build(dependsOn:"clean") {
 	def tsc = "tsc"
-	workingDir "./"
+	//workingDir "./"
 
 	if (System.properties['os.name'].toLowerCase().contains('mac')) {
 		tsc = "/usr/local/bin/tsc"
