@@ -27,6 +27,8 @@ task build() {
 		tsc = "/usr/local/bin/tsc"
 	}
 
+	delete "build/"
+	commandLine "mkdir", "build"
 
 	for (targetClass in targetClassList ) {
 		  println "Compiling file ${targetClass}..."
