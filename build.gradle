@@ -19,7 +19,7 @@ task clean(dependsOn:"createBuild") {
 	tree.each { File file -> delete file }
 }
 
-task build(type: Exec, dependsOn:"clean") {
+task build(dependsOn:"clean") {
 	def tsc = "tsc"
 	workingDir "./"
 
