@@ -29,7 +29,6 @@
   "homepage": "https://github.com/nidin/TS-ByteArray",
   "devDependencies": {
     "gulp":"3.8.10",
-    "gulp-foreach":"*",
     "gulp-shell":"*",
     "gulp-closure-compiler":"*",
     "gulp-sourcemaps":"*",
