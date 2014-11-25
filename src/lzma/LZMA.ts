@@ -5,6 +5,7 @@ module nid
     /**
      * LZMA Decoder
      * @author Nidin Vinayakan | nidinthb@gmail.com
+     *
      */
 
     export class LZMA

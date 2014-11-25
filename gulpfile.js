@@ -6,30 +6,23 @@ var sourcemaps = require('gulp-sourcemaps');
 var del = require('del');
 
 var paths = {
-    ts_scripts: ['src/BitArray.ts','src/ByteArray.ts','src/ByteArrayBase.ts'],
+    ts_classes: ['BitArray','ByteArray','ByteArrayBase'],
     js_scripts: ['build/*.js']
 };
 
 gulp.task('clean', function(cb) {
     del(['build'], cb);
+
 });
 
-gulp.task('compile', ['clean'], function() {
-    //'tsc -t "ES5" --declaration --out "/build/<%1= %jsFileName%>" "<%=base\%tsFileName%" --sourcemap
-    return gulp.src(paths.ts_scripts)
-        .pipe(foreach(function(stream, file){
-            //var jsFileName = file.name.replace(".ts",".js");
-            var base = file.path;
-            var srcFile = base+'/'+file.name;
-            var destFile = 'build/'+file.name;
-            return stream
-                .pipe(shell([
-                    'echo compiling...',
-                    'tsc -t "ES5" --declaration --out "/build/test.js" "src/ByteArray.ts"  --sourcemap'
-                ]));
-        }))
-//        .pipe(gulp.dest('build'));
+var shellCompileTasks = [];
+Object.keys(paths.ts_classes).forEach(function(index) {
+    var className = paths.ts_classes[index];
+    shellCompileTasks.push('echo Compiling:'+className+'.ts');
+    shellCompileTasks.push('tsc -t "ES5" --declaration --out "build/'+className+'.js" "src/'+className+'.ts"  --sourcemap');
 });
+
+gulp.task('compile', ['clean'], shell.task(shellCompileTasks));
 
 gulp.task('optimize', function() {
     return gulp.src(paths.js_scripts)
@@ -53,8 +46,8 @@ gulp.task('optimize', function() {
 
 // Rerun the task when a file changes
 gulp.task('watch', function() {
-    gulp.watch(paths.ts_scripts, ['compile']);
+    gulp.watch('src/**/*.ts', ['compile']);
 });
 
 // The default task (called when you run `gulp` from cli)
-gulp.task('default', ['watch', 'compile']);
+gulp.task('default', ['compile']);

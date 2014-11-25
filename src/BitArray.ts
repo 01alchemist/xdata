@@ -1,5 +1,12 @@
 ﻿///<reference path="ByteArrayBase.ts" />
-
+/**
+ * JavaScript BitArray
+ * version : 0.2
+ * @author Nidin Vinayakan | nidinthb@gmail.com
+ *
+ * Utility to read bits from ByteArray
+ *
+ */
 module nid.utils
 {
 	export class BitArray extends ByteArrayBase

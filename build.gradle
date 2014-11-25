@@ -19,15 +19,8 @@ task clean(dependsOn:"createBuild") {
 	tree.each { File file -> delete file }
 }
 
-task build(dependsOn:"clean") {
+/*task build(dependsOn:"clean") {
 	def tsc = "tsc"
-	//workingDir "./"
-
-	if (System.properties['os.name'].toLowerCase().contains('mac')) {
-		tsc = "/usr/local/bin/tsc"
-	}
-
-
 	for (targetClass in targetClassList ) {
 		  println "Compiling file ${targetClass}..."
 				exec {
@@ -35,4 +28,29 @@ task build(dependsOn:"clean") {
 					args "-t", "ES5", "--declaration", "--out", "build/"+targetClass+".js", "src/"+targetClass+".ts", "--sourcemap"
 				}
    }
+}*/
+
+task build2(dependsOn:"clean") {
+	List compileTasks = []
+	/*for (targetClass in targetClassList ) {
+		compileTasks << createCompileTask(targetClass)
+	}*/
+	targetClassList.each{
+		targetClass ->
+		compileTasks << createCompileTask(targetClass)
+	}
+	compileTasks.each{
+		it.mustRunAfter clean
+		it.execute()
+	}
+
+	println "Finised execution"
+}
+
+private createCompileTask(targetClass) {
+  println "Creating compile task for $targetClass"
+  return task("Compiling $targetClass",type:Exec) {
+    //commandLine "tsc", "-t", "ES5", "--declaration", "--out", "build/"+targetClass+".js", "src/"+targetClass+".ts", "--sourcemap"
+    commandLine "echo", "test $targetClass"
+  }
 }
