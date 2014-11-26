@@ -152,7 +152,7 @@ module nid.utils
             }else{
                 //Offset argument ignored
                 bytes = bytes == null?new ByteArrayBase(null):bytes;
-                bytes.dataView = new DataView(this.data.buffer,this.position,length);
+                bytes.dataView = new DataView(this.data.buffer,this.bufferOffset+this.position,length);
                 this.position += length;
             }
 
@@ -331,7 +331,7 @@ module nid.utils
         public readUTFBytes(length: number): string{
             if (!this.validate(length)) return null;
 
-            var bytes: Uint8Array = new Uint8Array(this.buffer,this.position,length);
+            var bytes: Uint8Array = new Uint8Array(this.buffer,this.bufferOffset+this.position,length);
             this.position += length;
             /*var bytes: Uint8Array = new Uint8Array(new ArrayBuffer(length));
             for (var i = 0; i < length; i++) {
@@ -349,14 +349,19 @@ module nid.utils
             }
             return str;
         }
-        public readStringTillNull(): string{
+        public readStringTillNull(keepEvenByte:boolean=true): string{
 
             var str:string = "";
+            var num:number=0;
             while(this.bytesAvailable > 0) {
                 var byte:number = this.data.getUint8(this.position++);
+                num++;
                 if(byte != 0){
                     str += String.fromCharCode(byte);
                 }else{
+                    if(keepEvenByte && num % 2 != 0){
+                        this.position++;
+                    }
                     break;
                 }
             }
@@ -634,7 +639,7 @@ module nid.utils
 		public readUint8Array(length:number,createNewBuffer:boolean=true):Uint8Array{
 			if (!this.validate(length)) return null;
             if(!createNewBuffer) {
-                var result:Uint8Array = new Uint8Array(this.buffer, this.position, length);
+                var result:Uint8Array = new Uint8Array(this.buffer, this.bufferOffset+this.position, length);
                 this.position += length;
             }else {
                 result = new Uint8Array(new ArrayBuffer(length));
@@ -654,7 +659,7 @@ module nid.utils
 			var size:number = length * ByteArrayBase.SIZE_OF_UINT16;
 			if (!this.validate(size)) return null;
             if(!createNewBuffer) {
-                var result:Uint16Array = new Uint16Array(this.buffer, this.position, length);
+                var result:Uint16Array = new Uint16Array(this.buffer, this.bufferOffset+this.position, length);
                 this.position += size;
             }
             else {
@@ -675,7 +680,7 @@ module nid.utils
 			var size:number = length * ByteArrayBase.SIZE_OF_UINT32;
 			if (!this.validate(size)) return null;
             if(!createNewBuffer) {
-                var result:Uint32Array = new Uint32Array(this.buffer, this.position, length);
+                var result:Uint32Array = new Uint32Array(this.buffer, this.bufferOffset+this.position, length);
                 this.position += size;
             }
             else {
@@ -695,7 +700,7 @@ module nid.utils
 		public readInt8Array(length:number,createNewBuffer:boolean=true):Int8Array{
 			if (!this.validate(length)) return null;
             if(!createNewBuffer) {
-                var result:Int8Array = new Int8Array(this.buffer, this.position, length);
+                var result:Int8Array = new Int8Array(this.buffer, this.bufferOffset+this.position, length);
                 this.position += length;
             }
             else {
@@ -716,7 +721,7 @@ module nid.utils
 			var size:number =  length * ByteArrayBase.SIZE_OF_INT16
 			if (!this.validate(size)) return null;
             if(!createNewBuffer) {
-                var result:Int16Array = new Int16Array(this.buffer, this.position, length);
+                var result:Int16Array = new Int16Array(this.buffer, this.bufferOffset+this.position, length);
                 this.position += size;
             }
             else {
@@ -737,7 +742,7 @@ module nid.utils
 			var size:number =  length * ByteArrayBase.SIZE_OF_INT32
 			if (!this.validate(size)) return null;
             if(!createNewBuffer) {
-                var result:Int32Array = new Int32Array(this.buffer, this.position, length);
+                var result:Int32Array = new Int32Array(this.buffer, this.bufferOffset+this.position, length);
                 this.position += size;
             }
             else {
