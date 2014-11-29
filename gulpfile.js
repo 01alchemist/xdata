@@ -1,5 +1,4 @@
 var gulp = require('gulp');
-var foreach = require('gulp-foreach');
 var shell = require('gulp-shell');
 var cc = require('gulp-closure-compiler');
 var sourcemaps = require('gulp-sourcemaps');
