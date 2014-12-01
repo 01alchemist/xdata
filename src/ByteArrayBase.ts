@@ -273,6 +273,26 @@ module nid.utils
             this.position += ByteArrayBase.SIZE_OF_UINT32;
 			return value;
         }
+		public readVariableSizedUnsignedInt():number{
+            var i:number;
+            var c:number = this.data.getUint8(this.position++);
+            if(c != 0xFF)
+            {
+                i = c << 8;
+                c = this.data.getUint8(this.position++);
+                i |= c;
+            }
+            else
+            {
+                c = this.data.getUint8(this.position++);
+                i = c << 16;
+                c = this.data.getUint8(this.position++);
+                i |= c << 8;
+                c = this.data.getUint8(this.position++);
+                i |= c;
+            }
+            return i;
+        }
         /**
 		 * Reads an unsigned 64-bit integer from the byte stream.
 		 *
