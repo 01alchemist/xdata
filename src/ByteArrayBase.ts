@@ -377,10 +377,10 @@ module nid.utils
             var str:string = "";
             var num:number=0;
             while(this.bytesAvailable > 0) {
-                var byte:number = this.data.getUint8(this.position++);
+                var _byte:number = this.data.getUint8(this.position++);
                 num++;
-                if(byte != 0){
-                    str += String.fromCharCode(byte);
+                if(_byte != 0){
+                    str += String.fromCharCode(_byte);
                 }else{
                     if(keepEvenByte && num % 2 != 0){
                         this.position++;
