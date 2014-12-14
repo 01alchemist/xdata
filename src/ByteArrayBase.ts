@@ -293,6 +293,9 @@ module nid.utils
             }
             return i;
         }
+        public readU16VX():number{
+            return (this.data.getUint8(this.position++) << 8) | this.data.getUint8(this.position++);
+        }
         /**
 		 * Reads an unsigned 64-bit integer from the byte stream.
 		 *
