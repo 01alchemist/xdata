@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/nidin/TS-ByteArray",
   "devDependencies": {
+    "typescript":"latest",
     "gulp":"3.8.10",
     "gulp-shell":"*",
     "gulp-closure-compiler":"*",
