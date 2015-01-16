@@ -22,9 +22,11 @@ module nid.utils
         static SIZE_OF_INT8: number = 1;
         static SIZE_OF_INT16: number = 2;
         static SIZE_OF_INT32: number = 4;
+        static SIZE_OF_INT64: number = 8;
         static SIZE_OF_UINT8: number = 1;
         static SIZE_OF_UINT16: number = 2;
         static SIZE_OF_UINT32: number = 4;
+        static SIZE_OF_UINT64: number = 8;
         static SIZE_OF_FLOAT32: number = 4;
         static SIZE_OF_FLOAT64: number = 8;
 
@@ -272,6 +274,46 @@ module nid.utils
 			var value = this.data.getUint32(this.position,this.endian == ByteArrayBase.LITTLE_ENDIAN);
             this.position += ByteArrayBase.SIZE_OF_UINT32;
 			return value;
+        }
+
+        /**
+		 * Reads a variable sized unsigned integer (VX -> 16-bit or 32-bit) from the byte stream.
+		 *
+         *   A VX is written as a variable length 2- or 4-byte element. If the index value is less than 65,280 (0xFF00),
+         *   then the index is written as an unsigned two-byte integer. Otherwise the index is written as an unsigned
+         *   four byte integer with bits 24-31 set. When reading an index, if the first byte encountered is 255 (0xFF),
+         *   then the four-byte form is being used and the first byte should be discarded or masked out.
+         *
+		 *   The returned value is in the range  0 to 65279 or 0 to 2147483647.
+		 * @return	A VX 16-bit or 32-bit unsigned integer between 0 to 65279 or 0 and 2147483647.
+         */
+		public readVariableSizedUnsignedInt():number{
+
+            var value:number;
+            var c = this.readUnsignedByte();
+            if(c != 0xFF)
+            {
+                value = c << 8;
+                c = this.readUnsignedByte();
+                value |= c;
+            }
+            else
+            {
+                c = this.readUnsignedByte();
+                value = c << 16;
+                c = this.readUnsignedByte();
+                value |= c << 8;
+                c = this.readUnsignedByte();
+                value |= c;
+            }
+            return value;
+        }
+
+        /**
+         * Fast read for WebGL since only Uint16 numbers are expected
+         */
+		public readU16VX():number{
+            return (this.readUnsignedByte() << 8) | this.readUnsignedByte();
         }
         /**
 		 * Reads an unsigned 64-bit integer from the byte stream.
