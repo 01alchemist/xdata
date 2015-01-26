@@ -139,26 +139,26 @@ module nid.utils
 		 * @param	offset	The offset (_position) in bytes at which the read data should be written.
 		 * @param	length	The number of bytes to read.  The default value of 0 causes all available data to be read.
          */
-        public readBytes(bytes: ByteArrayBase=null, offset: number= 0, length: number= 0,createNewBuffer:boolean=false): ByteArrayBase{
+        public readBytes(_bytes:ByteArrayBase=null, offset:number= 0, length:number= 0,createNewBuffer:boolean=false): ByteArrayBase{
             if(length == 0){
                 length = this.bytesAvailable;
             }
             else if (!this.validate(length)) return null;
 
             if(createNewBuffer){
-                bytes = bytes == null?new ByteArrayBase(new ArrayBuffer(length)):bytes;
+                _bytes = _bytes == null?new ByteArrayBase(new ArrayBuffer(length)):_bytes;
                 //This method is expensive
-                for(var i=offset; i < length;i++){
-                    bytes.data.setUint8(i,this.data.getUint8(this.position++));
+                for(var i=0; i < length;i++){
+                    _bytes.data.setUint8(i+offset,this.data.getUint8(this.position++));
                 }
             }else{
                 //Offset argument ignored
-                bytes = bytes == null?new ByteArrayBase(null):bytes;
-                bytes.dataView = new DataView(this.data.buffer,this.bufferOffset+this.position,length);
+                _bytes = _bytes == null?new ByteArrayBase(null):_bytes;
+                _bytes.dataView = new DataView(this.data.buffer,this.bufferOffset+this.position,length);
                 this.position += length;
             }
 
-            return bytes;
+            return _bytes;
         }
 
 		/**
@@ -373,13 +373,13 @@ module nid.utils
         public readUTFBytes(length: number): string{
             if (!this.validate(length)) return null;
 
-            var bytes: Uint8Array = new Uint8Array(this.buffer,this.bufferOffset+this.position,length);
+            var _bytes: Uint8Array = new Uint8Array(this.buffer,this.bufferOffset+this.position,length);
             this.position += length;
-            /*var bytes: Uint8Array = new Uint8Array(new ArrayBuffer(length));
+            /*var _bytes: Uint8Array = new Uint8Array(new ArrayBuffer(length));
             for (var i = 0; i < length; i++) {
-                bytes[i] = this.data.getUint8(this.position++);
+                _bytes[i] = this.data.getUint8(this.position++);
             }*/
-            return this.decodeUTF8(bytes);
+            return this.decodeUTF8(_bytes);
         }
         public readStandardString(length: number): string{
             if (!this.validate(length)) return null;
@@ -455,11 +455,11 @@ module nid.utils
 		 * @param	offset	A zero-based index indicating the _position into the array to begin writing.
 		 * @param	length	An unsigned integer indicating how far into the buffer to write.
          */
-        public writeBytes(bytes: ByteArrayBase, offset: number= 0, length: number= 0): void{
+        public writeBytes(_bytes: ByteArrayBase, offset: number= 0, length: number= 0): void{
             this.validateBuffer(length);
 
-            var tmp_data = new DataView(bytes.buffer);
-			for(var i=0; i < bytes.length;i++){
+            var tmp_data = new DataView(_bytes.buffer);
+			for(var i=0; i < _bytes.length;i++){
 				this.data.setUint8(this.position++,tmp_data.getUint8(i));
 			}
         }
@@ -576,11 +576,11 @@ module nid.utils
 		 * Writes a Uint8Array to the byte stream.
 		 * @param	value	The Uint8Array to be written.
          */
-        public writeUint8Array(bytes: Uint8Array):void {
-            this.validateBuffer(this.position + bytes.length);
+        public writeUint8Array(_bytes: Uint8Array):void {
+            this.validateBuffer(this.position + _bytes.length);
 
-            for (var i = 0; i < bytes.length; i++) {
-                this.data.setUint8(this.position++, bytes[i]);
+            for (var i = 0; i < _bytes.length; i++) {
+                this.data.setUint8(this.position++, _bytes[i]);
             }
         }
 
@@ -588,11 +588,11 @@ module nid.utils
          * Writes a Uint16Array to the byte stream.
          * @param	value	The Uint16Array to be written.
          */
-        public writeUint16Array(bytes: Uint16Array): void {
-            this.validateBuffer(this.position + bytes.length);
+        public writeUint16Array(_bytes: Uint16Array): void {
+            this.validateBuffer(this.position + _bytes.length);
 
-            for (var i = 0; i < bytes.length; i++) {
-                this.data.setUint16(this.position, bytes[i], this.endian === ByteArrayBase.LITTLE_ENDIAN);
+            for (var i = 0; i < _bytes.length; i++) {
+                this.data.setUint16(this.position, _bytes[i], this.endian === ByteArrayBase.LITTLE_ENDIAN);
                 this.position += ByteArrayBase.SIZE_OF_UINT16;
             }
         }
@@ -601,11 +601,11 @@ module nid.utils
          * Writes a Uint32Array to the byte stream.
          * @param	value	The Uint32Array to be written.
          */
-        public writeUint32Array(bytes: Uint32Array): void {
-            this.validateBuffer(this.position + bytes.length);
+        public writeUint32Array(_bytes: Uint32Array): void {
+            this.validateBuffer(this.position + _bytes.length);
 
-            for (var i = 0; i < bytes.length; i++) {
-                this.data.setUint32(this.position, bytes[i], this.endian === ByteArrayBase.LITTLE_ENDIAN);
+            for (var i = 0; i < _bytes.length; i++) {
+                this.data.setUint32(this.position, _bytes[i], this.endian === ByteArrayBase.LITTLE_ENDIAN);
                 this.position += ByteArrayBase.SIZE_OF_UINT32;
             }
         }
@@ -614,11 +614,11 @@ module nid.utils
          * Writes a Int8Array to the byte stream.
          * @param	value	The Int8Array to be written.
          */
-        public writeInt8Array(bytes: Int8Array): void {
-            this.validateBuffer(this.position + bytes.length);
+        public writeInt8Array(_bytes: Int8Array): void {
+            this.validateBuffer(this.position + _bytes.length);
 
-            for (var i = 0; i < bytes.length; i++) {
-                this.data.setInt8(this.position++, bytes[i]);
+            for (var i = 0; i < _bytes.length; i++) {
+                this.data.setInt8(this.position++, _bytes[i]);
             }
         }
 
@@ -626,11 +626,11 @@ module nid.utils
          * Writes a Int16Array to the byte stream.
          * @param	value	The Int16Array to be written.
          */
-        public writeInt16Array(bytes: Int16Array): void {
-            this.validateBuffer(this.position + bytes.length);
+        public writeInt16Array(_bytes: Int16Array): void {
+            this.validateBuffer(this.position + _bytes.length);
 
-            for (var i = 0; i < bytes.length; i++) {
-                this.data.setInt16(this.position, bytes[i], this.endian === ByteArrayBase.LITTLE_ENDIAN);
+            for (var i = 0; i < _bytes.length; i++) {
+                this.data.setInt16(this.position, _bytes[i], this.endian === ByteArrayBase.LITTLE_ENDIAN);
                 this.position += ByteArrayBase.SIZE_OF_INT16;
             }
         }
@@ -639,11 +639,11 @@ module nid.utils
          * Writes a Int32Array to the byte stream.
          * @param	value	The Int32Array to be written.
          */
-        public writeInt32Array(bytes: Int32Array): void {
-            this.validateBuffer(this.position + bytes.length);
+        public writeInt32Array(_bytes: Int32Array): void {
+            this.validateBuffer(this.position + _bytes.length);
 
-            for (var i = 0; i < bytes.length; i++) {
-                this.data.setInt32(this.position, bytes[i], this.endian === ByteArrayBase.LITTLE_ENDIAN);
+            for (var i = 0; i < _bytes.length; i++) {
+                this.data.setInt32(this.position, _bytes[i], this.endian === ByteArrayBase.LITTLE_ENDIAN);
                 this.position += ByteArrayBase.SIZE_OF_INT32;
             }
         }
@@ -652,11 +652,11 @@ module nid.utils
          * Writes a Float32Array to the byte stream.
          * @param	value	The Float32Array to be written.
          */
-        public writeFloat32Array(bytes: Float32Array): void {
-            this.validateBuffer(this.position + bytes.length);
+        public writeFloat32Array(_bytes: Float32Array): void {
+            this.validateBuffer(this.position + _bytes.length);
 
-            for (var i = 0; i < bytes.length; i++) {
-                this.data.setFloat32(this.position, bytes[i], this.endian === ByteArrayBase.LITTLE_ENDIAN);
+            for (var i = 0; i < _bytes.length; i++) {
+                this.data.setFloat32(this.position, _bytes[i], this.endian === ByteArrayBase.LITTLE_ENDIAN);
                 this.position += ByteArrayBase.SIZE_OF_FLOAT32;
             }
         }
@@ -665,11 +665,11 @@ module nid.utils
          * Writes a Float64Array to the byte stream.
          * @param	value	The Float64Array to be written.
          */
-        public writeFloat64Array(bytes: Float64Array): void {
-            this.validateBuffer(this.position + bytes.length);
+        public writeFloat64Array(_bytes: Float64Array): void {
+            this.validateBuffer(this.position + _bytes.length);
 
-            for (var i = 0; i < bytes.length; i++) {
-                this.data.setFloat64(this.position, bytes[i], this.endian === ByteArrayBase.LITTLE_ENDIAN);
+            for (var i = 0; i < _bytes.length; i++) {
+                this.data.setFloat64(this.position, _bytes[i], this.endian === ByteArrayBase.LITTLE_ENDIAN);
                 this.position += ByteArrayBase.SIZE_OF_FLOAT64;
             }
         }
