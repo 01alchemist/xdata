@@ -1,4 +1,4 @@
-module nid
+module nid.utils
 {
     /**
      * LZMA Decoder

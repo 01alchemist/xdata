@@ -1,5 +1,6 @@
 ///<reference path="LZMA.ts" />
-module nid{
+module nid.utils{
+
     "use strict"
     export class LZMAWorker
     {
@@ -30,4 +31,4 @@ module nid{
         }
     }
 }
-var w = new nid.LZMAWorker();
+var w = new nid.utils.LZMAWorker();

@@ -29,7 +29,7 @@ module nid.utils
                 throw "Compression error! "+algorithm+" not implemented";
             }
         }
-		/*public uncompress(algorithm:string=CompressionAlgorithm.LZMA) : void{
+		public uncompress(algorithm:string=CompressionAlgorithm.LZMA) : void{
             if(algorithm == CompressionAlgorithm.LZMA) {
                 try {
                     this.buffer = LZMAHelper.decode(this.buffer);
@@ -39,7 +39,7 @@ module nid.utils
             }else{
                 throw "Uncompression error! "+algorithm+" not implemented";
             }
-        }*/
+        }
         public compressAsync(algorithm:string,callback) : void{
             if(algorithm == CompressionAlgorithm.LZMA) {
 

@@ -1,7 +1,8 @@
+///<reference path="lzma/LZMA.ts" />
 module nid.utils{
 
     export class LZMAHelper{
-        //static decoder:LZMA = new LZMA();
+        static decoder:LZMA = new LZMA();
         static decoderAsync:Worker = new Worker('LZMAWorker.min.js');
         static callback:Function;
         static ENCODE:number = 1;
@@ -22,12 +23,23 @@ module nid.utils{
             }
         }
 
-        /*static encode(data:ArrayBuffer):ArrayBuffer{
+        /**
+         * TODO : Implement encoder
+         * @param data
+         * @returns {null}
+         */
+        static encode(data:ArrayBuffer):ArrayBuffer{
             return null;
         }
         static decode(data:ArrayBuffer):ArrayBuffer{
             return LZMAHelper.decoder.decode(new Uint8Array(data)).buffer;
-        }*/
+        }
+
+        /**
+         * TODO : Implement encoder
+         * @param data
+         * @param _callback
+         */
         static encodeAsync(data:ArrayBuffer,_callback:Function):void{
 
         }
