@@ -1,18 +1,18 @@
-///<reference path="LZMA.ts" />
+///<reference path="ZLIB.ts" />
 module nid.utils{
 
     "use strict"
-    export class LZMAWorker
+    export class ZLIBWorker
     {
         static ENCODE:number = 1;
         static DECODE:number = 2;
-        private decoder:LZMA;
+        private decoder:ZLIB;
         private command:number = 0;
 
         constructor ()
         {
             var _this = this;
-            this.decoder = new LZMA();
+            this.decoder = new ZLIB();
 
             addEventListener('message', (e:any) => {
                 if(_this.command == 0){
@@ -26,9 +26,9 @@ module nid.utils{
         }
         private decode(data):void{
             var result = this.decoder.decode(new Uint8Array(data));
-            (<any> postMessage)(LZMAWorker.DECODE);
+            (<any> postMessage)(ZLIBWorker.DECODE);
             (<any> postMessage)(result.buffer,[result.buffer]);
         }
     }
 }
-var zlma_w = new nid.utils.LZMAWorker();
+var zlib_w = new nid.utils.ZLIBWorker();

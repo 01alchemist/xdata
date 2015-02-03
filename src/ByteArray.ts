@@ -1,6 +1,7 @@
-﻿///<reference path="ByteArrayBase.ts" />
-///<reference path="LZMAHelper.ts" />
-///<reference path="CompressionAlgorithm.ts" />
+﻿///<reference path="./ByteArrayBase.ts" />
+///<reference path="./LZMAHelper.ts" />
+///<reference path="./ZLIBHelper.ts" />
+///<reference path="./CompressionAlgorithm.ts" />
 /**
 * JavaScript ByteArray 
 * version : 0.2
@@ -23,31 +24,48 @@ module nid.utils
             super(buffer,offset,length);
         }
 		public compress(algorithm:string=CompressionAlgorithm.LZMA) : void{
+            throw "Compression error! "+algorithm+" not implemented";
             if(algorithm == CompressionAlgorithm.LZMA) {
 
             }else{
                 throw "Compression error! "+algorithm+" not implemented";
             }
         }
-		public uncompress(algorithm:string=CompressionAlgorithm.LZMA) : void{
+		public decompressBuffer(algorithm:string=CompressionAlgorithm.LZMA) : void{
             if(algorithm == CompressionAlgorithm.LZMA) {
                 try {
                     this.buffer = LZMAHelper.decode(this.buffer);
                 } catch (e) {
                     throw "Uncompression error! "+algorithm+" not implemented";
                 }
+            }else if(algorithm == CompressionAlgorithm.ZLIB){
+                this.buffer = ZLIBHelper.decode(this.buffer);
+            }else{
+                throw "Uncompression error! "+algorithm+" not implemented";
+            }
+        }
+		public decompress(algorithm:string=CompressionAlgorithm.LZMA) : void{
+            if(algorithm == CompressionAlgorithm.LZMA) {
+                try {
+                    this.array = LZMAHelper.decode(this.array);
+                } catch (e) {
+                    throw "Uncompression error! "+algorithm+" not implemented";
+                }
+            }else if(algorithm == CompressionAlgorithm.ZLIB){
+                this.array = ZLIBHelper.decode(this.array);
             }else{
                 throw "Uncompression error! "+algorithm+" not implemented";
             }
         }
         public compressAsync(algorithm:string,callback) : void{
+            throw "Compression error! "+algorithm+" not implemented";
             if(algorithm == CompressionAlgorithm.LZMA) {
 
             }else{
                 throw "Compression error! "+algorithm+" not implemented";
             }
         }
-        public uncompressAsync(algorithm:string=CompressionAlgorithm.LZMA,callback=null) : void{
+        public decompressAsync(algorithm:string=CompressionAlgorithm.LZMA,callback=null) : void{
             if(algorithm == CompressionAlgorithm.LZMA){
                 LZMAHelper.decodeAsync(this.buffer,function(_data){
                     this.buffer = _data;
@@ -57,7 +75,7 @@ module nid.utils
             }
         }
 		public deflate():void{}
-        public inflate(): void{ }
+        public inflate(): void{}
 
 
 		/**

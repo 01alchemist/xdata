@@ -5,7 +5,8 @@ var sourcemaps = require('gulp-sourcemaps');
 var del = require('del');
 
 var paths = {
-    ts_classes: ['BitArray','ByteArray','ByteArrayBase'],
+    ts_classes: ['ByteArray'],
+    /*ts_classes: ['BitArray','ByteArray','ByteArrayBase'],*/
     js_scripts: ['build/*.js']
 };
 
