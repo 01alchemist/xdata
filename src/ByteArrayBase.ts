@@ -160,27 +160,6 @@ module nid.utils
 
             return _bytes;
         }
-        public readBytesAsByteArray(_bytes:ByteArray=null, offset:number= 0, length:number= 0,createNewBuffer:boolean=false): ByteArray{
-            if(length == 0){
-                length = this.bytesAvailable;
-            }
-            else if (!this.validate(length)) return null;
-
-            if(createNewBuffer){
-                _bytes = _bytes == null?new ByteArray(new ArrayBuffer(length)):_bytes;
-                //This method is expensive
-                for(var i=0; i < length;i++){
-                    _bytes.data.setUint8(i+offset,this.data.getUint8(this.position++));
-                }
-            }else{
-                //Offset argument ignored
-                _bytes = _bytes == null?new ByteArray(null):_bytes;
-                _bytes.dataView = new DataView(this.data.buffer,this.bufferOffset+this.position,length);
-                this.position += length;
-            }
-
-            return _bytes;
-        }
 
 		/**
 		 * Reads an IEEE 754 double-precision (64-bit) floating-point number from the byte stream.

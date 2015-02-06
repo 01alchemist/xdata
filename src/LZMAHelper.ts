@@ -31,8 +31,11 @@ module nid.utils{
         static encode(data:ArrayBuffer):ArrayBuffer{
             return null;
         }
-        static decode(data:ArrayBuffer):ArrayBuffer{
+        static decodeBuffer(data:ArrayBuffer):ArrayBuffer{
             return LZMAHelper.decoder.decode(new Uint8Array(data)).buffer;
+        }
+        static decode(data:Uint8Array):Uint8Array{
+            return LZMAHelper.decoder.decode(data);
         }
 
         /**
