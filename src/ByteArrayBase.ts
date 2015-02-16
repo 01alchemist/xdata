@@ -108,6 +108,19 @@ module nid.utils
             }
             return this.array;
         }
+        public setArray(array:Uint8Array):void{
+            this.array = array;
+            this.setBuffer(array.buffer, array.byteOffset, array.byteLength);
+        }
+        public setBuffer(buffer:ArrayBuffer, offset:number=0, length:number=0){
+            if(buffer){
+                this.data = new DataView(buffer,offset,length>0?length:buffer.byteLength);
+                this.write_position = length>0?length:buffer.byteLength;
+            }else{
+                this.write_position = 0;
+            }
+            this._position = 0;
+        }
         /**
          * Reads a Boolean value from the byte stream. A single byte is read,
 		 * and true is returned if the byte is nonzero,

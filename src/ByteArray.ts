@@ -1,6 +1,6 @@
 ﻿///<reference path="./ByteArrayBase.ts" />
 ///<reference path="./LZMAHelper.ts" />
-///<reference path="./ZLIBHelper.ts" />
+/*///<reference path="./ZLIBHelper.ts" />*/
 ///<reference path="./CompressionAlgorithm.ts" />
 /**
 * JavaScript ByteArray 
@@ -39,7 +39,7 @@ module nid.utils
                     throw "Uncompression error! "+algorithm+" not implemented";
                 }
             }else if(algorithm == CompressionAlgorithm.ZLIB){
-                this.buffer = ZLIBHelper.decodeBuffer(this.buffer);
+                /*this.buffer = ZLIBHelper.decodeBuffer(this.buffer);*/
             }else{
                 throw "Uncompression error! "+algorithm+" not implemented";
             }
@@ -52,7 +52,7 @@ module nid.utils
                     throw "Uncompression error! "+algorithm+" not implemented";
                 }
             }else if(algorithm == CompressionAlgorithm.ZLIB){
-                this.array = ZLIBHelper.decode(this.array);
+                /*this.array = ZLIBHelper.decode(this.array);*/
             }else{
                 throw "Uncompression error! "+algorithm+" not implemented";
             }
