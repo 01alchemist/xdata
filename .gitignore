@@ -1,6 +1,5 @@
-/.idea
-/.gradle
-/build
-/node_modules
-/bower_components
+.idea
+.gradle
+node_modules
 atlassian-ide-plugin.xml
+npm-debug.log

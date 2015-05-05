@@ -3,22 +3,26 @@ module nid.utils{
 
     export class LZMAHelper{
         static decoder:LZMA = new LZMA();
-        static decoderAsync:Worker = new Worker('LZMAWorker.min.js');
+        static decoderAsync:Worker;
+        static enableAsync:boolean = false;
         static callback:Function;
         static ENCODE:number = 1;
         static DECODE:number = 2;
 
         static init():void{
             var command = 0;
-            LZMAHelper.decoderAsync.onmessage = function(e){
-                if(command == 0){
-                    command = e.data;
-                }else if(command == LZMAHelper.ENCODE){
-                    command = 0;//encode not implemented
-                }else if(command == LZMAHelper.DECODE){
-                    command = 0;
-                    LZMAHelper.callback(e.data);
-                    LZMAHelper.callback = null;
+            if(LZMAHelper.enableAsync){
+                LZMAHelper.decoderAsync = new Worker('LZMAWorker.min.js');
+                LZMAHelper.decoderAsync.onmessage = function(e){
+                    if(command == 0){
+                        command = e.data;
+                    }else if(command == LZMAHelper.ENCODE){
+                        command = 0;//encode not implemented
+                    }else if(command == LZMAHelper.DECODE){
+                        command = 0;
+                        LZMAHelper.callback(e.data);
+                        LZMAHelper.callback = null;
+                    }
                 }
             }
         }
@@ -44,15 +48,23 @@ module nid.utils{
          * @param _callback
          */
         static encodeAsync(data:ArrayBuffer,_callback:Function):void{
+            if(LZMAHelper.enableAsync) {
 
+            }else{
+                console.log('Error! Asynchronous encoding is disabled');
+            }
         }
         static decodeAsync(data:ArrayBuffer,_callback:Function):void{
-            if(LZMAHelper.callback == null){
-                LZMAHelper.callback = _callback;
-                LZMAHelper.decoderAsync.postMessage(LZMAHelper.DECODE);
-                LZMAHelper.decoderAsync.postMessage(data,[data]);
+            if(LZMAHelper.enableAsync) {
+                if (LZMAHelper.callback == null) {
+                    LZMAHelper.callback = _callback;
+                    LZMAHelper.decoderAsync.postMessage(LZMAHelper.DECODE);
+                    LZMAHelper.decoderAsync.postMessage(data, [data]);
+                } else {
+                    console.log('Warning! Another LZMA decoding is running...');
+                }
             }else{
-                console.log('Warning! Another LZMA decoding is running...');
+                console.log('Error! Asynchronous decoding is disabled');
             }
         }
     }

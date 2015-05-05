@@ -1,53 +1,86 @@
 var gulp = require('gulp');
 var shell = require('gulp-shell');
-var cc = require('gulp-closure-compiler');
+var uglify = require('gulp-uglify');
+var rename = require('gulp-rename');
 var sourcemaps = require('gulp-sourcemaps');
 var del = require('del');
 
+var build_path =  "build";
 var paths = {
+    ts_files: [
+        'src/ByteArray.ts'
+    ],
     ts_classes: ['ByteArray'],
-    /*ts_classes: ['BitArray','ByteArray','ByteArrayBase'],*/
-    js_scripts: ['build/*.js']
+    js_scripts: [build_path+'/**/*.js']
 };
 
-gulp.task('clean', function(cb) {
-    del(['build'], cb);
-
+gulp.task('cleanES5', function(cb) {
+    del(['build/es5'], cb);
 });
 
-var shellCompileTasks = [];
-Object.keys(paths.ts_classes).forEach(function(index) {
-    var className = paths.ts_classes[index];
-    shellCompileTasks.push('echo Compiling:'+className+'.ts');
-    shellCompileTasks.push('tsc -t "ES5" --declaration --out "build/'+className+'.js" "src/'+className+'.ts"  --sourcemap');
+gulp.task('cleanES6', function(cb) {
+    del(['build/es6'], cb);
 });
 
-gulp.task('compile', ['clean'], shell.task(shellCompileTasks));
+var tsc_cmd = 'tsc -t "ES5" --out <%= dest(file.path) %> <%= file.path %>  --sourcemap';
+var echo = 'echo [--:--:--] Compiling \033[1;33m<%= className(file.path) %>\033[0m';
+
+gulp.task('compileES5', ['cleanES5'], function(){
+    return gulp.src(paths.ts_files)
+        .pipe(shell([echo+' (ES5)',tsc_cmd], {
+            templateData: {
+                dest: function (s) {
+                    var d = s.substring(s.lastIndexOf("\\")+1, s.length);
+                    return build_path+"/es5/"+d.replace(/ts/, 'js');
+                },
+                className: function(s){
+                    return s.substring(s.lastIndexOf("\\")+1, s.length);
+                }
+            }
+        }));
+});
+
+gulp.task('compileES6', ['cleanES6'], function(){
+    var tsc = tsc_cmd.replace("ES5","ES6");
+    return gulp.src(paths.ts_files)
+        .pipe(shell([echo+' (ES6)',tsc], {
+            templateData: {
+                dest: function (s) {
+                    var d = s.substring(s.lastIndexOf("\\")+1, s.length);
+                    return build_path+"/es6/"+d.replace(/ts/, 'js');
+                },
+                className: function(s){
+                    return s.substring(s.lastIndexOf("\\")+1, s.length);
+                }
+            }
+        }));
+});
 
 gulp.task('optimize', function() {
     return gulp.src(paths.js_scripts)
         .pipe(sourcemaps.init())
-        .pipe(cc({
-            compilerPath: 'bower_components/closure-compiler/compiler.jar',
-            compilerFlags: {
-                compilation_level: 'ADVANCED_OPTIMIZATIONS',
-                define: [
-                    "goog.DEBUG=false"
-                ],
-                // Some compiler flags (like --use_types_for_optimization) don't have value. Use null.
-                // use_types_for_optimization: null,
-                only_closure_dependencies: true,
-                output_wrapper: '(function(){%output%})();',
-                warning_level: 'VERBOSE'
+        .pipe(uglify({ outSourceMap: true }))
+        .pipe(rename(function (path) {
+            if(path.extname === '.js') {
+                path.basename += '.min';
             }
         }))
-        .pipe(gulp.dest('build'));
+        .pipe(gulp.dest(build_path));
 });
 
-// Rerun the task when a file changes
 gulp.task('watch', function() {
     gulp.watch('src/**/*.ts', ['compile']);
 });
 
+gulp.task('watchES5', function() {
+    gulp.watch('src/**/*.ts', ['compileES5']);
+});
+
+gulp.task('watchES6', function() {
+    gulp.watch('src/**/*.ts', ['compileES6']);
+});
+
+gulp.task('compile', ['compileES5','compileES6']);
+
 // The default task (called when you run `gulp` from cli)
-gulp.task('default', ['compile']);
+gulp.task('default', ['compile','optimize']);
