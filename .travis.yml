@@ -2,13 +2,13 @@ language: node_js
 node_js:
   - "0.11"
 install:
-  - "npm install -g typescript@1.4.1"
-  - "npm install -g gulp"
-  - "npm install -g gulp-shell"
-  - "npm install -g gulp-uglify"
-  - "npm install -g gulp-rename"
-  - "npm install -g gulp-sourcemaps"
-  - "npm install -g run-sequence"
-  - "npm install -g del"
+  - "npm install typescript@1.4.1"
+  - "npm install gulp"
+  - "npm install gulp-shell"
+  - "npm install gulp-uglify"
+  - "npm install gulp-rename"
+  - "npm install gulp-sourcemaps"
+  - "npm install run-sequence"
+  - "npm install del"
 script:
   - 'gulp'
