@@ -248,7 +248,6 @@ var nid;
                     return null;
                 if (createNewBuffer) {
                     _bytes = _bytes == null ? new ByteArrayBase(new ArrayBuffer(length)) : _bytes;
-                    //This method is expensive
                     for (var i = 0; i < length; i++) {
                         _bytes.data.setUint8(i + offset, this.data.getUint8(this.position++));
                     }
@@ -1301,9 +1300,15 @@ var nid;
                 else
                     return state - 6;
             };
-            LzmaDecoder.prototype.updateState_ShortRep = function (state) { return state < 7 ? 9 : 11; };
-            LzmaDecoder.prototype.updateState_Rep = function (state) { return state < 7 ? 8 : 11; };
-            LzmaDecoder.prototype.updateState_Match = function (state) { return state < 7 ? 7 : 10; };
+            LzmaDecoder.prototype.updateState_ShortRep = function (state) {
+                return state < 7 ? 9 : 11;
+            };
+            LzmaDecoder.prototype.updateState_Rep = function (state) {
+                return state < 7 ? 8 : 11;
+            };
+            LzmaDecoder.prototype.updateState_Match = function (state) {
+                return state < 7 ? 7 : 10;
+            };
             LzmaDecoder.prototype.decode = function (unpackSizeDefined, unpackSize) {
                 this.init();
                 this.rangeDec.init();
@@ -1373,9 +1378,7 @@ var nid;
                         state = this.updateState_Match(state);
                         rep0 = this.decodeDistance(len);
                         if (rep0 == 0xFFFFFFFF) {
-                            return this.rangeDec.isFinishedOK() ?
-                                utils.LZMA.LZMA_RES_FINISHED_WITH_MARKER :
-                                utils.LZMA.LZMA_RES_ERROR;
+                            return this.rangeDec.isFinishedOK() ? utils.LZMA.LZMA_RES_FINISHED_WITH_MARKER : utils.LZMA.LZMA_RES_ERROR;
                         }
                         if (unpackSizeDefined && unpackSize == 0) {
                             return utils.LZMA.LZMA_RES_ERROR;
@@ -1912,8 +1915,10 @@ var nid;
                     throw "Uncompression error! " + algorithm + " not implemented";
                 }
             };
-            ByteArray.prototype.deflate = function () { };
-            ByteArray.prototype.inflate = function () { };
+            ByteArray.prototype.deflate = function () {
+            };
+            ByteArray.prototype.inflate = function () {
+            };
             /**
              * Reads the number of data bytes, specified by the length parameter, from the byte stream.
              * The bytes are read into the ByteArray object specified by the bytes parameter,
@@ -1934,7 +1939,6 @@ var nid;
                     return null;
                 if (createNewBuffer) {
                     _bytes = _bytes == null ? new ByteArray(new ArrayBuffer(length)) : _bytes;
-                    //This method is expensive
                     for (var i = 0; i < length; i++) {
                         _bytes.data.setUint8(i + offset, this.data.getUint8(this.position++));
                     }

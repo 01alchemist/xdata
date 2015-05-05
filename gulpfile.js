@@ -3,6 +3,7 @@ var shell = require('gulp-shell');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var sourcemaps = require('gulp-sourcemaps');
+var runSequence = require('run-sequence');
 var del = require('del');
 
 var build_path =  "build";
@@ -83,4 +84,6 @@ gulp.task('watchES6', function() {
 gulp.task('compile', ['compileES5','compileES6']);
 
 // The default task (called when you run `gulp` from cli)
-gulp.task('default', ['compile','optimize']);
+gulp.task('default', function(callback){
+    runSequence('compile','optimize',callback);
+});

@@ -6,12 +6,14 @@
  */
 var ctypes;
 (function (ctypes) {
-    class UInt64 {
-        constructor(low = 0, high = 0) {
+    var UInt64 = (function () {
+        function UInt64(low, high) {
+            if (low === void 0) { low = 0; }
+            if (high === void 0) { high = 0; }
             this.low = low;
             this.high = high;
         }
-        value() {
+        UInt64.prototype.value = function () {
             //this._value = (this.low | (this.high << 32));
             var _h = this.high.toString(16);
             var _hd = 8 - _h.length;
@@ -29,8 +31,9 @@ var ctypes;
             }
             this._value = Number('0x' + _h + _l);
             return this._value;
-        }
-    }
+        };
+        return UInt64;
+    })();
     ctypes.UInt64 = UInt64;
 })(ctypes || (ctypes = {}));
 /**
@@ -41,12 +44,12 @@ var ctypes;
  */
 var ctypes;
 (function (ctypes) {
-    class Int64 {
-        constructor(low, high) {
+    var Int64 = (function () {
+        function Int64(low, high) {
             this.low = low;
             this.high = high;
         }
-        value() {
+        Int64.prototype.value = function () {
             //this._value = (this.low | (this.high << 32));
             var _h = this.high.toString(16);
             var _hd = 8 - _h.length;
@@ -64,8 +67,9 @@ var ctypes;
             }
             this._value = Number('0x' + _h + _l);
             return this._value;
-        }
-    }
+        };
+        return Int64;
+    })();
     ctypes.Int64 = Int64;
 })(ctypes || (ctypes = {}));
 ///<reference path="./ctypes/ctypes.d.ts" />
@@ -84,8 +88,10 @@ var nid;
     (function (utils) {
         var UInt64 = ctypes.UInt64;
         var Int64 = ctypes.Int64;
-        class ByteArrayBase {
-            constructor(buffer, offset = 0, length = 0) {
+        var ByteArrayBase = (function () {
+            function ByteArrayBase(buffer, offset, length) {
+                if (offset === void 0) { offset = 0; }
+                if (length === void 0) { length = 0; }
                 this.BUFFER_EXT_SIZE = 1024; //Buffer expansion size
                 this.array = null;
                 this.EOF_byte = -1;
@@ -106,62 +112,92 @@ var nid;
                 this._position = 0;
                 this.endian = ByteArrayBase.BIG_ENDIAN;
             }
-            // getter setter
-            get buffer() {
-                return this.data.buffer;
-            }
-            set buffer(value) {
-                this.data = new DataView(value);
-            }
-            get dataView() {
-                return this.data;
-            }
-            set dataView(value) {
-                this.data = value;
-                this.write_position = value.byteLength;
-            }
-            get phyPosition() {
-                return this._position + this.data.byteOffset;
-            }
-            get bufferOffset() {
-                return this.data.byteOffset;
-            }
-            get position() {
-                return this._position;
-            }
-            set position(value) {
-                if (this._position < value) {
-                    if (!this.validate(this._position - value)) {
-                        return;
+            Object.defineProperty(ByteArrayBase.prototype, "buffer", {
+                // getter setter
+                get: function () {
+                    return this.data.buffer;
+                },
+                set: function (value) {
+                    this.data = new DataView(value);
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(ByteArrayBase.prototype, "dataView", {
+                get: function () {
+                    return this.data;
+                },
+                set: function (value) {
+                    this.data = value;
+                    this.write_position = value.byteLength;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(ByteArrayBase.prototype, "phyPosition", {
+                get: function () {
+                    return this._position + this.data.byteOffset;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(ByteArrayBase.prototype, "bufferOffset", {
+                get: function () {
+                    return this.data.byteOffset;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(ByteArrayBase.prototype, "position", {
+                get: function () {
+                    return this._position;
+                },
+                set: function (value) {
+                    if (this._position < value) {
+                        if (!this.validate(this._position - value)) {
+                            return;
+                        }
                     }
-                }
-                this._position = value;
-                this.write_position = value > this.write_position ? value : this.write_position;
-            }
-            get length() {
-                return this.write_position;
-            }
-            set length(value) {
-                this.validateBuffer(value);
-            }
-            get bytesAvailable() {
-                return this.data.byteLength - this._position;
-            }
+                    this._position = value;
+                    this.write_position = value > this.write_position ? value : this.write_position;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(ByteArrayBase.prototype, "length", {
+                get: function () {
+                    return this.write_position;
+                },
+                set: function (value) {
+                    this.validateBuffer(value);
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(ByteArrayBase.prototype, "bytesAvailable", {
+                get: function () {
+                    return this.data.byteLength - this._position;
+                },
+                enumerable: true,
+                configurable: true
+            });
             //end
-            clear() {
+            ByteArrayBase.prototype.clear = function () {
                 this._position = 0;
-            }
-            getArray() {
+            };
+            ByteArrayBase.prototype.getArray = function () {
                 if (this.array == null) {
                     this.array = new Uint8Array(this.data.buffer, this.data.byteOffset, this.data.byteLength);
                 }
                 return this.array;
-            }
-            setArray(array) {
+            };
+            ByteArrayBase.prototype.setArray = function (array) {
                 this.array = array;
                 this.setBuffer(array.buffer, array.byteOffset, array.byteLength);
-            }
-            setBuffer(buffer, offset = 0, length = 0) {
+            };
+            ByteArrayBase.prototype.setBuffer = function (buffer, offset, length) {
+                if (offset === void 0) { offset = 0; }
+                if (length === void 0) { length = 0; }
                 if (buffer) {
                     this.data = new DataView(buffer, offset, length > 0 ? length : buffer.byteLength);
                     this.write_position = length > 0 ? length : buffer.byteLength;
@@ -170,28 +206,28 @@ var nid;
                     this.write_position = 0;
                 }
                 this._position = 0;
-            }
+            };
             /**
              * Reads a Boolean value from the byte stream. A single byte is read,
              * and true is returned if the byte is nonzero,
              * false otherwise.
              * @return	Returns true if the byte is nonzero, false otherwise.
             */
-            readBoolean() {
+            ByteArrayBase.prototype.readBoolean = function () {
                 if (!this.validate(ByteArrayBase.SIZE_OF_BOOLEAN))
                     return null;
                 return this.data.getUint8(this.position++) != 0;
-            }
+            };
             /**
              * Reads a signed byte from the byte stream.
              * The returned value is in the range -128 to 127.
              * @return	An integer between -128 and 127.
              */
-            readByte() {
+            ByteArrayBase.prototype.readByte = function () {
                 if (!this.validate(ByteArrayBase.SIZE_OF_INT8))
                     return null;
                 return this.data.getInt8(this.position++);
-            }
+            };
             /**
              * Reads the number of data bytes, specified by the length parameter, from the byte stream.
              * The bytes are read into the ByteArrayBase object specified by the bytes parameter,
@@ -200,7 +236,11 @@ var nid;
              * @param	offset	The offset (_position) in bytes at which the read data should be written.
              * @param	length	The number of bytes to read.  The default value of 0 causes all available data to be read.
              */
-            readBytes(_bytes = null, offset = 0, length = 0, createNewBuffer = false) {
+            ByteArrayBase.prototype.readBytes = function (_bytes, offset, length, createNewBuffer) {
+                if (_bytes === void 0) { _bytes = null; }
+                if (offset === void 0) { offset = 0; }
+                if (length === void 0) { length = 0; }
+                if (createNewBuffer === void 0) { createNewBuffer = false; }
                 if (length == 0) {
                     length = this.bytesAvailable;
                 }
@@ -208,7 +248,6 @@ var nid;
                     return null;
                 if (createNewBuffer) {
                     _bytes = _bytes == null ? new ByteArrayBase(new ArrayBuffer(length)) : _bytes;
-                    //This method is expensive
                     for (var i = 0; i < length; i++) {
                         _bytes.data.setUint8(i + offset, this.data.getUint8(this.position++));
                     }
@@ -220,49 +259,49 @@ var nid;
                     this.position += length;
                 }
                 return _bytes;
-            }
+            };
             /**
              * Reads an IEEE 754 double-precision (64-bit) floating-point number from the byte stream.
              * @return	A double-precision (64-bit) floating-point number.
              */
-            readDouble() {
+            ByteArrayBase.prototype.readDouble = function () {
                 if (!this.validate(ByteArrayBase.SIZE_OF_FLOAT64))
                     return null;
                 var value = this.data.getFloat64(this.position, this.endian == ByteArrayBase.LITTLE_ENDIAN);
                 this.position += ByteArrayBase.SIZE_OF_FLOAT64;
                 return value;
-            }
+            };
             /**
              * Reads an IEEE 754 single-precision (32-bit) floating-point number from the byte stream.
              * @return	A single-precision (32-bit) floating-point number.
              */
-            readFloat() {
+            ByteArrayBase.prototype.readFloat = function () {
                 if (!this.validate(ByteArrayBase.SIZE_OF_FLOAT32))
                     return null;
                 var value = this.data.getFloat32(this.position, this.endian == ByteArrayBase.LITTLE_ENDIAN);
                 this.position += ByteArrayBase.SIZE_OF_FLOAT32;
                 return value;
-            }
+            };
             /**
              * Reads a signed 32-bit integer from the byte stream.
              *
              *   The returned value is in the range -2147483648 to 2147483647.
              * @return	A 32-bit signed integer between -2147483648 and 2147483647.
              */
-            readInt() {
+            ByteArrayBase.prototype.readInt = function () {
                 if (!this.validate(ByteArrayBase.SIZE_OF_INT32))
                     return null;
                 var value = this.data.getInt32(this.position, this.endian == ByteArrayBase.LITTLE_ENDIAN);
                 this.position += ByteArrayBase.SIZE_OF_INT32;
                 return value;
-            }
+            };
             /**
              * Reads a signed 64-bit integer from the byte stream.
              *
              *   The returned value is in the range −(2^63) to 2^63 − 1
              * @return	A 64-bit signed integer between −(2^63) to 2^63 − 1
              */
-            readInt64() {
+            ByteArrayBase.prototype.readInt64 = function () {
                 if (!this.validate(ByteArrayBase.SIZE_OF_UINT32))
                     return null;
                 var low = this.data.getInt32(this.position, this.endian == ByteArrayBase.LITTLE_ENDIAN);
@@ -270,7 +309,7 @@ var nid;
                 var high = this.data.getInt32(this.position, this.endian == ByteArrayBase.LITTLE_ENDIAN);
                 this.position += ByteArrayBase.SIZE_OF_INT32;
                 return new Int64(low, high);
-            }
+            };
             /**
              * Reads a multibyte string of specified length from the byte stream using the
              * specified character set.
@@ -287,48 +326,48 @@ var nid;
              *   On the other system, the application will use the system's default code page.
              * @return	UTF-8 encoded string.
              */
-            readMultiByte(length, charSet) {
+            ByteArrayBase.prototype.readMultiByte = function (length, charSet) {
                 if (!this.validate(length))
                     return null;
                 return "";
-            }
+            };
             /**
              * Reads a signed 16-bit integer from the byte stream.
              *
              *   The returned value is in the range -32768 to 32767.
              * @return	A 16-bit signed integer between -32768 and 32767.
              */
-            readShort() {
+            ByteArrayBase.prototype.readShort = function () {
                 if (!this.validate(ByteArrayBase.SIZE_OF_INT16))
                     return null;
                 var value = this.data.getInt16(this.position, this.endian == ByteArrayBase.LITTLE_ENDIAN);
                 this.position += ByteArrayBase.SIZE_OF_INT16;
                 return value;
-            }
+            };
             /**
              * Reads an unsigned byte from the byte stream.
              *
              *   The returned value is in the range 0 to 255.
              * @return	A 32-bit unsigned integer between 0 and 255.
              */
-            readUnsignedByte() {
+            ByteArrayBase.prototype.readUnsignedByte = function () {
                 if (!this.validate(ByteArrayBase.SIZE_OF_UINT8))
                     return null;
                 return this.data.getUint8(this.position++);
-            }
+            };
             /**
              * Reads an unsigned 32-bit integer from the byte stream.
              *
              *   The returned value is in the range 0 to 4294967295.
              * @return	A 32-bit unsigned integer between 0 and 4294967295.
              */
-            readUnsignedInt() {
+            ByteArrayBase.prototype.readUnsignedInt = function () {
                 if (!this.validate(ByteArrayBase.SIZE_OF_UINT32))
                     return null;
                 var value = this.data.getUint32(this.position, this.endian == ByteArrayBase.LITTLE_ENDIAN);
                 this.position += ByteArrayBase.SIZE_OF_UINT32;
                 return value;
-            }
+            };
             /**
              * Reads a variable sized unsigned integer (VX -> 16-bit or 32-bit) from the byte stream.
              *
@@ -340,7 +379,7 @@ var nid;
              *   The returned value is in the range  0 to 65279 or 0 to 2147483647.
              * @return	A VX 16-bit or 32-bit unsigned integer between 0 to 65279 or 0 and 2147483647.
              */
-            readVariableSizedUnsignedInt() {
+            ByteArrayBase.prototype.readVariableSizedUnsignedInt = function () {
                 var value;
                 var c = this.readUnsignedByte();
                 if (c != 0xFF) {
@@ -357,20 +396,20 @@ var nid;
                     value |= c;
                 }
                 return value;
-            }
+            };
             /**
              * Fast read for WebGL since only Uint16 numbers are expected
              */
-            readU16VX() {
+            ByteArrayBase.prototype.readU16VX = function () {
                 return (this.readUnsignedByte() << 8) | this.readUnsignedByte();
-            }
+            };
             /**
              * Reads an unsigned 64-bit integer from the byte stream.
              *
              *   The returned value is in the range 0 to 2^64 − 1.
              * @return	A 64-bit unsigned integer between 0 and 2^64 − 1
              */
-            readUnsignedInt64() {
+            ByteArrayBase.prototype.readUnsignedInt64 = function () {
                 if (!this.validate(ByteArrayBase.SIZE_OF_UINT32))
                     return null;
                 var low = this.data.getUint32(this.position, this.endian == ByteArrayBase.LITTLE_ENDIAN);
@@ -378,27 +417,27 @@ var nid;
                 var high = this.data.getUint32(this.position, this.endian == ByteArrayBase.LITTLE_ENDIAN);
                 this.position += ByteArrayBase.SIZE_OF_UINT32;
                 return new UInt64(low, high);
-            }
+            };
             /**
              * Reads an unsigned 16-bit integer from the byte stream.
              *
              *   The returned value is in the range 0 to 65535.
              * @return	A 16-bit unsigned integer between 0 and 65535.
              */
-            readUnsignedShort() {
+            ByteArrayBase.prototype.readUnsignedShort = function () {
                 if (!this.validate(ByteArrayBase.SIZE_OF_UINT16))
                     return null;
                 var value = this.data.getUint16(this.position, this.endian == ByteArrayBase.LITTLE_ENDIAN);
                 this.position += ByteArrayBase.SIZE_OF_UINT16;
                 return value;
-            }
+            };
             /**
              * Reads a UTF-8 string from the byte stream.  The string
              * is assumed to be prefixed with an unsigned short indicating
              * the length in bytes.
              * @return	UTF-8 encoded  string.
              */
-            readUTF() {
+            ByteArrayBase.prototype.readUTF = function () {
                 if (!this.validate(ByteArrayBase.SIZE_OF_UINT16))
                     return null;
                 var length = this.data.getUint16(this.position, this.endian == ByteArrayBase.LITTLE_ENDIAN);
@@ -409,14 +448,14 @@ var nid;
                 else {
                     return "";
                 }
-            }
+            };
             /**
              * Reads a sequence of UTF-8 bytes specified by the length
              * parameter from the byte stream and returns a string.
              * @param	length	An unsigned short indicating the length of the UTF-8 bytes.
              * @return	A string composed of the UTF-8 bytes of the specified length.
              */
-            readUTFBytes(length) {
+            ByteArrayBase.prototype.readUTFBytes = function (length) {
                 if (!this.validate(length))
                     return null;
                 var _bytes = new Uint8Array(this.buffer, this.bufferOffset + this.position, length);
@@ -426,8 +465,8 @@ var nid;
                     _bytes[i] = this.data.getUint8(this.position++);
                 }*/
                 return this.decodeUTF8(_bytes);
-            }
-            readStandardString(length) {
+            };
+            ByteArrayBase.prototype.readStandardString = function (length) {
                 if (!this.validate(length))
                     return null;
                 var str = "";
@@ -435,8 +474,9 @@ var nid;
                     str += String.fromCharCode(this.data.getUint8(this.position++));
                 }
                 return str;
-            }
-            readStringTillNull(keepEvenByte = true) {
+            };
+            ByteArrayBase.prototype.readStringTillNull = function (keepEvenByte) {
+                if (keepEvenByte === void 0) { keepEvenByte = true; }
                 var str = "";
                 var num = 0;
                 while (this.bytesAvailable > 0) {
@@ -453,31 +493,31 @@ var nid;
                     }
                 }
                 return str;
-            }
+            };
             /**
              * Writes a Boolean value. A single byte is written according to the value parameter,
              * either 1 if true or 0 if false.
              * @param	value	A Boolean value determining which byte is written. If the parameter is true,
              *   the method writes a 1; if false, the method writes a 0.
              */
-            writeBoolean(value) {
+            ByteArrayBase.prototype.writeBoolean = function (value) {
                 this.validateBuffer(ByteArrayBase.SIZE_OF_BOOLEAN);
                 this.data.setUint8(this.position++, value ? 1 : 0);
-            }
+            };
             /**
              * Writes a byte to the byte stream.
              * The low 8 bits of the
              * parameter are used. The high 24 bits are ignored.
              * @param	value	A 32-bit integer. The low 8 bits are written to the byte stream.
              */
-            writeByte(value) {
+            ByteArrayBase.prototype.writeByte = function (value) {
                 this.validateBuffer(ByteArrayBase.SIZE_OF_INT8);
                 this.data.setInt8(this.position++, value);
-            }
-            writeUnsignedByte(value) {
+            };
+            ByteArrayBase.prototype.writeUnsignedByte = function (value) {
                 this.validateBuffer(ByteArrayBase.SIZE_OF_UINT8);
                 this.data.setUint8(this.position++, value);
-            }
+            };
             /**
              * Writes a sequence of length bytes from the
              * specified byte array, bytes,
@@ -495,40 +535,42 @@ var nid;
              * @param	offset	A zero-based index indicating the _position into the array to begin writing.
              * @param	length	An unsigned integer indicating how far into the buffer to write.
              */
-            writeBytes(_bytes, offset = 0, length = 0) {
+            ByteArrayBase.prototype.writeBytes = function (_bytes, offset, length) {
+                if (offset === void 0) { offset = 0; }
+                if (length === void 0) { length = 0; }
                 this.validateBuffer(length);
                 var tmp_data = new DataView(_bytes.buffer);
                 for (var i = 0; i < _bytes.length; i++) {
                     this.data.setUint8(this.position++, tmp_data.getUint8(i));
                 }
-            }
+            };
             /**
              * Writes an IEEE 754 double-precision (64-bit) floating-point number to the byte stream.
              * @param	value	A double-precision (64-bit) floating-point number.
              */
-            writeDouble(value) {
+            ByteArrayBase.prototype.writeDouble = function (value) {
                 this.validateBuffer(ByteArrayBase.SIZE_OF_FLOAT64);
                 this.data.setFloat64(this.position, value, this.endian == ByteArrayBase.LITTLE_ENDIAN);
                 this.position += ByteArrayBase.SIZE_OF_FLOAT64;
-            }
+            };
             /**
              * Writes an IEEE 754 single-precision (32-bit) floating-point number to the byte stream.
              * @param	value	A single-precision (32-bit) floating-point number.
             */
-            writeFloat(value) {
+            ByteArrayBase.prototype.writeFloat = function (value) {
                 this.validateBuffer(ByteArrayBase.SIZE_OF_FLOAT32);
                 this.data.setFloat32(this.position, value, this.endian == ByteArrayBase.LITTLE_ENDIAN);
                 this.position += ByteArrayBase.SIZE_OF_FLOAT32;
-            }
+            };
             /**
              * Writes a 32-bit signed integer to the byte stream.
              * @param	value	An integer to write to the byte stream.
             */
-            writeInt(value) {
+            ByteArrayBase.prototype.writeInt = function (value) {
                 this.validateBuffer(ByteArrayBase.SIZE_OF_INT32);
                 this.data.setInt32(this.position, value, this.endian == ByteArrayBase.LITTLE_ENDIAN);
                 this.position += ByteArrayBase.SIZE_OF_INT32;
-            }
+            };
             /**
              * Writes a multibyte string to the byte stream using the specified character set.
              * @param	value	The string value to be written.
@@ -536,57 +578,57 @@ var nid;
              *   include "shift-jis", "cn-gb", "iso-8859-1", and others.
              *   For a complete list, see Supported Character Sets.
              */
-            writeMultiByte(value, charSet) {
-            }
+            ByteArrayBase.prototype.writeMultiByte = function (value, charSet) {
+            };
             /**
              * Writes a 16-bit integer to the byte stream. The low 16 bits of the parameter are used.
              * The high 16 bits are ignored.
              * @param	value	32-bit integer, whose low 16 bits are written to the byte stream.
              */
-            writeShort(value) {
+            ByteArrayBase.prototype.writeShort = function (value) {
                 this.validateBuffer(ByteArrayBase.SIZE_OF_INT16);
                 this.data.setInt16(this.position, value, this.endian == ByteArrayBase.LITTLE_ENDIAN);
                 this.position += ByteArrayBase.SIZE_OF_INT16;
-            }
-            writeUnsignedShort(value) {
+            };
+            ByteArrayBase.prototype.writeUnsignedShort = function (value) {
                 this.validateBuffer(ByteArrayBase.SIZE_OF_UINT16);
                 this.data.setUint16(this.position, value, this.endian == ByteArrayBase.LITTLE_ENDIAN);
                 this.position += ByteArrayBase.SIZE_OF_UINT16;
-            }
+            };
             /**
              * Writes a 32-bit unsigned integer to the byte stream.
              * @param	value	An unsigned integer to write to the byte stream.
              */
-            writeUnsignedInt(value) {
+            ByteArrayBase.prototype.writeUnsignedInt = function (value) {
                 this.validateBuffer(ByteArrayBase.SIZE_OF_UINT32);
                 this.data.setUint32(this.position, value, this.endian == ByteArrayBase.LITTLE_ENDIAN);
                 this.position += ByteArrayBase.SIZE_OF_UINT32;
-            }
+            };
             /**
              * Writes a UTF-8 string to the byte stream. The length of the UTF-8 string in bytes
              * is written first, as a 16-bit integer, followed by the bytes representing the
              * characters of the string.
              * @param	value	The string value to be written.
              */
-            writeUTF(value) {
+            ByteArrayBase.prototype.writeUTF = function (value) {
                 var utf8bytes = this.encodeUTF8(value);
                 var length = utf8bytes.length;
                 this.validateBuffer(ByteArrayBase.SIZE_OF_UINT16 + length);
                 this.data.setUint16(this.position, length, this.endian === ByteArrayBase.LITTLE_ENDIAN);
                 this.position += ByteArrayBase.SIZE_OF_UINT16;
                 this.writeUint8Array(utf8bytes);
-            }
+            };
             /**
              * Writes a UTF-8 string to the byte stream. Similar to the writeUTF() method,
              * but writeUTFBytes() does not prefix the string with a 16-bit length word.
              * @param	value	The string value to be written.
              */
-            writeUTFBytes(value) {
+            ByteArrayBase.prototype.writeUTFBytes = function (value) {
                 this.writeUint8Array(this.encodeUTF8(value));
-            }
-            toString() {
+            };
+            ByteArrayBase.prototype.toString = function () {
                 return "[ByteArrayBase] length:" + this.length + ", bytesAvailable:" + this.bytesAvailable;
-            }
+            };
             /****************************/
             /* EXTRA JAVASCRIPT APIs    */
             /****************************/
@@ -594,93 +636,94 @@ var nid;
              * Writes a Uint8Array to the byte stream.
              * @param	value	The Uint8Array to be written.
              */
-            writeUint8Array(_bytes) {
+            ByteArrayBase.prototype.writeUint8Array = function (_bytes) {
                 this.validateBuffer(this.position + _bytes.length);
                 for (var i = 0; i < _bytes.length; i++) {
                     this.data.setUint8(this.position++, _bytes[i]);
                 }
-            }
+            };
             /**
              * Writes a Uint16Array to the byte stream.
              * @param	value	The Uint16Array to be written.
              */
-            writeUint16Array(_bytes) {
+            ByteArrayBase.prototype.writeUint16Array = function (_bytes) {
                 this.validateBuffer(this.position + _bytes.length);
                 for (var i = 0; i < _bytes.length; i++) {
                     this.data.setUint16(this.position, _bytes[i], this.endian === ByteArrayBase.LITTLE_ENDIAN);
                     this.position += ByteArrayBase.SIZE_OF_UINT16;
                 }
-            }
+            };
             /**
              * Writes a Uint32Array to the byte stream.
              * @param	value	The Uint32Array to be written.
              */
-            writeUint32Array(_bytes) {
+            ByteArrayBase.prototype.writeUint32Array = function (_bytes) {
                 this.validateBuffer(this.position + _bytes.length);
                 for (var i = 0; i < _bytes.length; i++) {
                     this.data.setUint32(this.position, _bytes[i], this.endian === ByteArrayBase.LITTLE_ENDIAN);
                     this.position += ByteArrayBase.SIZE_OF_UINT32;
                 }
-            }
+            };
             /**
              * Writes a Int8Array to the byte stream.
              * @param	value	The Int8Array to be written.
              */
-            writeInt8Array(_bytes) {
+            ByteArrayBase.prototype.writeInt8Array = function (_bytes) {
                 this.validateBuffer(this.position + _bytes.length);
                 for (var i = 0; i < _bytes.length; i++) {
                     this.data.setInt8(this.position++, _bytes[i]);
                 }
-            }
+            };
             /**
              * Writes a Int16Array to the byte stream.
              * @param	value	The Int16Array to be written.
              */
-            writeInt16Array(_bytes) {
+            ByteArrayBase.prototype.writeInt16Array = function (_bytes) {
                 this.validateBuffer(this.position + _bytes.length);
                 for (var i = 0; i < _bytes.length; i++) {
                     this.data.setInt16(this.position, _bytes[i], this.endian === ByteArrayBase.LITTLE_ENDIAN);
                     this.position += ByteArrayBase.SIZE_OF_INT16;
                 }
-            }
+            };
             /**
              * Writes a Int32Array to the byte stream.
              * @param	value	The Int32Array to be written.
              */
-            writeInt32Array(_bytes) {
+            ByteArrayBase.prototype.writeInt32Array = function (_bytes) {
                 this.validateBuffer(this.position + _bytes.length);
                 for (var i = 0; i < _bytes.length; i++) {
                     this.data.setInt32(this.position, _bytes[i], this.endian === ByteArrayBase.LITTLE_ENDIAN);
                     this.position += ByteArrayBase.SIZE_OF_INT32;
                 }
-            }
+            };
             /**
              * Writes a Float32Array to the byte stream.
              * @param	value	The Float32Array to be written.
              */
-            writeFloat32Array(_bytes) {
+            ByteArrayBase.prototype.writeFloat32Array = function (_bytes) {
                 this.validateBuffer(this.position + _bytes.length);
                 for (var i = 0; i < _bytes.length; i++) {
                     this.data.setFloat32(this.position, _bytes[i], this.endian === ByteArrayBase.LITTLE_ENDIAN);
                     this.position += ByteArrayBase.SIZE_OF_FLOAT32;
                 }
-            }
+            };
             /**
              * Writes a Float64Array to the byte stream.
              * @param	value	The Float64Array to be written.
              */
-            writeFloat64Array(_bytes) {
+            ByteArrayBase.prototype.writeFloat64Array = function (_bytes) {
                 this.validateBuffer(this.position + _bytes.length);
                 for (var i = 0; i < _bytes.length; i++) {
                     this.data.setFloat64(this.position, _bytes[i], this.endian === ByteArrayBase.LITTLE_ENDIAN);
                     this.position += ByteArrayBase.SIZE_OF_FLOAT64;
                 }
-            }
+            };
             /**
              * Read a Uint8Array from the byte stream.
              * @param	length An unsigned short indicating the length of the Uint8Array.
              */
-            readUint8Array(length, createNewBuffer = true) {
+            ByteArrayBase.prototype.readUint8Array = function (length, createNewBuffer) {
+                if (createNewBuffer === void 0) { createNewBuffer = true; }
                 if (!this.validate(length))
                     return null;
                 if (!createNewBuffer) {
@@ -695,12 +738,13 @@ var nid;
                     }
                 }
                 return result;
-            }
+            };
             /**
              * Read a Uint16Array from the byte stream.
              * @param	length An unsigned short indicating the length of the Uint16Array.
              */
-            readUint16Array(length, createNewBuffer = true) {
+            ByteArrayBase.prototype.readUint16Array = function (length, createNewBuffer) {
+                if (createNewBuffer === void 0) { createNewBuffer = true; }
                 var size = length * ByteArrayBase.SIZE_OF_UINT16;
                 if (!this.validate(size))
                     return null;
@@ -716,12 +760,13 @@ var nid;
                     }
                 }
                 return result;
-            }
+            };
             /**
              * Read a Uint32Array from the byte stream.
              * @param	length An unsigned short indicating the length of the Uint32Array.
              */
-            readUint32Array(length, createNewBuffer = true) {
+            ByteArrayBase.prototype.readUint32Array = function (length, createNewBuffer) {
+                if (createNewBuffer === void 0) { createNewBuffer = true; }
                 var size = length * ByteArrayBase.SIZE_OF_UINT32;
                 if (!this.validate(size))
                     return null;
@@ -737,12 +782,13 @@ var nid;
                     }
                 }
                 return result;
-            }
+            };
             /**
              * Read a Int8Array from the byte stream.
              * @param	length An unsigned short indicating the length of the Int8Array.
              */
-            readInt8Array(length, createNewBuffer = true) {
+            ByteArrayBase.prototype.readInt8Array = function (length, createNewBuffer) {
+                if (createNewBuffer === void 0) { createNewBuffer = true; }
                 if (!this.validate(length))
                     return null;
                 if (!createNewBuffer) {
@@ -757,12 +803,13 @@ var nid;
                     }
                 }
                 return result;
-            }
+            };
             /**
              * Read a Int16Array from the byte stream.
              * @param	length An unsigned short indicating the length of the Int16Array.
              */
-            readInt16Array(length, createNewBuffer = true) {
+            ByteArrayBase.prototype.readInt16Array = function (length, createNewBuffer) {
+                if (createNewBuffer === void 0) { createNewBuffer = true; }
                 var size = length * ByteArrayBase.SIZE_OF_INT16;
                 if (!this.validate(size))
                     return null;
@@ -778,12 +825,13 @@ var nid;
                     }
                 }
                 return result;
-            }
+            };
             /**
              * Read a Int32Array from the byte stream.
              * @param	length An unsigned short indicating the length of the Int32Array.
              */
-            readInt32Array(length, createNewBuffer = true) {
+            ByteArrayBase.prototype.readInt32Array = function (length, createNewBuffer) {
+                if (createNewBuffer === void 0) { createNewBuffer = true; }
                 var size = length * ByteArrayBase.SIZE_OF_INT32;
                 if (!this.validate(size))
                     return null;
@@ -799,12 +847,13 @@ var nid;
                     }
                 }
                 return result;
-            }
+            };
             /**
              * Read a Float32Array from the byte stream.
              * @param	length An unsigned short indicating the length of the Float32Array.
              */
-            readFloat32Array(length, createNewBuffer = true) {
+            ByteArrayBase.prototype.readFloat32Array = function (length, createNewBuffer) {
+                if (createNewBuffer === void 0) { createNewBuffer = true; }
                 var size = length * ByteArrayBase.SIZE_OF_FLOAT32;
                 if (!this.validate(size))
                     return null;
@@ -830,12 +879,13 @@ var nid;
                     }
                 }
                 return result;
-            }
+            };
             /**
              * Read a Float64Array from the byte stream.
              * @param	length An unsigned short indicating the length of the Float64Array.
              */
-            readFloat64Array(length, createNewBuffer = true) {
+            ByteArrayBase.prototype.readFloat64Array = function (length, createNewBuffer) {
+                if (createNewBuffer === void 0) { createNewBuffer = true; }
                 var size = length * ByteArrayBase.SIZE_OF_FLOAT64;
                 if (!this.validate(size))
                     return null;
@@ -851,8 +901,8 @@ var nid;
                     }
                 }
                 return result;
-            }
-            validate(len) {
+            };
+            ByteArrayBase.prototype.validate = function (len) {
                 //len += this.data.byteOffset;
                 if (this.data.byteLength > 0 && this._position + len <= this.data.byteLength) {
                     return true;
@@ -860,22 +910,22 @@ var nid;
                 else {
                     throw 'Error #2030: End of file was encountered.';
                 }
-            }
+            };
             /**********************/
             /*  PRIVATE METHODS   */
             /**********************/
-            validateBuffer(len) {
+            ByteArrayBase.prototype.validateBuffer = function (len) {
                 this.write_position = len > this.write_position ? len : this.write_position;
                 if (this.data.byteLength < len) {
                     var tmp = new Uint8Array(new ArrayBuffer(len + this.BUFFER_EXT_SIZE));
                     tmp.set(new Uint8Array(this.data.buffer));
                     this.data.buffer = tmp.buffer;
                 }
-            }
+            };
             /**
              * UTF-8 Encoding/Decoding
              */
-            encodeUTF8(str) {
+            ByteArrayBase.prototype.encodeUTF8 = function (str) {
                 var pos = 0;
                 var codePoints = this.stringToCodePoints(str);
                 var outputBytes = [];
@@ -910,8 +960,8 @@ var nid;
                     }
                 }
                 return new Uint8Array(outputBytes);
-            }
-            decodeUTF8(data) {
+            };
+            ByteArrayBase.prototype.decodeUTF8 = function (data) {
                 var fatal = false;
                 var pos = 0;
                 var result = "";
@@ -1002,23 +1052,23 @@ var nid;
                     }
                 }
                 return result;
-            }
-            encoderError(code_point) {
+            };
+            ByteArrayBase.prototype.encoderError = function (code_point) {
                 throw 'EncodingError! The code point ' + code_point + ' could not be encoded.';
-            }
-            decoderError(fatal, opt_code_point) {
+            };
+            ByteArrayBase.prototype.decoderError = function (fatal, opt_code_point) {
                 if (fatal) {
                     throw 'DecodingError';
                 }
                 return opt_code_point || 0xFFFD;
-            }
-            inRange(a, min, max) {
+            };
+            ByteArrayBase.prototype.inRange = function (a, min, max) {
                 return min <= a && a <= max;
-            }
-            div(n, d) {
+            };
+            ByteArrayBase.prototype.div = function (n, d) {
                 return Math.floor(n / d);
-            }
-            stringToCodePoints(string) {
+            };
+            ByteArrayBase.prototype.stringToCodePoints = function (string) {
                 /** @type {Array.<number>} */
                 var cps = [];
                 // Based on http://www.w3.org/TR/WebIDL/#idl-DOMString
@@ -1051,21 +1101,22 @@ var nid;
                     i += 1;
                 }
                 return cps;
-            }
-        }
-        ByteArrayBase.BIG_ENDIAN = "bigEndian";
-        ByteArrayBase.LITTLE_ENDIAN = "littleEndian";
-        ByteArrayBase.SIZE_OF_BOOLEAN = 1;
-        ByteArrayBase.SIZE_OF_INT8 = 1;
-        ByteArrayBase.SIZE_OF_INT16 = 2;
-        ByteArrayBase.SIZE_OF_INT32 = 4;
-        ByteArrayBase.SIZE_OF_INT64 = 8;
-        ByteArrayBase.SIZE_OF_UINT8 = 1;
-        ByteArrayBase.SIZE_OF_UINT16 = 2;
-        ByteArrayBase.SIZE_OF_UINT32 = 4;
-        ByteArrayBase.SIZE_OF_UINT64 = 8;
-        ByteArrayBase.SIZE_OF_FLOAT32 = 4;
-        ByteArrayBase.SIZE_OF_FLOAT64 = 8;
+            };
+            ByteArrayBase.BIG_ENDIAN = "bigEndian";
+            ByteArrayBase.LITTLE_ENDIAN = "littleEndian";
+            ByteArrayBase.SIZE_OF_BOOLEAN = 1;
+            ByteArrayBase.SIZE_OF_INT8 = 1;
+            ByteArrayBase.SIZE_OF_INT16 = 2;
+            ByteArrayBase.SIZE_OF_INT32 = 4;
+            ByteArrayBase.SIZE_OF_INT64 = 8;
+            ByteArrayBase.SIZE_OF_UINT8 = 1;
+            ByteArrayBase.SIZE_OF_UINT16 = 2;
+            ByteArrayBase.SIZE_OF_UINT32 = 4;
+            ByteArrayBase.SIZE_OF_UINT64 = 8;
+            ByteArrayBase.SIZE_OF_FLOAT32 = 4;
+            ByteArrayBase.SIZE_OF_FLOAT64 = 8;
+            return ByteArrayBase;
+        })();
         utils.ByteArrayBase = ByteArrayBase;
     })(utils = nid.utils || (nid.utils = {}));
 })(nid || (nid = {}));
@@ -1073,38 +1124,41 @@ var nid;
 (function (nid) {
     var utils;
     (function (utils) {
-        class MEMORY {
-            static allocateUint8(len) {
+        var MEMORY = (function () {
+            function MEMORY() {
+            }
+            MEMORY.allocateUint8 = function (len) {
                 MEMORY.u8 = new Uint8Array(len);
-            }
-            static allocateUint16(len) {
+            };
+            MEMORY.allocateUint16 = function (len) {
                 MEMORY.u16 = new Uint16Array(len);
-            }
-            static allocateUint32(len) {
+            };
+            MEMORY.allocateUint32 = function (len) {
                 MEMORY.u32 = new Uint32Array(len);
-            }
-            static getUint8() {
+            };
+            MEMORY.getUint8 = function () {
                 if (!MEMORY.u8) {
                     MEMORY.allocateUint8(10);
                 }
                 return MEMORY.u8Index++;
-            }
-            static getUint16() {
+            };
+            MEMORY.getUint16 = function () {
                 if (!MEMORY.u16) {
                     MEMORY.allocateUint16(24);
                 }
                 return MEMORY.u16Index++;
-            }
-            static getUint32() {
+            };
+            MEMORY.getUint32 = function () {
                 if (!MEMORY.u32) {
                     MEMORY.allocateUint32(10);
                 }
                 return MEMORY.u32Index++;
-            }
-        }
-        MEMORY.u8Index = 0;
-        MEMORY.u16Index = 0;
-        MEMORY.u32Index = 0;
+            };
+            MEMORY.u8Index = 0;
+            MEMORY.u16Index = 0;
+            MEMORY.u32Index = 0;
+            return MEMORY;
+        })();
         utils.MEMORY = MEMORY;
     })(utils = nid.utils || (nid.utils = {}));
 })(nid || (nid = {}));
@@ -1118,8 +1172,8 @@ var nid;
          * @author Nidin Vinayakan | nidinthb@gmail.com
          */
         var MEMORY = nid.utils.MEMORY;
-        class LzmaDecoder {
-            constructor() {
+        var LzmaDecoder = (function () {
+            function LzmaDecoder() {
                 this.posSlotDecoder = utils.BitTreeDecoder.constructArray(6, utils.LZMA.kNumLenToPosStates); //6
                 this.alignDecoder = new utils.BitTreeDecoder(utils.LZMA.kNumAlignBits);
                 this.posDecoders = new Uint16Array(1 + utils.LZMA.kNumFullDistances - utils.LZMA.kEndPosModelIndex);
@@ -1134,7 +1188,7 @@ var nid;
                 this.rangeDec = new utils.RangeDecoder();
                 this.outWindow = new utils.OutWindow();
             }
-            init() {
+            LzmaDecoder.prototype.init = function () {
                 this.loc1 = MEMORY.getUint32() | 0;
                 this.loc2 = MEMORY.getUint32() | 0;
                 this.matchBitI = MEMORY.getUint16() | 0;
@@ -1153,22 +1207,22 @@ var nid;
                 utils.LZMA.INIT_PROBS(this.isRep0Long);
                 this.lenDecoder.init();
                 this.repLenDecoder.init();
-            }
-            create() {
+            };
+            LzmaDecoder.prototype.create = function () {
                 this.outWindow.create(this.dictSize);
                 this.createLiterals();
-            }
+            };
             //Private
-            createLiterals() {
+            LzmaDecoder.prototype.createLiterals = function () {
                 this.litProbs = new Uint16Array(0x300 << (this.lc + this.lp));
-            }
-            initLiterals() {
+            };
+            LzmaDecoder.prototype.initLiterals = function () {
                 var num = 0x300 << (this.lc + this.lp); //UInt32
                 for (var i = 0; i < num; i++) {
                     this.litProbs[i] = utils.LZMA.PROB_INIT_VAL;
                 }
-            }
-            decodeLiteral(state, rep0) {
+            };
+            LzmaDecoder.prototype.decodeLiteral = function (state, rep0) {
                 MEMORY.u16[this.prevByteI] = 0; //unsigned byte
                 if (!this.outWindow.isEmpty())
                     MEMORY.u16[this.prevByteI] = this.outWindow.getByte(1);
@@ -1190,8 +1244,8 @@ var nid;
                     MEMORY.u16[this.symbolI] = (MEMORY.u16[this.symbolI] << 1) | this.rangeDec.decodeBit(this.litProbs, probsOffset + MEMORY.u16[this.symbolI]);
                 }
                 this.outWindow.putByte(MEMORY.u16[this.symbolI] - 0x100);
-            }
-            decodeDistance(len) {
+            };
+            LzmaDecoder.prototype.decodeDistance = function (len) {
                 var lenState = len; //unsigned byte
                 if (lenState > utils.LZMA.kNumLenToPosStates - 1)
                     lenState = utils.LZMA.kNumLenToPosStates - 1;
@@ -1208,15 +1262,15 @@ var nid;
                     MEMORY.u32[this.loc1] += this.alignDecoder.reverseDecode(this.rangeDec);
                 }
                 return MEMORY.u32[this.loc1];
-            }
-            initDist() {
+            };
+            LzmaDecoder.prototype.initDist = function () {
                 for (var i = 0; i < utils.LZMA.kNumLenToPosStates; i++) {
                     this.posSlotDecoder[i].init();
                 }
                 this.alignDecoder.init();
                 utils.LZMA.INIT_PROBS(this.posDecoders);
-            }
-            decodeProperties(properties) {
+            };
+            LzmaDecoder.prototype.decodeProperties = function (properties) {
                 var prop = new Uint8Array(4);
                 prop[0] = properties[0];
                 if (prop[0] >= (9 * 5 * 5)) {
@@ -1237,19 +1291,25 @@ var nid;
                 if (this.dictSize < utils.LZMA.LZMA_DIC_MIN) {
                     this.dictSize = utils.LZMA.LZMA_DIC_MIN;
                 }
-            }
-            updateState_Literal(state) {
+            };
+            LzmaDecoder.prototype.updateState_Literal = function (state) {
                 if (state < 4)
                     return 0;
                 else if (state < 10)
                     return state - 3;
                 else
                     return state - 6;
-            }
-            updateState_ShortRep(state) { return state < 7 ? 9 : 11; }
-            updateState_Rep(state) { return state < 7 ? 8 : 11; }
-            updateState_Match(state) { return state < 7 ? 7 : 10; }
-            decode(unpackSizeDefined, unpackSize) {
+            };
+            LzmaDecoder.prototype.updateState_ShortRep = function (state) {
+                return state < 7 ? 9 : 11;
+            };
+            LzmaDecoder.prototype.updateState_Rep = function (state) {
+                return state < 7 ? 8 : 11;
+            };
+            LzmaDecoder.prototype.updateState_Match = function (state) {
+                return state < 7 ? 7 : 10;
+            };
+            LzmaDecoder.prototype.decode = function (unpackSizeDefined, unpackSize) {
                 this.init();
                 this.rangeDec.init();
                 if (unpackSizeDefined) {
@@ -1318,9 +1378,7 @@ var nid;
                         state = this.updateState_Match(state);
                         rep0 = this.decodeDistance(len);
                         if (rep0 == 0xFFFFFFFF) {
-                            return this.rangeDec.isFinishedOK() ?
-                                utils.LZMA.LZMA_RES_FINISHED_WITH_MARKER :
-                                utils.LZMA.LZMA_RES_ERROR;
+                            return this.rangeDec.isFinishedOK() ? utils.LZMA.LZMA_RES_FINISHED_WITH_MARKER : utils.LZMA.LZMA_RES_ERROR;
                         }
                         if (unpackSizeDefined && unpackSize == 0) {
                             return utils.LZMA.LZMA_RES_ERROR;
@@ -1341,8 +1399,9 @@ var nid;
                         return utils.LZMA.LZMA_RES_ERROR;
                     }
                 }
-            }
-        }
+            };
+            return LzmaDecoder;
+        })();
         utils.LzmaDecoder = LzmaDecoder;
     })(utils = nid.utils || (nid.utils = {}));
 })(nid || (nid = {}));
@@ -1354,18 +1413,18 @@ var nid;
          * LZMA Decoder
          * @author Nidin Vinayakan | nidinthb@gmail.com
          */
-        class OutWindow {
-            constructor() {
+        var OutWindow = (function () {
+            function OutWindow() {
                 this.out_pos = 0;
             }
-            create(dictSize) {
+            OutWindow.prototype.create = function (dictSize) {
                 this.buf = new Uint8Array(dictSize);
                 this.pos = 0;
                 this.size = dictSize;
                 this.isFull = false;
                 this.totalPos = 0;
-            }
-            putByte(b) {
+            };
+            OutWindow.prototype.putByte = function (b) {
                 this.totalPos++;
                 this.buf[this.pos++] = b;
                 if (this.pos == this.size) {
@@ -1374,22 +1433,23 @@ var nid;
                 }
                 //this.outStream.writeUnsignedByte(b);
                 this.outStream[this.out_pos++] = b;
-            }
-            getByte(dist) {
+            };
+            OutWindow.prototype.getByte = function (dist) {
                 return this.buf[dist <= this.pos ? this.pos - dist : this.size - dist + this.pos];
-            }
-            copyMatch(dist, len) {
+            };
+            OutWindow.prototype.copyMatch = function (dist, len) {
                 for (; len > 0; len--) {
                     this.putByte(this.getByte(dist));
                 }
-            }
-            checkDistance(dist) {
+            };
+            OutWindow.prototype.checkDistance = function (dist) {
                 return dist <= this.pos || this.isFull;
-            }
-            isEmpty() {
+            };
+            OutWindow.prototype.isEmpty = function () {
                 return this.pos == 0 && !this.isFull;
-            }
-        }
+            };
+            return OutWindow;
+        })();
         utils.OutWindow = OutWindow;
     })(utils = nid.utils || (nid.utils = {}));
 })(nid || (nid = {}));
@@ -1398,18 +1458,18 @@ var nid;
 (function (nid) {
     var utils;
     (function (utils) {
-        class RangeDecoder {
-            constructor() {
+        var RangeDecoder = (function () {
+            function RangeDecoder() {
                 this.rangeI = 0;
                 this.codeI = 1;
                 this.loc1 = 2;
                 this.loc2 = 3;
                 this.in_pos = 13;
             }
-            isFinishedOK() {
+            RangeDecoder.prototype.isFinishedOK = function () {
                 return this.U32[this.codeI] == 0;
-            }
-            init() {
+            };
+            RangeDecoder.prototype.init = function () {
                 this.U32 = new Uint32Array(4);
                 this.U16 = new Uint16Array(4);
                 this.corrupted = false;
@@ -1424,14 +1484,14 @@ var nid;
                 if (this.U32[this.codeI] == this.U32[this.rangeI]) {
                     this.corrupted = true;
                 }
-            }
-            normalize() {
+            };
+            RangeDecoder.prototype.normalize = function () {
                 if (this.U32[this.rangeI] < RangeDecoder.kTopValue) {
                     this.U32[this.rangeI] <<= 8;
                     this.U32[this.codeI] = (this.U32[this.codeI] << 8) | this.inStream[this.in_pos++];
                 }
-            }
-            decodeDirectBits(numBits) {
+            };
+            RangeDecoder.prototype.decodeDirectBits = function (numBits) {
                 this.U32[this.loc1] = 0; //UInt32
                 do {
                     this.U32[this.rangeI] >>>= 1;
@@ -1446,8 +1506,8 @@ var nid;
                     this.U32[this.loc1] += this.U32[this.loc2] + 1;
                 } while (--numBits);
                 return this.U32[this.loc1];
-            }
-            decodeBit(prob, index) {
+            };
+            RangeDecoder.prototype.decodeBit = function (prob, index) {
                 this.U16[0] = prob[index];
                 //bound
                 this.U32[2] = (this.U32[0] >>> 11) * this.U16[0];
@@ -1471,9 +1531,10 @@ var nid;
                     this.U32[1] = (this.U32[1] << 8) | this.inStream[this.in_pos++];
                 }
                 return this.U16[1];
-            }
-        }
-        RangeDecoder.kTopValue = (1 << 24);
+            };
+            RangeDecoder.kTopValue = (1 << 24);
+            return RangeDecoder;
+        })();
         utils.RangeDecoder = RangeDecoder;
     })(utils = nid.utils || (nid.utils = {}));
 })(nid || (nid = {}));
@@ -1486,31 +1547,32 @@ var nid;
          * LZMA Decoder
          * @author Nidin Vinayakan | nidinthb@gmail.com
          */
-        class BitTreeDecoder {
-            constructor(numBits) {
+        var BitTreeDecoder = (function () {
+            function BitTreeDecoder(numBits) {
                 this.numBits = numBits;
                 this.probs = new Uint16Array(1 << this.numBits);
             }
-            init() {
+            BitTreeDecoder.prototype.init = function () {
                 utils.LZMA.INIT_PROBS(this.probs);
-            }
-            decode(rc) {
+            };
+            BitTreeDecoder.prototype.decode = function (rc) {
                 var m = 1; //Uint16
                 for (var i = 0; i < this.numBits; i++)
                     m = (m << 1) + rc.decodeBit(this.probs, m);
                 return m - (1 << this.numBits);
-            }
-            reverseDecode(rc) {
+            };
+            BitTreeDecoder.prototype.reverseDecode = function (rc) {
                 return utils.LZMA.BitTreeReverseDecode(this.probs, this.numBits, rc);
-            }
-            static constructArray(numBits, len) {
+            };
+            BitTreeDecoder.constructArray = function (numBits, len) {
                 var vec = [];
                 for (var i = 0; i < len; i++) {
                     vec[i] = new BitTreeDecoder(numBits);
                 }
                 return vec;
-            }
-        }
+            };
+            return BitTreeDecoder;
+        })();
         utils.BitTreeDecoder = BitTreeDecoder;
     })(utils = nid.utils || (nid.utils = {}));
 })(nid || (nid = {}));
@@ -1523,21 +1585,21 @@ var nid;
          * LZMA Decoder
          * @author Nidin Vinayakan | nidinthb@gmail.com
          */
-        class LenDecoder {
-            constructor() {
+        var LenDecoder = (function () {
+            function LenDecoder() {
                 this.lowCoder = utils.BitTreeDecoder.constructArray(3, 1 << utils.LZMA.kNumPosBitsMax);
                 this.midCoder = utils.BitTreeDecoder.constructArray(3, 1 << utils.LZMA.kNumPosBitsMax);
                 this.highCoder = new utils.BitTreeDecoder(8);
             }
-            init() {
+            LenDecoder.prototype.init = function () {
                 this.choice = [utils.LZMA.PROB_INIT_VAL, utils.LZMA.PROB_INIT_VAL];
                 this.highCoder.init();
                 for (var i = 0; i < (1 << utils.LZMA.kNumPosBitsMax); i++) {
                     this.lowCoder[i].init();
                     this.midCoder[i].init();
                 }
-            }
-            decode(rc, posState) {
+            };
+            LenDecoder.prototype.decode = function (rc, posState) {
                 if (rc.decodeBit(this.choice, 0) == 0) {
                     return this.lowCoder[posState].decode(rc);
                 }
@@ -1545,8 +1607,9 @@ var nid;
                     return 8 + this.midCoder[posState].decode(rc);
                 }
                 return 16 + this.highCoder.decode(rc);
-            }
-        }
+            };
+            return LenDecoder;
+        })();
         utils.LenDecoder = LenDecoder;
     })(utils = nid.utils || (nid.utils = {}));
 })(nid || (nid = {}));
@@ -1561,16 +1624,17 @@ var nid;
          * @author Nidin Vinayakan | nidinthb@gmail.com
          *
          */
-        class LZMA {
-            constructor() {
+        var LZMA = (function () {
+            function LZMA() {
                 this.decoder = new utils.LzmaDecoder();
             }
-            static INIT_PROBS(p) {
+            LZMA.INIT_PROBS = function (p) {
                 for (var i = 0; i < p.length; i++) {
                     p[i] = this.PROB_INIT_VAL;
                 }
-            }
-            static BitTreeReverseDecode(probs, numBits, rc, offset = 0) {
+            };
+            LZMA.BitTreeReverseDecode = function (probs, numBits, rc, offset) {
+                if (offset === void 0) { offset = 0; }
                 var m = 1;
                 var symbol = 0;
                 for (var i = 0; i < numBits; i++) {
@@ -1580,8 +1644,8 @@ var nid;
                     symbol |= (bit << i);
                 }
                 return symbol;
-            }
-            decode(data) {
+            };
+            LZMA.prototype.decode = function (data) {
                 this.data = data;
                 //var header:Uint8Array = data.readUint8Array(13);
                 var header = new Uint8Array(13);
@@ -1641,23 +1705,24 @@ var nid;
                     console.log("\nWarning: LZMA stream is corrupted\n");
                 }
                 return this.decoder.outWindow.outStream;
-            }
-        }
-        LZMA.LZMA_DIC_MIN = (1 << 12);
-        LZMA.LZMA_RES_ERROR = 0;
-        LZMA.LZMA_RES_FINISHED_WITH_MARKER = 1;
-        LZMA.LZMA_RES_FINISHED_WITHOUT_MARKER = 2;
-        LZMA.kNumBitModelTotalBits = 11;
-        LZMA.kNumMoveBits = 5;
-        LZMA.PROB_INIT_VAL = ((1 << LZMA.kNumBitModelTotalBits) / 2); //1024
-        LZMA.kNumPosBitsMax = 4;
-        LZMA.kNumStates = 12;
-        LZMA.kNumLenToPosStates = 4;
-        LZMA.kNumAlignBits = 4;
-        LZMA.kStartPosModelIndex = 4;
-        LZMA.kEndPosModelIndex = 14;
-        LZMA.kNumFullDistances = (1 << (LZMA.kEndPosModelIndex >>> 1));
-        LZMA.kMatchMinLen = 2;
+            };
+            LZMA.LZMA_DIC_MIN = (1 << 12);
+            LZMA.LZMA_RES_ERROR = 0;
+            LZMA.LZMA_RES_FINISHED_WITH_MARKER = 1;
+            LZMA.LZMA_RES_FINISHED_WITHOUT_MARKER = 2;
+            LZMA.kNumBitModelTotalBits = 11;
+            LZMA.kNumMoveBits = 5;
+            LZMA.PROB_INIT_VAL = ((1 << LZMA.kNumBitModelTotalBits) / 2); //1024
+            LZMA.kNumPosBitsMax = 4;
+            LZMA.kNumStates = 12;
+            LZMA.kNumLenToPosStates = 4;
+            LZMA.kNumAlignBits = 4;
+            LZMA.kStartPosModelIndex = 4;
+            LZMA.kEndPosModelIndex = 14;
+            LZMA.kNumFullDistances = (1 << (LZMA.kEndPosModelIndex >>> 1));
+            LZMA.kMatchMinLen = 2;
+            return LZMA;
+        })();
         utils.LZMA = LZMA;
     })(utils = nid.utils || (nid.utils = {}));
 })(nid || (nid = {}));
@@ -1666,8 +1731,10 @@ var nid;
 (function (nid) {
     var utils;
     (function (utils) {
-        class LZMAHelper {
-            static init() {
+        var LZMAHelper = (function () {
+            function LZMAHelper() {
+            }
+            LZMAHelper.init = function () {
                 var command = 0;
                 if (LZMAHelper.enableAsync) {
                     LZMAHelper.decoderAsync = new Worker('LZMAWorker.min.js');
@@ -1685,34 +1752,34 @@ var nid;
                         }
                     };
                 }
-            }
+            };
             /**
              * TODO : Implement encoder
              * @param data
              * @returns {null}
              */
-            static encode(data) {
+            LZMAHelper.encode = function (data) {
                 return null;
-            }
-            static decodeBuffer(data) {
+            };
+            LZMAHelper.decodeBuffer = function (data) {
                 return LZMAHelper.decoder.decode(new Uint8Array(data)).buffer;
-            }
-            static decode(data) {
+            };
+            LZMAHelper.decode = function (data) {
                 return LZMAHelper.decoder.decode(data);
-            }
+            };
             /**
              * TODO : Implement encoder
              * @param data
              * @param _callback
              */
-            static encodeAsync(data, _callback) {
+            LZMAHelper.encodeAsync = function (data, _callback) {
                 if (LZMAHelper.enableAsync) {
                 }
                 else {
                     console.log('Error! Asynchronous encoding is disabled');
                 }
-            }
-            static decodeAsync(data, _callback) {
+            };
+            LZMAHelper.decodeAsync = function (data, _callback) {
                 if (LZMAHelper.enableAsync) {
                     if (LZMAHelper.callback == null) {
                         LZMAHelper.callback = _callback;
@@ -1726,12 +1793,13 @@ var nid;
                 else {
                     console.log('Error! Asynchronous decoding is disabled');
                 }
-            }
-        }
-        LZMAHelper.decoder = new utils.LZMA();
-        LZMAHelper.enableAsync = false;
-        LZMAHelper.ENCODE = 1;
-        LZMAHelper.DECODE = 2;
+            };
+            LZMAHelper.decoder = new utils.LZMA();
+            LZMAHelper.enableAsync = false;
+            LZMAHelper.ENCODE = 1;
+            LZMAHelper.DECODE = 2;
+            return LZMAHelper;
+        })();
         utils.LZMAHelper = LZMAHelper;
     })(utils = nid.utils || (nid.utils = {}));
 })(nid || (nid = {}));
@@ -1745,14 +1813,23 @@ var nid;
          * version : 0.2
          * @author Nidin Vinayakan | nidinthb@gmail.com
          */
-        class CompressionAlgorithm {
-        }
-        CompressionAlgorithm.DEFLATE = "deflate";
-        CompressionAlgorithm.LZMA = "lzma";
-        CompressionAlgorithm.ZLIB = "zlib";
+        var CompressionAlgorithm = (function () {
+            function CompressionAlgorithm() {
+            }
+            CompressionAlgorithm.DEFLATE = "deflate";
+            CompressionAlgorithm.LZMA = "lzma";
+            CompressionAlgorithm.ZLIB = "zlib";
+            return CompressionAlgorithm;
+        })();
         utils.CompressionAlgorithm = CompressionAlgorithm;
     })(utils = nid.utils || (nid.utils = {}));
 })(nid || (nid = {}));
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
 ///<reference path="./ByteArrayBase.ts" />
 ///<reference path="./LZMAHelper.ts" />
 /*///<reference path="./ZLIBHelper.ts" />*/
@@ -1770,19 +1847,24 @@ var nid;
 (function (nid) {
     var utils;
     (function (utils) {
-        class ByteArray extends utils.ByteArrayBase {
-            constructor(buffer, offset = 0, length = 0) {
-                super(buffer, offset, length);
+        var ByteArray = (function (_super) {
+            __extends(ByteArray, _super);
+            function ByteArray(buffer, offset, length) {
+                if (offset === void 0) { offset = 0; }
+                if (length === void 0) { length = 0; }
+                _super.call(this, buffer, offset, length);
             }
-            compress(algorithm = utils.CompressionAlgorithm.LZMA) {
+            ByteArray.prototype.compress = function (algorithm) {
+                if (algorithm === void 0) { algorithm = utils.CompressionAlgorithm.LZMA; }
                 throw "Compression error! " + algorithm + " not implemented";
                 if (algorithm == utils.CompressionAlgorithm.LZMA) {
                 }
                 else {
                     throw "Compression error! " + algorithm + " not implemented";
                 }
-            }
-            decompressBuffer(algorithm = utils.CompressionAlgorithm.LZMA) {
+            };
+            ByteArray.prototype.decompressBuffer = function (algorithm) {
+                if (algorithm === void 0) { algorithm = utils.CompressionAlgorithm.LZMA; }
                 if (algorithm == utils.CompressionAlgorithm.LZMA) {
                     try {
                         this.buffer = utils.LZMAHelper.decodeBuffer(this.buffer);
@@ -1796,8 +1878,9 @@ var nid;
                 else {
                     throw "Uncompression error! " + algorithm + " not implemented";
                 }
-            }
-            decompress(algorithm = utils.CompressionAlgorithm.LZMA) {
+            };
+            ByteArray.prototype.decompress = function (algorithm) {
+                if (algorithm === void 0) { algorithm = utils.CompressionAlgorithm.LZMA; }
                 if (algorithm == utils.CompressionAlgorithm.LZMA) {
                     try {
                         this.array = utils.LZMAHelper.decode(this.array);
@@ -1811,16 +1894,18 @@ var nid;
                 else {
                     throw "Uncompression error! " + algorithm + " not implemented";
                 }
-            }
-            compressAsync(algorithm, callback) {
+            };
+            ByteArray.prototype.compressAsync = function (algorithm, callback) {
                 throw "Compression error! " + algorithm + " not implemented";
                 if (algorithm == utils.CompressionAlgorithm.LZMA) {
                 }
                 else {
                     throw "Compression error! " + algorithm + " not implemented";
                 }
-            }
-            decompressAsync(algorithm = utils.CompressionAlgorithm.LZMA, callback = null) {
+            };
+            ByteArray.prototype.decompressAsync = function (algorithm, callback) {
+                if (algorithm === void 0) { algorithm = utils.CompressionAlgorithm.LZMA; }
+                if (callback === void 0) { callback = null; }
                 if (algorithm == utils.CompressionAlgorithm.LZMA) {
                     utils.LZMAHelper.decodeAsync(this.buffer, function (_data) {
                         this.buffer = _data;
@@ -1829,9 +1914,11 @@ var nid;
                 else {
                     throw "Uncompression error! " + algorithm + " not implemented";
                 }
-            }
-            deflate() { }
-            inflate() { }
+            };
+            ByteArray.prototype.deflate = function () {
+            };
+            ByteArray.prototype.inflate = function () {
+            };
             /**
              * Reads the number of data bytes, specified by the length parameter, from the byte stream.
              * The bytes are read into the ByteArray object specified by the bytes parameter,
@@ -1840,7 +1927,11 @@ var nid;
              * @param	offset	The offset (_position) in bytes at which the read data should be written.
              * @param	length	The number of bytes to read.  The default value of 0 causes all available data to be read.
              */
-            readBytesAsByteArray(_bytes = null, offset = 0, length = 0, createNewBuffer = false) {
+            ByteArray.prototype.readBytesAsByteArray = function (_bytes, offset, length, createNewBuffer) {
+                if (_bytes === void 0) { _bytes = null; }
+                if (offset === void 0) { offset = 0; }
+                if (length === void 0) { length = 0; }
+                if (createNewBuffer === void 0) { createNewBuffer = false; }
                 if (length == 0) {
                     length = this.bytesAvailable;
                 }
@@ -1848,7 +1939,6 @@ var nid;
                     return null;
                 if (createNewBuffer) {
                     _bytes = _bytes == null ? new ByteArray(new ArrayBuffer(length)) : _bytes;
-                    //This method is expensive
                     for (var i = 0; i < length; i++) {
                         _bytes.data.setUint8(i + offset, this.data.getUint8(this.position++));
                     }
@@ -1860,26 +1950,27 @@ var nid;
                     this.position += length;
                 }
                 return _bytes;
-            }
+            };
             /**
              * Reads an object from the byte array, encoded in AMF
              * serialized format.
              * @return	The deserialized object.
              */
-            readObject() {
+            ByteArray.prototype.readObject = function () {
                 //return this.readAmfObject();
                 return null;
-            }
+            };
             /**
              * Writes an object into the byte array in AMF
              * serialized format.
              * @param	object	The object to serialize.
              */
-            writeObject(value) {
-            }
-        }
-        ByteArray.BIG_ENDIAN = "bigEndian";
-        ByteArray.LITTLE_ENDIAN = "littleEndian";
+            ByteArray.prototype.writeObject = function (value) {
+            };
+            ByteArray.BIG_ENDIAN = "bigEndian";
+            ByteArray.LITTLE_ENDIAN = "littleEndian";
+            return ByteArray;
+        })(utils.ByteArrayBase);
         utils.ByteArray = ByteArray;
     })(utils = nid.utils || (nid.utils = {}));
 })(nid || (nid = {}));
