@@ -8,6 +8,7 @@ install:
   - "npm install -g gulp-uglify"
   - "npm install -g gulp-rename"
   - "npm install -g gulp-sourcemaps"
+  - "npm install -g run-sequence"
   - "npm install -g del"
 script:
   - 'gulp'
