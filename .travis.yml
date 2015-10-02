@@ -3,13 +3,6 @@ language: node_js
 node_js:
   - "0.12"
 install:
-  - "npm install typescript@1.5.3"
-  - "npm install gulp"
-  - "npm install gulp-shell"
-  - "npm install gulp-uglify"
-  - "npm install gulp-rename"
-  - "npm install gulp-sourcemaps"
-  - "npm install run-sequence"
-  - "npm install del"
+  - "npm install"
 script:
   - 'gulp'
