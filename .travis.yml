@@ -12,4 +12,4 @@ install:
   - "npm install run-sequence"
   - "npm install del"
 script:
-  - 'gulp default'
+  - 'gulp'
