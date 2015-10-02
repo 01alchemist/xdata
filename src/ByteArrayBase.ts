@@ -797,8 +797,18 @@ module nid.utils
 			var size:number =  length * ByteArrayBase.SIZE_OF_INT32
 			if (!this.validate(size)) return null;
             if(!createNewBuffer) {
-                var result:Int32Array = new Int32Array(this.buffer, this.bufferOffset+this.position, length);
-                this.position += size;
+
+                if((this.bufferOffset+this.position) % 4 == 0){
+                    var result:Float32Array = new Int32Array(this.buffer, this.bufferOffset+this.position, length);
+                    this.position += size;
+                }else{
+                    var tmp:Uint8Array = new Uint8Array(new ArrayBuffer(size));
+                    for (var i = 0; i < size; i++) {
+                        tmp[i] = this.data.getUint8(this.position);
+                        this.position += ByteArrayBase.SIZE_OF_UINT8;
+                    }
+                    result = new Int32Array(tmp.buffer);
+                }
             }
             else {
                 result = new Int32Array(new ArrayBuffer(size));
@@ -818,8 +828,8 @@ module nid.utils
 			var size:number =  length * ByteArrayBase.SIZE_OF_FLOAT32;
 			if (!this.validate(size)) return null;
             if(!createNewBuffer) {
-                if(this.position % 4 == 0){
-                    var result:Float32Array = new Float32Array(this.buffer, this.position, length);
+                if((this.bufferOffset+this.position) % 4 == 0){
+                    var result:Float32Array = new Float32Array(this.buffer, this.bufferOffset+this.position, length);
                     this.position += size;
                 }else{
                     var tmp:Uint8Array = new Uint8Array(new ArrayBuffer(size));
