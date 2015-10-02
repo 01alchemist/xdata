@@ -2,7 +2,7 @@ language: node_js
 node_js:
   - "0.12"
 install:
-  - "npm install typescript@1.4.1"
+  - "npm install typescript@1.5.3"
   - "npm install gulp"
   - "npm install gulp-shell"
   - "npm install gulp-uglify"
@@ -11,4 +11,4 @@ install:
   - "npm install run-sequence"
   - "npm install del"
 script:
-  - 'gulp compileES5'
+  - 'gulp default'

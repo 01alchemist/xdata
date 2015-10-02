@@ -85,5 +85,5 @@ gulp.task('compile', ['compileES5','compileES6']);
 
 // The default task (called when you run `gulp` from cli)
 gulp.task('default', function(callback){
-    runSequence('compile','optimize',callback);
+    runSequence('compileES5', callback);
 });
