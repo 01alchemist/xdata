@@ -29,17 +29,17 @@
   },
   "homepage": "https://github.com/nidin/TS-ByteArray",
   "devDependencies": {
-    "bower":"latest",
+    "bower":"1.5.3",
     "typescript":"1.5.3",
-    "gulp":"3.8.11",
-    "gulp-shell":"*",
-    "gulp-uglify":"*",
-    "gulp-rename":"*",
-    "gulp-sourcemaps":"*",
-    "run-sequence":"*",
-    "del":"*",
-    "jasmine": "2.1.0",
-    "phantomjs":"1.9.12",
-    "requirejs":"2.1.15"
+    "gulp":"3.9.0",
+    "gulp-shell":"0.4.3",
+    "gulp-uglify":"1.4.1",
+    "gulp-rename":"1.2.2",
+    "gulp-sourcemaps":"1.6.0",
+    "run-sequence":"1.1.4",
+    "del":"2.0.2 ",
+    "jasmine": "2.3.2",
+    "phantomjs":"1.9.18",
+    "requirejs":"2.1.20"
   }
 }
