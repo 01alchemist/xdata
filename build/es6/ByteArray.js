@@ -1763,7 +1763,7 @@ var nid;
         utils.CompressionAlgorithm = CompressionAlgorithm;
     })(utils = nid.utils || (nid.utils = {}));
 })(nid || (nid = {}));
-///<reference path="./ByteArrayBase.ts" />
+///<reference path="./ByteArray.ts" />
 ///<reference path="./LZMAHelper.ts" />
 /*///<reference path="./ZLIBHelper.ts" />*/
 ///<reference path="./CompressionAlgorithm.ts" />

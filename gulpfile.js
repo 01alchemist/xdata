@@ -9,7 +9,7 @@ var del = require('del');
 var build_path =  "build";
 var paths = {
     ts_files: [
-        'src/ByteArray.ts'
+        'src/DataArray.ts'
     ],
     ts_classes: ['ByteArray'],
     js_scripts: [build_path+'/**/*.js']

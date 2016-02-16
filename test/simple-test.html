@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>JavaScript DataArray</title>
+	<script src="../node_modules/systemjs/dist/system.src.js"></script>
+    <script>
+        System.config({
+            packages: {
+                "../": {
+                    format: 'register',
+                    defaultExtension: 'js'
+                }
+            }
+        });
+        System.import('../test/SimpleTest').then(null, console.error.bind(console));
+    </script>
+</head>
+</body>
+</html>
