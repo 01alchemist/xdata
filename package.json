@@ -1,6 +1,6 @@
 {
   "name": "data-array",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "Extended ActionScript3 ByteArray API for JavaScript",
   "main": "src/nid/utils/DataArray.ts",
   "directories": {
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/nidin/DataArray.git"
+    "url": "https://github.com/01alchemist/DataArray.git"
   },
   "keywords": [
     "javascript",
@@ -20,12 +20,12 @@
     "dataarray",
     "bytearray"
   ],
-  "author": "Nidin Vinayakan <nidinthb@gmail.com>",
+  "author": "Nidin Vinayakan <01@01alchemist.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nidin/DataArray/issues"
+    "url": "https://github.com/01alchemist/DataArray/issues"
   },
-  "homepage": "https://github.com/nidin/DataArray",
+  "homepage": "https://github.com/01alchemist/DataArray",
   "devDependencies": {
     "bower":"1.5.3",
     "typescript": "^1.7.5",
