@@ -1,5 +1,5 @@
 {
-  "name": "DataArray",
+  "name": "data-array",
   "version": "2.0.0",
   "description": "Extended ActionScript3 ByteArray API for JavaScript",
   "main": "src/nid/utils/DataArray.ts",
