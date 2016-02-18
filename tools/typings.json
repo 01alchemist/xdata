@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "es6-promise": "github:typed-typings/npm-es6-promise#fb04188767acfec1defd054fc8024fafa5cd4de7"
+  },
+  "ambientDependencies": {
+    "fs-extra": "github:DefinitelyTyped/DefinitelyTyped/fs-extra/fs-extra.d.ts#72d95b38f008fed506c6cbf3af8a693bd7c3363a",
+    "jasmine": "github:DefinitelyTyped/DefinitelyTyped/jasmine/jasmine.d.ts#dd638012d63e069f2c99d06ef4dcc9616a943ee4",
+    "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts#366b936e62a6244a15f011e0ee0559b903d1dd65"
+  }
+}

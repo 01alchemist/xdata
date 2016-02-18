@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall":"tsd reinstall --overwrite --clean --config tools/tsd.json"
+    "postinstall":"cd tools && typings install"
   },
   "repository": {
     "type": "git",
@@ -115,6 +115,6 @@
     "typescript": "^1.7.5",
     "which": "~1",
     "yargs": "2.3.*",
-    "tsd": "^0.6.5-beta"
+    "typings": "^0.6.8"
   }
 }
