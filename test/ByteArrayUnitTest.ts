@@ -1,4 +1,4 @@
-import {ByteArray} from "../src/nid/utils/ByteArray";
+import {ByteArray} from "../modules/xdata/src/nid/utils/ByteArray";
 import {TestClass} from "./tsUnit";
 import {Test} from "./tsUnit";
 

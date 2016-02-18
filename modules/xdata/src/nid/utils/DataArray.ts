@@ -85,12 +85,17 @@ export class DataArray extends ByteArray {
      * Reads the number of data bytes, specified by the length parameter, from the byte stream.
      * The bytes are read into the DataArray object specified by the bytes parameter,
      * and the bytes are written into the destination ByteArray starting at the _position specified by offset.
-     * @param    bytes    The DataArray object to read data into.
+     * @param    _bytes    The DataArray object to read data into.
      * @param    offset    The offset (_position) in bytes at which the read data should be written.
      * @param    length    The number of bytes to read.  The default value of 0 causes all available data to be read.
+     * @param createNewBuffer
      */
 
     public readBytesAsByteArray(_bytes:DataArray = null, offset:number = 0, length:number = 0, createNewBuffer:boolean = false):DataArray {
+        console.warn("[DEPRECATED] readBytesAsByteArray is deprecated use readBytesAsDataArray instead");
+        return this.readBytesAsDataArray(_bytes, offset, length, createNewBuffer);
+    }
+    public readBytesAsDataArray(_bytes:DataArray = null, offset:number = 0, length:number = 0, createNewBuffer:boolean = false):DataArray {
         if (length == 0) {
             length = this.bytesAvailable;
         }
