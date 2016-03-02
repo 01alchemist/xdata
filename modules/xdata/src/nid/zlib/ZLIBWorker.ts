@@ -1,5 +1,5 @@
 import {ZLIB} from "./ZLIB";
-"use strict";
+
 export class ZLIBWorker {
     static ENCODE:number = 1;
     static DECODE:number = 2;

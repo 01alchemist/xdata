@@ -1,4 +1,3 @@
-"use strict";
 "use asm";
 /**
  * @author Nidin Vinayakan | nidinthb@gmail.com

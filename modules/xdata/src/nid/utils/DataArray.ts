@@ -20,9 +20,9 @@ export class DataArray extends ByteArray {
     }
 
     public compress(algorithm:string = CompressionAlgorithm.LZMA):void {
-        throw "Compression error! " + algorithm + " not implemented";
-        if (algorithm == CompressionAlgorithm.LZMA) {
 
+        if (algorithm == CompressionAlgorithm.LZMA) {
+            throw "Compression error! " + algorithm + " not implemented";
         } else {
             throw "Compression error! " + algorithm + " not implemented";
         }
@@ -57,9 +57,8 @@ export class DataArray extends ByteArray {
     }
 
     public compressAsync(algorithm:string, callback):void {
-        throw "Compression error! " + algorithm + " not implemented";
         if (algorithm == CompressionAlgorithm.LZMA) {
-
+            throw "Compression error! " + algorithm + " not implemented";
         } else {
             throw "Compression error! " + algorithm + " not implemented";
         }

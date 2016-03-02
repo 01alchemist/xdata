@@ -1,4 +1,3 @@
-"use strict";
 /**
  * ZLIB Decoder
  * @author Nidin Vinayakan | nidinthb@gmail.com

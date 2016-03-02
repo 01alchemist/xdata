@@ -1,4 +1,3 @@
-"use strict";
 /**
  * ZLIB CRC32
  * @author Nidin Vinayakan | nidinthb@gmail.com

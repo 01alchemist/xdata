@@ -1,4 +1,3 @@
-"use strict";
 /**
  * CompressionMethod
  * @author Nidin Vinayakan | nidinthb@gmail.com

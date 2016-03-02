@@ -1,4 +1,3 @@
-"use strict";
 /**
  * String Utilities
  * @author Nidin Vinayakan | nidinthb@gmail.com

@@ -1,4 +1,3 @@
-"use strict";
 import {ZLIB} from "../zlib/ZLIB";
 /**
  * @author Nidin Vinayakan | nidinthb@gmail.com
@@ -32,12 +31,10 @@ export class ZLIBHelper {
      */
     static encodeBuffer(data:ArrayBuffer):ArrayBuffer {
         throw "ZLIB encoder not implemented!";
-        return null;
     }
 
     static encode(data:Uint8Array):Uint8Array {
         throw "ZLIB encoder not implemented!";
-        return null;
     }
 
     static decodeBuffer(data:ArrayBuffer):ArrayBuffer {

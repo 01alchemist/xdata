@@ -1,5 +1,4 @@
 import {Huffman} from "./Huffman";
-"use strict";
 /**
  * ZLIB Decoder
  * @author Nidin Vinayakan | nidinthb@gmail.com

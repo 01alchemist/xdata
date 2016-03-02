@@ -1,7 +1,6 @@
 import {RawInflate} from "./RawInflate";
 import {CompressionMethod} from "./CompressionMethod";
 import {Adler32} from "./Adler32";
-"use strict";
 /**
  * ZLIB Decoder
  * @author Nidin Vinayakan | nidinthb@gmail.com

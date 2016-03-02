@@ -1,6 +1,6 @@
 import {LzmaDecoder} from "./LzmaDecoder";
 import {RangeDecoder} from "./RangeDecoder";
-"use strict"
+
 /**
  * LZMA Decoder
  * @author Nidin Vinayakan | nidinthb@gmail.com

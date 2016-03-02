@@ -1,5 +1,5 @@
 import {LZMA} from "./LZMA";
-"use strict";
+
 export class LZMAWorker {
     static ENCODE:number = 1;
     static DECODE:number = 2;

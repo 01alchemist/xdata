@@ -69,15 +69,16 @@ export class BitArray extends ByteArray {
         this.bitsPending = 0;
     }
 
-    public calculateMaxBits(signed:boolean, values:Array<number>):number {
+    static calculateMaxBits(signed:boolean, values:Array<number>):number {
         var b:number = 0;
-        var vmax:number = -2147483648//int.MIN_VALUE;
+        var vmax:number = -2147483648;//int.MIN_VALUE;
         if (!signed) {
-            for (var usvalue in values) {
-                b |= usvalue;
+            for (var i:number = 0; i < values.length; i++) {
+                b |= values[i];
             }
         } else {
-            for (var svalue in values) {
+            for (var i:number = 0; i < values.length; i++) {
+                var svalue = values[i];
                 if (svalue >= 0) {
                     b |= svalue;
                 } else {
