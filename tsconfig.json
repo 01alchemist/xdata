@@ -8,9 +8,10 @@
     "experimentalDecorators": true,
     "removeComments": true,
     "noImplicitAny": false,
-    "outFile":"build/xdata.js"
+    "outFile":"modules/xdata/bundle/xdata.js"
   },
   "exclude": [
+    "modules/xdata/bundle",
     "tools",
     "build",
     "test",
