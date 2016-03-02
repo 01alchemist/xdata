@@ -5,8 +5,6 @@ Extended ActionScript3 ByteArray API for JavaScript
 
 Developed by [Nidin Vinayakan]
 
-npm https://www.npmjs.com/package/data-array
-
 License
 ----
 
