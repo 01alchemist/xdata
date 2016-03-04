@@ -1,35 +1,38 @@
 {
   "name": "xdata",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "description": "Extended ActionScript3 ByteArray API for JavaScript",
-  "main": "src/nid/utils/DataArray.ts",
+  "main": "core.ts",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/01alchemist/DataArray.git"
+    "url": "https://github.com/01alchemist/xdata.git"
   },
   "keywords": [
-    "javascript",
+    "xdata",
     "typescript",
     "dataarray",
-    "bytearray"
+    "bitarray",
+    "bytearray",
+    "lzma",
+    "zlib"
   ],
   "author": "Nidin Vinayakan <01@01alchemist.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/01alchemist/DataArray/issues"
+    "url": "https://github.com/01alchemist/xdata/issues"
   },
-  "homepage": "https://github.com/01alchemist/DataArray",
+  "homepage": "https://github.com/01alchemist/xdata",
   "dependencies": {
     "systemjs": "0.18.10",
     "es6-promise": "^3.0.2",
     "es6-shim": "^0.33.3"
   },
   "devDependencies": {
+    "typescript": "^1.8.7"
   }
 }
