@@ -12,6 +12,7 @@
   },
   "exclude": [
     "modules/xdata/bundle",
+    "modules/xdata/src/nid/zlib/ZLIBWorker.ts",
     "tools",
     "build",
     "test",

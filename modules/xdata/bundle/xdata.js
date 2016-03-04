@@ -2342,7 +2342,7 @@ define("src/nid/utils/DataArray", ["require", "exports", "src/nid/utils/ByteArra
     }(ByteArray_2.ByteArray));
     exports.DataArray = DataArray;
 });
-define("xdata", ["require", "exports", "src/nid/zlib/ZLIB", "src/nid/lzma/LZMA", "src/nid/utils/ByteArray", "src/nid/utils/BitArray", "src/nid/utils/DataArray"], function (require, exports, ZLIB_1, LZMA_5, ByteArray_3, BitArray_1, DataArray_1) {
+define("core", ["require", "exports", "src/nid/zlib/ZLIB", "src/nid/lzma/LZMA", "src/nid/utils/ByteArray", "src/nid/utils/BitArray", "src/nid/utils/DataArray"], function (require, exports, ZLIB_1, LZMA_5, ByteArray_3, BitArray_1, DataArray_1) {
     "use strict";
     function __export(m) {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
@@ -2639,36 +2639,5 @@ define("src/nid/zlib/CRC32", ["require", "exports"], function (require, exports)
         return CRC32;
     }());
     exports.CRC32 = CRC32;
-});
-define("src/nid/zlib/ZLIBWorker", ["require", "exports", "src/nid/zlib/ZLIB"], function (require, exports, ZLIB_3) {
-    "use strict";
-    var ZLIBWorker = (function () {
-        function ZLIBWorker() {
-            this.command = 0;
-            var _this = this;
-            this.decoder = new ZLIB_3.ZLIB();
-            addEventListener('message', function (e) {
-                if (_this.command == 0) {
-                    _this.command = e.data;
-                }
-                else if (_this.command == 1) {
-                    _this.command = 0;
-                }
-                else if (_this.command == 2) {
-                    _this.decode(e.data);
-                }
-            }, false);
-        }
-        ZLIBWorker.prototype.decode = function (data) {
-            var result = this.decoder.decode(new Uint8Array(data));
-            postMessage(ZLIBWorker.DECODE);
-            postMessage(result.buffer, [result.buffer]);
-        };
-        ZLIBWorker.ENCODE = 1;
-        ZLIBWorker.DECODE = 2;
-        return ZLIBWorker;
-    }());
-    exports.ZLIBWorker = ZLIBWorker;
-    var zlib_w = new ZLIBWorker();
 });
 //# sourceMappingURL=xdata.js.map

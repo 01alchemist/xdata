@@ -13,6 +13,8 @@ License
 
 ##Usage 
 
+    import {DataArray,ByteArray,BitArray} from "xdata/core"
+
 ###Classes
 - **_1. BitArray_**
 - **_2. ByteArray_**

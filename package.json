@@ -1,6 +1,6 @@
 {
-  "name": "data-array",
-  "version": "0.0.0",
+  "name": "xdata",
+  "version": "2.1.5",
   "description": "Extended ActionScript3 ByteArray API for JavaScript",
   "main": "src/nid/utils/DataArray.ts",
   "directories": {
@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node ./node_modules/typescript/bin/tsc -p ./",
+    "build": "tsc -p ./",
     "publish": "npm publish ./modules/xdata"
   },
   "repository": {
