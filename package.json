@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc -p ./",
+    "build-dev": "tsc -p ./",
+    "build-dist": "tsc -p ./ -outFile modules/xdata/bundle/xdata.js",
     "publish": "npm publish ./modules/xdata"
   },
   "repository": {
@@ -31,7 +32,7 @@
   },
   "homepage": "https://github.com/01alchemist/xdata",
   "dependencies": {
-    "systemjs": "0.18.10",
+    "systemjs": "0.19.6",
     "es6-promise": "^3.0.2",
     "es6-shim": "^0.33.3"
   },

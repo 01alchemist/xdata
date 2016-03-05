@@ -10,9 +10,5 @@
     "noImplicitAny": false
   },
   "exclude": [
-    "modules/xdata/bundle",
-    "tools",
-    "build",
-    "node_modules"
   ]
 }

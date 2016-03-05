@@ -10,15 +10,14 @@ export class ZLIBHelper {
     static DECODE:number = 2;
 
     static init():void {
-        var command = 0;
         ZLIBHelper.decoderAsync.onmessage = function (e) {
-            if (command == 0) {
-                command = e.data;
-            } else if (command == ZLIBHelper.ENCODE) {
-                command = 0;//encode not implemented
-            } else if (command == ZLIBHelper.DECODE) {
-                command = 0;
-                ZLIBHelper.callback(e.data);
+
+            var receivedData:any = e.data;
+
+            if (receivedData.command === ZLIBHelper.ENCODE) {
+                //encode not implemented
+            } else if (receivedData.command === ZLIBHelper.DECODE) {
+                ZLIBHelper.callback(receivedData.result);
                 ZLIBHelper.callback = null;
             }
         }
@@ -57,8 +56,7 @@ export class ZLIBHelper {
     static decodeBufferAsync(data:ArrayBuffer, _callback:Function):void {
         if (ZLIBHelper.callback == null) {
             ZLIBHelper.callback = _callback;
-            ZLIBHelper.decoderAsync.postMessage(ZLIBHelper.DECODE);
-            ZLIBHelper.decoderAsync.postMessage(data, [data]);
+            ZLIBHelper.decoderAsync.postMessage({command: ZLIBHelper.DECODE, data: data}, [data]);
         } else {
             console.log('Warning! Another ZLIB decoding is running...');
         }

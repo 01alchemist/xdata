@@ -15,13 +15,13 @@ export class LZMAHelper {
         if (LZMAHelper.enableAsync) {
             LZMAHelper.decoderAsync = new Worker('LZMAWorker.min.js');
             LZMAHelper.decoderAsync.onmessage = function (e) {
-                if (command == 0) {
-                    command = e.data;
-                } else if (command == LZMAHelper.ENCODE) {
-                    command = 0;//encode not implemented
-                } else if (command == LZMAHelper.DECODE) {
-                    command = 0;
-                    LZMAHelper.callback(e.data);
+
+                var receivedData:any = e.data;
+
+                if (receivedData.command === LZMAHelper.ENCODE) {
+                    //encode not implemented
+                } else if (receivedData.command === LZMAHelper.DECODE) {
+                    LZMAHelper.callback(receivedData.result);
                     LZMAHelper.callback = null;
                 }
             }
@@ -62,8 +62,7 @@ export class LZMAHelper {
         if (LZMAHelper.enableAsync) {
             if (LZMAHelper.callback == null) {
                 LZMAHelper.callback = _callback;
-                LZMAHelper.decoderAsync.postMessage(LZMAHelper.DECODE);
-                LZMAHelper.decoderAsync.postMessage(data, [data]);
+                LZMAHelper.decoderAsync.postMessage({command: LZMAHelper.DECODE, data: data}, [data]);
             } else {
                 console.log('Warning! Another LZMA decoding is running...');
             }
