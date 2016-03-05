@@ -16,7 +16,10 @@ export class LZMAHelper {
         if(workerScript){
             LZMAHelper.workerScript = workerScript;
         }
-
+        if(LZMAHelper.decoderAsync){
+            LZMAHelper.decoderAsync.terminate();
+            LZMAHelper.decoderAsync = null;
+        }
         if (LZMAHelper.enableAsync) {
             LZMAHelper.decoderAsync = new Worker(LZMAHelper.workerScript);
             LZMAHelper.decoderAsync.onmessage = function (e) {

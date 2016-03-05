@@ -15,6 +15,10 @@ export class ZLIBHelper {
         if(workerScript){
             ZLIBHelper.workerScript = workerScript;
         }
+        if(ZLIBHelper.decoderAsync){
+            ZLIBHelper.decoderAsync.terminate();
+            ZLIBHelper.decoderAsync = null;
+        }
         ZLIBHelper.decoderAsync = new Worker(ZLIBHelper.workerScript);
         ZLIBHelper.decoderAsync.onmessage = function (e) {
 
