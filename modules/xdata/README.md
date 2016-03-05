@@ -17,12 +17,14 @@ npm registry [https://www.npmjs.com/package/xdata](https://www.npmjs.com/package
 
 ###Usage 
 
-    import {DataArray,ByteArray,BitArray} from "xdata/core"
+    import {DataArray,ByteArray,BitArray,LZMAHelper,ZLIBHelper} from "xdata/core"
 
 ###Classes
 - **_1. BitArray_**
 - **_2. ByteArray_**
 - **_3. DataArray_**
+- **_4. LZMAHelper_**
+- **_5. ZLIBHelper_**
 
 
 ###**_BitArray_**
