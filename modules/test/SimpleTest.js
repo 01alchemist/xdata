@@ -1,4 +1,4 @@
-System.register(["../modules/xdata/src/nid/utils/ByteArray"], function(exports_1, context_1) {
+System.register(["../xdata/src/nid/utils/ByteArray"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var ByteArray_1;

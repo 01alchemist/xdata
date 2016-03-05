@@ -1,4 +1,4 @@
-import {ByteArray} from "../modules/xdata/src/nid/utils/ByteArray";
+import {ByteArray} from "../xdata/src/nid/utils/ByteArray";
 /**
  * Created by Nidin Vinayakan on 15-02-2016.
  */

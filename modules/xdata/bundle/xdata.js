@@ -262,1735 +262,9 @@ System.register("test/tsUnit", [], function(exports_1, context_1) {
         }
     }
 });
-System.register("test/ByteArrayUnitTest", ["../modules/xdata/src/nid/utils/ByteArray", "test/tsUnit"], function(exports_2, context_2) {
+System.register("xdata/src/ctypes/Int64", [], function(exports_2, context_2) {
     "use strict";
     var __moduleName = context_2 && context_2.id;
-    var ByteArray_1, tsUnit_1, tsUnit_2;
-    var ByteArrayUnitTest, test, TestRunner;
-    return {
-        setters:[
-            function (ByteArray_1_1) {
-                ByteArray_1 = ByteArray_1_1;
-            },
-            function (tsUnit_1_1) {
-                tsUnit_1 = tsUnit_1_1;
-                tsUnit_2 = tsUnit_1_1;
-            }],
-        execute: function() {
-            ByteArrayUnitTest = (function (_super) {
-                __extends(ByteArrayUnitTest, _super);
-                function ByteArrayUnitTest() {
-                    _super.apply(this, arguments);
-                    this.target = new ByteArray_1.ByteArray(new ArrayBuffer(1024 * 2));
-                    this.BYTE_MAX = 127;
-                    this.BYTE_MIN = -128;
-                    this.UBYTE_MAX = 255;
-                    this.UBYTE_MIN = 0;
-                    this.INT_MAX = 2147483647;
-                    this.INT_MIN = -2147483648;
-                    this.UINT_MAX = 4294967295;
-                    this.UINT_MIN = 0;
-                    this.SHORT_MAX = 32767;
-                    this.SHORT_MIN = -32768;
-                    this.USHORT_MAX = 65535;
-                    this.USHORT_MIN = 0;
-                    this.FLOAT_MAX = 3.4028234663852886e+38;
-                    this.FLOAT_MIN = 1.1754943508222875e-38;
-                    this.DOUBLE_MAX = Number.MAX_VALUE;
-                    this.DOUBLE_MIN = Number.MIN_VALUE;
-                    this.UTF_STR = "this is a utf8 encoded string";
-                    this.SIZE_OF_BOOLEAN = ByteArray_1.ByteArray.SIZE_OF_BOOLEAN;
-                    this.SIZE_OF_INT8 = ByteArray_1.ByteArray.SIZE_OF_INT8;
-                    this.SIZE_OF_INT16 = ByteArray_1.ByteArray.SIZE_OF_INT16;
-                    this.SIZE_OF_INT32 = ByteArray_1.ByteArray.SIZE_OF_INT32;
-                    this.SIZE_OF_UINT8 = ByteArray_1.ByteArray.SIZE_OF_UINT8;
-                    this.SIZE_OF_UINT16 = ByteArray_1.ByteArray.SIZE_OF_UINT16;
-                    this.SIZE_OF_UINT32 = ByteArray_1.ByteArray.SIZE_OF_UINT32;
-                    this.SIZE_OF_FLOAT32 = ByteArray_1.ByteArray.SIZE_OF_FLOAT32;
-                    this.SIZE_OF_FLOAT64 = ByteArray_1.ByteArray.SIZE_OF_FLOAT64;
-                }
-                ByteArrayUnitTest.prototype.writeAndReadBoolean = function () {
-                    this.target.writeBoolean(true);
-                    this.target.position = this.target.position - this.SIZE_OF_BOOLEAN;
-                    var result = this.target.readBoolean();
-                    this.areIdentical(true, result);
-                    this.target.writeBoolean(false);
-                    this.target.position = this.target.position - this.SIZE_OF_BOOLEAN;
-                    var result = this.target.readBoolean();
-                    this.areIdentical(false, result);
-                };
-                ByteArrayUnitTest.prototype.writeAndReadByte = function () {
-                    this.target.writeByte(this.BYTE_MAX);
-                    this.target.writeByte(this.BYTE_MIN);
-                    this.target.position = this.target.position - (2 * this.SIZE_OF_INT8);
-                    var result = this.target.readByte();
-                    this.areIdentical(this.BYTE_MAX, result);
-                    result = this.target.readByte();
-                    this.areIdentical(this.BYTE_MIN, result);
-                };
-                ByteArrayUnitTest.prototype.writeAndReadUnsignedByte = function () {
-                    this.target.writeUnsignedByte(this.UBYTE_MAX);
-                    this.target.writeUnsignedByte(this.UBYTE_MIN);
-                    this.target.position = this.target.position - (2 * this.SIZE_OF_UINT8);
-                    var result = this.target.readUnsignedByte();
-                    this.areIdentical(this.UBYTE_MAX, result);
-                    result = this.target.readUnsignedByte();
-                    this.areIdentical(this.UBYTE_MIN, result);
-                };
-                ByteArrayUnitTest.prototype.writeAndReadDouble = function () {
-                    this.target.writeDouble(this.DOUBLE_MAX);
-                    this.target.writeDouble(this.DOUBLE_MIN);
-                    this.target.position = this.target.position - (2 * this.SIZE_OF_FLOAT64);
-                    var result = this.target.readDouble();
-                    this.areIdentical(this.DOUBLE_MAX, result);
-                    result = this.target.readDouble();
-                    this.areIdentical(this.DOUBLE_MIN, result);
-                };
-                ByteArrayUnitTest.prototype.writeAndReadFloat = function () {
-                    this.target.writeFloat(this.FLOAT_MAX);
-                    this.target.writeFloat(this.FLOAT_MIN);
-                    this.target.position = this.target.position - (2 * this.SIZE_OF_FLOAT32);
-                    var result = this.target.readFloat();
-                    this.areIdentical(this.FLOAT_MAX, result);
-                    var result = this.target.readFloat();
-                    this.areIdentical(this.FLOAT_MIN, result);
-                };
-                ByteArrayUnitTest.prototype.writeAndReadInt = function () {
-                    this.target.writeInt(this.INT_MAX);
-                    this.target.writeInt(this.INT_MIN);
-                    this.target.position = this.target.position - (2 * this.SIZE_OF_INT32);
-                    var result = this.target.readInt();
-                    this.areIdentical(this.INT_MAX, result);
-                    result = this.target.readInt();
-                    this.areIdentical(this.INT_MIN, result);
-                };
-                ByteArrayUnitTest.prototype.writeAndReadUnsignedInt = function () {
-                    this.target.writeUnsignedInt(this.UINT_MAX);
-                    this.target.writeUnsignedInt(this.UINT_MIN);
-                    this.target.position = this.target.position - (2 * this.SIZE_OF_UINT32);
-                    var result = this.target.readUnsignedInt();
-                    this.areIdentical(this.UINT_MAX, result);
-                    result = this.target.readInt();
-                    this.areIdentical(this.UINT_MIN, result);
-                };
-                ByteArrayUnitTest.prototype.writeAndReadShort = function () {
-                    this.target.writeShort(this.SHORT_MAX);
-                    this.target.writeShort(this.SHORT_MIN);
-                    this.target.position = this.target.position - (2 * this.SIZE_OF_INT16);
-                    var result = this.target.readShort();
-                    this.areIdentical(this.SHORT_MAX, result);
-                    result = this.target.readShort();
-                    this.areIdentical(this.SHORT_MIN, result);
-                };
-                ByteArrayUnitTest.prototype.writeAndReadUnsignedShort = function () {
-                    this.target.writeUnsignedShort(this.USHORT_MAX);
-                    this.target.writeUnsignedShort(this.USHORT_MIN);
-                    this.target.position = this.target.position - (2 * this.SIZE_OF_UINT16);
-                    var result = this.target.readUnsignedShort();
-                    this.areIdentical(this.USHORT_MAX, result);
-                    result = this.target.readUnsignedShort();
-                    this.areIdentical(this.USHORT_MIN, result);
-                };
-                ByteArrayUnitTest.prototype.writeAndReadUTF = function () {
-                    this.target.writeUTF(this.UTF_STR);
-                    this.target.position = this.target.position - (this.SIZE_OF_UINT16 + this.UTF_STR.length);
-                    var result = this.target.readUTF();
-                    this.areIdentical(this.UTF_STR, result);
-                };
-                ByteArrayUnitTest.prototype.writeAndReadUTFBytes = function () {
-                    this.target.writeUTFBytes(this.UTF_STR);
-                    this.target.position = this.target.position - this.UTF_STR.length;
-                    var result = this.target.readUTFBytes(this.UTF_STR.length);
-                    this.areIdentical(this.UTF_STR, result);
-                };
-                ByteArrayUnitTest.prototype.writeAndReadUint8Array = function () {
-                    var _array = new Uint8Array(new ArrayBuffer(4));
-                    _array[0] = 1;
-                    _array[1] = 11;
-                    _array[2] = 22;
-                    _array[3] = 33;
-                    this.target.writeUint8Array(_array);
-                    this.target.position = this.target.position - _array.length;
-                    var result = this.target.readUint8Array(_array.length);
-                    this.areIdenticalArray(_array, result);
-                };
-                ByteArrayUnitTest.prototype.writeAndReadUint16Array = function () {
-                    var size = 4 * this.SIZE_OF_UINT16;
-                    var _array = new Uint16Array(new ArrayBuffer(size));
-                    _array[0] = 1;
-                    _array[1] = 11;
-                    _array[2] = 22;
-                    _array[3] = 33;
-                    this.target.writeUint16Array(_array);
-                    this.target.position = this.target.position - size;
-                    var result = this.target.readUint16Array(_array.length);
-                    this.areIdenticalArray(_array, result);
-                };
-                ByteArrayUnitTest.prototype.writeAndReadUint32Array = function () {
-                    var size = 4 * this.SIZE_OF_UINT32;
-                    var _array = new Uint32Array(new ArrayBuffer(size));
-                    _array[0] = 1;
-                    _array[1] = 11;
-                    _array[2] = 22;
-                    _array[3] = 33;
-                    this.target.writeUint32Array(_array);
-                    this.target.position = this.target.position - size;
-                    var result = this.target.readUint32Array(_array.length);
-                    this.areIdenticalArray(_array, result);
-                };
-                ByteArrayUnitTest.prototype.writeAndReadInt8Array = function () {
-                    var _array = new Int8Array(new ArrayBuffer(4));
-                    _array[0] = 1;
-                    _array[1] = 11;
-                    _array[2] = 22;
-                    _array[3] = 33;
-                    this.target.writeInt8Array(_array);
-                    this.target.position = this.target.position - _array.length;
-                    var result = this.target.readInt8Array(_array.length);
-                    this.areIdenticalArray(_array, result);
-                };
-                ByteArrayUnitTest.prototype.writeAndReadInt16Array = function () {
-                    var size = 4 * this.SIZE_OF_INT16;
-                    var _array = new Int16Array(new ArrayBuffer(size));
-                    _array[0] = 1;
-                    _array[1] = 11;
-                    _array[2] = 22;
-                    _array[3] = 33;
-                    this.target.writeInt16Array(_array);
-                    this.target.position = this.target.position - size;
-                    var result = this.target.readInt16Array(_array.length);
-                    this.areIdenticalArray(_array, result);
-                };
-                ByteArrayUnitTest.prototype.writeAndReadInt32Array = function () {
-                    var size = 4 * this.SIZE_OF_INT32;
-                    var _array = new Int32Array(new ArrayBuffer(size));
-                    _array[0] = 1;
-                    _array[1] = 11;
-                    _array[2] = 22;
-                    _array[3] = 33;
-                    this.target.writeInt32Array(_array);
-                    this.target.position = this.target.position - size;
-                    var result = this.target.readInt32Array(_array.length);
-                    this.areIdenticalArray(_array, result);
-                };
-                ByteArrayUnitTest.prototype.writeAndReadFloat32Array = function () {
-                    var size = 4 * this.SIZE_OF_FLOAT32;
-                    var _array = new Float32Array(new ArrayBuffer(size));
-                    _array[0] = 1.02563;
-                    _array[1] = 11.056256;
-                    _array[2] = 22.0165465;
-                    _array[3] = 33.65486;
-                    this.target.writeFloat32Array(_array);
-                    this.target.position = this.target.position - size;
-                    var result = this.target.readFloat32Array(_array.length);
-                    this.areIdenticalArray(_array, result);
-                };
-                ByteArrayUnitTest.prototype.writeAndReadFloat64Array = function () {
-                    var size = 4 * this.SIZE_OF_FLOAT64;
-                    var _array = new Float64Array(new ArrayBuffer(size));
-                    _array[0] = 1.02563;
-                    _array[1] = 11.056256;
-                    _array[2] = 22.0165465;
-                    _array[3] = 33.65486;
-                    this.target.writeFloat64Array(_array);
-                    this.target.position = this.target.position - size;
-                    var result = this.target.readFloat64Array(_array.length);
-                    this.areIdenticalArray(_array, result);
-                };
-                return ByteArrayUnitTest;
-            }(tsUnit_1.TestClass));
-            test = new tsUnit_2.Test();
-            test.addTestClass(new ByteArrayUnitTest());
-            TestRunner = {
-                run: function run() {
-                    test.showResults(document.getElementById('results'), test.run());
-                }
-            };
-            TestRunner.run();
-        }
-    }
-});
-System.register("test/LzmaTest", ["../modules/xdata/src/nid/utils/ByteArray", "../modules/xdata/src/nid/lzma/LZMA"], function(exports_3, context_3) {
-    "use strict";
-    var __moduleName = context_3 && context_3.id;
-    var ByteArray_2, LZMA_1;
-    var LzmaTest;
-    return {
-        setters:[
-            function (ByteArray_2_1) {
-                ByteArray_2 = ByteArray_2_1;
-            },
-            function (LZMA_1_1) {
-                LZMA_1 = LZMA_1_1;
-            }],
-        execute: function() {
-            LzmaTest = (function () {
-                function LzmaTest() {
-                    this.decoder2 = new LZMA_1.LZMA();
-                    this.ENCODE = 1;
-                    this.DECODE = 2;
-                    this.command = 0;
-                    this.command2 = 0;
-                    window.onload = this.init.bind(this);
-                }
-                LzmaTest.prototype.init = function () {
-                    var _this = this;
-                    var self = this;
-                    this.decoder = new Worker('../modules/xdata/workers/lzma-worker-bootstrap.js');
-                    this.reader = new FileReader();
-                    this.reader2 = new FileReader();
-                    this.reader.onload = function (e) {
-                        var inData = new Uint8Array(e.target["result"]);
-                        console.log(inData.length);
-                        console.time("decode");
-                        _this.decode(inData, function (result) {
-                            var outData = new ByteArray_2.ByteArray(result);
-                            console.timeEnd("decode");
-                            console.log(outData.length);
-                        });
-                    };
-                    this.reader2.onload = function (e) {
-                        var inData = new Uint8Array(e.target["result"]);
-                        console.log(inData.length);
-                        console.time("decode");
-                        var result = _this.decoder2.decode(inData);
-                        var outData = new ByteArray_2.ByteArray(result.buffer);
-                        console.timeEnd("decode");
-                        console.log(outData.length);
-                    };
-                    var fileInput = document.getElementById("fileBrowser");
-                    var fileInput2 = document.getElementById("fileBrowser2");
-                    fileInput.onchange = function (e) {
-                        self.file = this.files[0];
-                        self.reader.readAsArrayBuffer(self.file);
-                    };
-                    fileInput2.onchange = function (e) {
-                        self.file2 = this.files[0];
-                        self.reader2.readAsArrayBuffer(self.file2);
-                    };
-                };
-                LzmaTest.prototype.decode = function (data, callback) {
-                    var self = this;
-                    this.decoder.onmessage = function (e) {
-                        if (e.data.command == self.ENCODE) {
-                        }
-                        else if (e.data.command == self.DECODE) {
-                            callback(e.data.result);
-                        }
-                    };
-                    this.decoder.postMessage({ command: this.DECODE, data: data.buffer }, [data.buffer]);
-                };
-                return LzmaTest;
-            }());
-            exports_3("LzmaTest", LzmaTest);
-        }
-    }
-});
-System.register("test/SimpleTest", ["../modules/xdata/src/nid/utils/ByteArray"], function(exports_4, context_4) {
-    "use strict";
-    var __moduleName = context_4 && context_4.id;
-    var ByteArray_3;
-    var SimpleTest;
-    return {
-        setters:[
-            function (ByteArray_3_1) {
-                ByteArray_3 = ByteArray_3_1;
-            }],
-        execute: function() {
-            SimpleTest = (function () {
-                function SimpleTest() {
-                    var byteArray = new ByteArray_3.ByteArray();
-                    byteArray.writeShort(52);
-                    byteArray.writeInt(-56256);
-                    byteArray.writeUnsignedInt(652);
-                    byteArray.writeDouble(Math.random() * Number.MAX_VALUE);
-                    byteArray.position = 0;
-                    console.log(byteArray.readShort());
-                    console.log(byteArray.readInt());
-                    console.log(byteArray.readUnsignedInt());
-                    console.log(byteArray.readDouble());
-                }
-                return SimpleTest;
-            }());
-            exports_4("SimpleTest", SimpleTest);
-            new SimpleTest();
-        }
-    }
-});
-System.register("xdata/src/nid/zlib/Huffman", [], function(exports_5, context_5) {
-    "use strict";
-    var __moduleName = context_5 && context_5.id;
-    var Huffman;
-    return {
-        setters:[],
-        execute: function() {
-            Huffman = (function () {
-                function Huffman() {
-                }
-                Huffman.buildHuffmanTable = function (lengths) {
-                    var listSize = lengths.length;
-                    var maxCodeLength = 0;
-                    var minCodeLength = Number.POSITIVE_INFINITY;
-                    var size;
-                    var table;
-                    var bitLength;
-                    var code;
-                    var skip;
-                    var reversed;
-                    var rtemp;
-                    var i;
-                    var il;
-                    var j;
-                    var value;
-                    for (i = 0, il = listSize; i < il; ++i) {
-                        if (lengths[i] > maxCodeLength) {
-                            maxCodeLength = lengths[i];
-                        }
-                        if (lengths[i] < minCodeLength) {
-                            minCodeLength = lengths[i];
-                        }
-                    }
-                    size = 1 << maxCodeLength;
-                    table = new Uint32Array(size);
-                    for (bitLength = 1, code = 0, skip = 2; bitLength <= maxCodeLength;) {
-                        for (i = 0; i < listSize; ++i) {
-                            if (lengths[i] === bitLength) {
-                                for (reversed = 0, rtemp = code, j = 0; j < bitLength; ++j) {
-                                    reversed = (reversed << 1) | (rtemp & 1);
-                                    rtemp >>= 1;
-                                }
-                                value = (bitLength << 16) | i;
-                                for (j = reversed; j < size; j += skip) {
-                                    table[j] = value;
-                                }
-                                ++code;
-                            }
-                        }
-                        ++bitLength;
-                        code <<= 1;
-                        skip <<= 1;
-                    }
-                    return [table, maxCodeLength, minCodeLength];
-                };
-                return Huffman;
-            }());
-            exports_5("Huffman", Huffman);
-        }
-    }
-});
-System.register("xdata/src/nid/zlib/RawInflate", ["xdata/src/nid/zlib/Huffman"], function(exports_6, context_6) {
-    "use strict";
-    var __moduleName = context_6 && context_6.id;
-    var Huffman_1;
-    var RawInflate;
-    return {
-        setters:[
-            function (Huffman_1_1) {
-                Huffman_1 = Huffman_1_1;
-            }],
-        execute: function() {
-            RawInflate = (function () {
-                function RawInflate(input, opt_params) {
-                    this.ZLIB_RAW_INFLATE_BUFFER_SIZE = 0x8000;
-                    if (!RawInflate.FixedLiteralLengthTable) {
-                        var lengths = new Uint8Array(288);
-                        var i, il;
-                        for (i = 0, il = lengths.length; i < il; ++i) {
-                            lengths[i] =
-                                (i <= 143) ? 8 :
-                                    (i <= 255) ? 9 :
-                                        (i <= 279) ? 7 :
-                                            8;
-                        }
-                        RawInflate.FixedLiteralLengthTable = Huffman_1.Huffman.buildHuffmanTable(lengths);
-                    }
-                    if (!RawInflate.FixedDistanceTable) {
-                        var lengths = new Uint8Array(30);
-                        var i, il;
-                        for (i = 0, il = lengths.length; i < il; ++i) {
-                            lengths[i] = 5;
-                        }
-                        RawInflate.FixedDistanceTable = Huffman_1.Huffman.buildHuffmanTable(lengths);
-                    }
-                    this.blocks = [];
-                    this.bufferSize = this.ZLIB_RAW_INFLATE_BUFFER_SIZE;
-                    this.totalpos = 0;
-                    this.ip = 0;
-                    this.bitsbuf = 0;
-                    this.bitsbuflen = 0;
-                    this.input = input;
-                    this.output;
-                    this.bfinal = false;
-                    this.bufferType = RawInflate.BufferType.ADAPTIVE;
-                    this.resize = false;
-                    if (opt_params || !(opt_params = {})) {
-                        if (opt_params['index']) {
-                            this.ip = opt_params['index'];
-                        }
-                        if (opt_params['bufferSize']) {
-                            this.bufferSize = opt_params['bufferSize'];
-                        }
-                        if (opt_params['bufferType']) {
-                            this.bufferType = opt_params['bufferType'];
-                        }
-                        if (opt_params['resize']) {
-                            this.resize = opt_params['resize'];
-                        }
-                    }
-                    switch (this.bufferType) {
-                        case RawInflate.BufferType.BLOCK:
-                            this.op = RawInflate.MaxBackwardLength;
-                            this.output =
-                                new Uint8Array(RawInflate.MaxBackwardLength +
-                                    this.bufferSize +
-                                    RawInflate.MaxCopyLength);
-                            break;
-                        case RawInflate.BufferType.ADAPTIVE:
-                            this.op = 0;
-                            this.output = new Uint8Array(this.bufferSize);
-                            this.expandBuffer = this.expandBufferAdaptive;
-                            this.concatBuffer = this.concatBufferDynamic;
-                            this.decodeHuffman = this.decodeHuffmanAdaptive;
-                            break;
-                        default:
-                            throw new Error('invalid inflate mode');
-                    }
-                }
-                RawInflate.prototype.decompress = function () {
-                    while (!this.bfinal) {
-                        this.parseBlock();
-                    }
-                    return this.concatBuffer();
-                };
-                RawInflate.prototype.parseBlock = function () {
-                    var hdr = this.readBits(3);
-                    if (hdr & 0x1) {
-                        this.bfinal = true;
-                    }
-                    hdr >>>= 1;
-                    switch (hdr) {
-                        case 0:
-                            this.parseUncompressedBlock();
-                            break;
-                        case 1:
-                            this.parseFixedHuffmanBlock();
-                            break;
-                        case 2:
-                            this.parseDynamicHuffmanBlock();
-                            break;
-                        default:
-                            throw new Error('unknown BTYPE: ' + hdr);
-                    }
-                };
-                RawInflate.prototype.readBits = function (length) {
-                    var bitsbuf = this.bitsbuf;
-                    var bitsbuflen = this.bitsbuflen;
-                    var input = this.input;
-                    var ip = this.ip;
-                    var inputLength = input.length;
-                    var octet;
-                    while (bitsbuflen < length) {
-                        if (ip >= inputLength) {
-                            throw new Error('input buffer is broken');
-                        }
-                        bitsbuf |= input[ip++] << bitsbuflen;
-                        bitsbuflen += 8;
-                    }
-                    octet = bitsbuf & ((1 << length) - 1);
-                    bitsbuf >>>= length;
-                    bitsbuflen -= length;
-                    this.bitsbuf = bitsbuf;
-                    this.bitsbuflen = bitsbuflen;
-                    this.ip = ip;
-                    return octet;
-                };
-                RawInflate.prototype.readCodeByTable = function (table) {
-                    var bitsbuf = this.bitsbuf;
-                    var bitsbuflen = this.bitsbuflen;
-                    var input = this.input;
-                    var ip = this.ip;
-                    var inputLength = input.length;
-                    var codeTable = table[0];
-                    var maxCodeLength = table[1];
-                    var codeWithLength;
-                    var codeLength;
-                    while (bitsbuflen < maxCodeLength) {
-                        if (ip >= inputLength) {
-                            break;
-                        }
-                        bitsbuf |= input[ip++] << bitsbuflen;
-                        bitsbuflen += 8;
-                    }
-                    codeWithLength = codeTable[bitsbuf & ((1 << maxCodeLength) - 1)];
-                    codeLength = codeWithLength >>> 16;
-                    this.bitsbuf = bitsbuf >> codeLength;
-                    this.bitsbuflen = bitsbuflen - codeLength;
-                    this.ip = ip;
-                    return codeWithLength & 0xffff;
-                };
-                RawInflate.prototype.parseUncompressedBlock = function () {
-                    var input = this.input;
-                    var ip = this.ip;
-                    var output = this.output;
-                    var op = this.op;
-                    var inputLength = input.length;
-                    var len;
-                    var nlen;
-                    var olength = output.length;
-                    var preCopy;
-                    this.bitsbuf = 0;
-                    this.bitsbuflen = 0;
-                    if (ip + 1 >= inputLength) {
-                        throw new Error('invalid uncompressed block header: LEN');
-                    }
-                    len = input[ip++] | (input[ip++] << 8);
-                    if (ip + 1 >= inputLength) {
-                        throw new Error('invalid uncompressed block header: NLEN');
-                    }
-                    nlen = input[ip++] | (input[ip++] << 8);
-                    if (len === ~nlen) {
-                        throw new Error('invalid uncompressed block header: length verify');
-                    }
-                    if (ip + len > input.length) {
-                        throw new Error('input buffer is broken');
-                    }
-                    switch (this.bufferType) {
-                        case RawInflate.BufferType.BLOCK:
-                            while (op + len > output.length) {
-                                preCopy = olength - op;
-                                len -= preCopy;
-                                output.set(input.subarray(ip, ip + preCopy), op);
-                                op += preCopy;
-                                ip += preCopy;
-                                this.op = op;
-                                output = this.expandBuffer();
-                                op = this.op;
-                            }
-                            break;
-                        case RawInflate.BufferType.ADAPTIVE:
-                            while (op + len > output.length) {
-                                output = this.expandBuffer({ fixRatio: 2 });
-                            }
-                            break;
-                        default:
-                            throw new Error('invalid inflate mode');
-                    }
-                    output.set(input.subarray(ip, ip + len), op);
-                    op += len;
-                    ip += len;
-                    this.ip = ip;
-                    this.op = op;
-                    this.output = output;
-                };
-                RawInflate.prototype.parseFixedHuffmanBlock = function () {
-                    this.decodeHuffman(RawInflate.FixedLiteralLengthTable, RawInflate.FixedDistanceTable);
-                };
-                RawInflate.prototype.parseDynamicHuffmanBlock = function () {
-                    var hlit = this.readBits(5) + 257;
-                    var hdist = this.readBits(5) + 1;
-                    var hclen = this.readBits(4) + 4;
-                    var codeLengths = new Uint8Array(RawInflate.Order.length);
-                    var codeLengthsTable;
-                    var litlenLengths;
-                    var distLengths;
-                    var i;
-                    for (i = 0; i < hclen; ++i) {
-                        codeLengths[RawInflate.Order[i]] = this.readBits(3);
-                    }
-                    codeLengthsTable = Huffman_1.Huffman.buildHuffmanTable(codeLengths);
-                    litlenLengths = new Uint8Array(hlit);
-                    distLengths = new Uint8Array(hdist);
-                    this.prev = 0;
-                    this.decodeHuffman(Huffman_1.Huffman.buildHuffmanTable(this.decode.call(this, hlit, codeLengthsTable, litlenLengths)), Huffman_1.Huffman.buildHuffmanTable(this.decode.call(this, hdist, codeLengthsTable, distLengths)));
-                };
-                RawInflate.prototype.decode = function (num, table, lengths) {
-                    var code;
-                    var prev = this.prev;
-                    var repeat;
-                    var i;
-                    for (i = 0; i < num;) {
-                        code = this.readCodeByTable(table);
-                        switch (code) {
-                            case 16:
-                                repeat = 3 + this.readBits(2);
-                                while (repeat--) {
-                                    lengths[i++] = prev;
-                                }
-                                break;
-                            case 17:
-                                repeat = 3 + this.readBits(3);
-                                while (repeat--) {
-                                    lengths[i++] = 0;
-                                }
-                                prev = 0;
-                                break;
-                            case 18:
-                                repeat = 11 + this.readBits(7);
-                                while (repeat--) {
-                                    lengths[i++] = 0;
-                                }
-                                prev = 0;
-                                break;
-                            default:
-                                lengths[i++] = code;
-                                prev = code;
-                                break;
-                        }
-                    }
-                    this.prev = prev;
-                    return lengths;
-                };
-                RawInflate.prototype.decodeHuffman = function (litlen, dist) {
-                    var output = this.output;
-                    var op = this.op;
-                    this.currentLitlenTable = litlen;
-                    var olength = output.length - RawInflate.MaxCopyLength;
-                    var code;
-                    var ti;
-                    var codeDist;
-                    var codeLength;
-                    while ((code = this.readCodeByTable(litlen)) !== 256) {
-                        if (code < 256) {
-                            if (op >= olength) {
-                                this.op = op;
-                                output = this.expandBuffer();
-                                op = this.op;
-                            }
-                            output[op++] = code;
-                            continue;
-                        }
-                        ti = code - 257;
-                        codeLength = RawInflate.LengthCodeTable[ti];
-                        if (RawInflate.LengthExtraTable[ti] > 0) {
-                            codeLength += this.readBits(RawInflate.LengthExtraTable[ti]);
-                        }
-                        code = this.readCodeByTable(dist);
-                        codeDist = RawInflate.DistCodeTable[code];
-                        if (RawInflate.DistExtraTable[code] > 0) {
-                            codeDist += this.readBits(RawInflate.DistExtraTable[code]);
-                        }
-                        if (op >= olength) {
-                            this.op = op;
-                            output = this.expandBuffer();
-                            op = this.op;
-                        }
-                        while (codeLength--) {
-                            output[op] = output[(op++) - codeDist];
-                        }
-                    }
-                    while (this.bitsbuflen >= 8) {
-                        this.bitsbuflen -= 8;
-                        this.ip--;
-                    }
-                    this.op = op;
-                };
-                RawInflate.prototype.decodeHuffmanAdaptive = function (litlen, dist) {
-                    var output = this.output;
-                    var op = this.op;
-                    this.currentLitlenTable = litlen;
-                    var olength = output.length;
-                    var code;
-                    var ti;
-                    var codeDist;
-                    var codeLength;
-                    while ((code = this.readCodeByTable(litlen)) !== 256) {
-                        if (code < 256) {
-                            if (op >= olength) {
-                                output = this.expandBuffer();
-                                olength = output.length;
-                            }
-                            output[op++] = code;
-                            continue;
-                        }
-                        ti = code - 257;
-                        codeLength = RawInflate.LengthCodeTable[ti];
-                        if (RawInflate.LengthExtraTable[ti] > 0) {
-                            codeLength += this.readBits(RawInflate.LengthExtraTable[ti]);
-                        }
-                        code = this.readCodeByTable(dist);
-                        codeDist = RawInflate.DistCodeTable[code];
-                        if (RawInflate.DistExtraTable[code] > 0) {
-                            codeDist += this.readBits(RawInflate.DistExtraTable[code]);
-                        }
-                        if (op + codeLength > olength) {
-                            output = this.expandBuffer();
-                            olength = output.length;
-                        }
-                        while (codeLength--) {
-                            output[op] = output[(op++) - codeDist];
-                        }
-                    }
-                    while (this.bitsbuflen >= 8) {
-                        this.bitsbuflen -= 8;
-                        this.ip--;
-                    }
-                    this.op = op;
-                };
-                RawInflate.prototype.expandBuffer = function (opt_param) {
-                    if (opt_param === void 0) { opt_param = null; }
-                    var buffer = new Uint8Array(this.op - RawInflate.MaxBackwardLength);
-                    var backward = this.op - RawInflate.MaxBackwardLength;
-                    var i;
-                    var il;
-                    var output = this.output;
-                    buffer.set(output.subarray(RawInflate.MaxBackwardLength, buffer.length));
-                    this.blocks.push(buffer);
-                    this.totalpos += buffer.length;
-                    output.set(output.subarray(backward, backward + RawInflate.MaxBackwardLength));
-                    this.op = RawInflate.MaxBackwardLength;
-                    return output;
-                };
-                RawInflate.prototype.expandBufferAdaptive = function (opt_param) {
-                    var buffer;
-                    var ratio = (this.input.length / this.ip + 1) | 0;
-                    var maxHuffCode;
-                    var newSize;
-                    var maxInflateSize;
-                    var input = this.input;
-                    var output = this.output;
-                    if (opt_param) {
-                        if (typeof opt_param.fixRatio === 'number') {
-                            ratio = opt_param.fixRatio;
-                        }
-                        if (typeof opt_param.addRatio === 'number') {
-                            ratio += opt_param.addRatio;
-                        }
-                    }
-                    if (ratio < 2) {
-                        maxHuffCode =
-                            (input.length - this.ip) / this.currentLitlenTable[2];
-                        maxInflateSize = (maxHuffCode / 2 * 258) | 0;
-                        newSize = maxInflateSize < output.length ?
-                            output.length + maxInflateSize :
-                            output.length << 1;
-                    }
-                    else {
-                        newSize = output.length * ratio;
-                    }
-                    buffer = new Uint8Array(newSize);
-                    buffer.set(output);
-                    this.output = buffer;
-                    return this.output;
-                };
-                RawInflate.prototype.concatBuffer = function () {
-                    var pos = 0;
-                    var limit = this.totalpos + (this.op - RawInflate.MaxBackwardLength);
-                    var output = this.output;
-                    var blocks = this.blocks;
-                    var block;
-                    var buffer = new Uint8Array(limit);
-                    var i;
-                    var il;
-                    var j;
-                    var jl;
-                    if (blocks.length === 0) {
-                        return this.output.subarray(RawInflate.MaxBackwardLength, this.op);
-                    }
-                    for (i = 0, il = blocks.length; i < il; ++i) {
-                        block = blocks[i];
-                        for (j = 0, jl = block.length; j < jl; ++j) {
-                            buffer[pos++] = block[j];
-                        }
-                    }
-                    for (i = RawInflate.MaxBackwardLength, il = this.op; i < il; ++i) {
-                        buffer[pos++] = output[i];
-                    }
-                    this.blocks = [];
-                    this.buffer = buffer;
-                    return this.buffer;
-                };
-                RawInflate.prototype.concatBufferDynamic = function () {
-                    var buffer;
-                    var op = this.op;
-                    if (this.resize) {
-                        buffer = new Uint8Array(op);
-                        buffer.set(this.output.subarray(0, op));
-                    }
-                    else {
-                        buffer = this.output.subarray(0, op);
-                    }
-                    this.buffer = buffer;
-                    return this.buffer;
-                };
-                RawInflate.BufferType = {
-                    BLOCK: 0,
-                    ADAPTIVE: 1
-                };
-                RawInflate.MaxBackwardLength = 32768;
-                RawInflate.MaxCopyLength = 32768;
-                RawInflate.Order = new Uint16Array([16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15]);
-                RawInflate.LengthCodeTable = new Uint16Array([
-                    0x0003, 0x0004, 0x0005, 0x0006, 0x0007, 0x0008, 0x0009, 0x000a, 0x000b,
-                    0x000d, 0x000f, 0x0011, 0x0013, 0x0017, 0x001b, 0x001f, 0x0023, 0x002b,
-                    0x0033, 0x003b, 0x0043, 0x0053, 0x0063, 0x0073, 0x0083, 0x00a3, 0x00c3,
-                    0x00e3, 0x0102, 0x0102, 0x0102
-                ]);
-                RawInflate.LengthExtraTable = new Uint8Array([
-                    0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5,
-                    5, 5, 0, 0, 0
-                ]);
-                RawInflate.DistCodeTable = new Uint16Array([
-                    0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0007, 0x0009, 0x000d, 0x0011,
-                    0x0019, 0x0021, 0x0031, 0x0041, 0x0061, 0x0081, 0x00c1, 0x0101, 0x0181,
-                    0x0201, 0x0301, 0x0401, 0x0601, 0x0801, 0x0c01, 0x1001, 0x1801, 0x2001,
-                    0x3001, 0x4001, 0x6001
-                ]);
-                RawInflate.DistExtraTable = new Uint8Array([
-                    0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11,
-                    11, 12, 12, 13, 13
-                ]);
-                return RawInflate;
-            }());
-            exports_6("RawInflate", RawInflate);
-        }
-    }
-});
-System.register("xdata/src/nid/zlib/CompressionMethod", [], function(exports_7, context_7) {
-    "use strict";
-    var __moduleName = context_7 && context_7.id;
-    var CompressionMethod;
-    return {
-        setters:[],
-        execute: function() {
-            CompressionMethod = (function () {
-                function CompressionMethod() {
-                }
-                CompressionMethod.ZLIB = {
-                    DEFLATE: 8,
-                    RESERVED: 15
-                };
-                CompressionMethod.ZIP = {
-                    STORE: 0,
-                    DEFLATE: 8
-                };
-                return CompressionMethod;
-            }());
-            exports_7("CompressionMethod", CompressionMethod);
-        }
-    }
-});
-System.register("xdata/src/nid/zlib/Adler32", [], function(exports_8, context_8) {
-    "use strict";
-    var __moduleName = context_8 && context_8.id;
-    var Adler32;
-    return {
-        setters:[],
-        execute: function() {
-            Adler32 = (function () {
-                function Adler32() {
-                }
-                Adler32.calc = function (array) {
-                    if (typeof (array) === 'string') {
-                        array = Adler32.encodeString(array);
-                    }
-                    return Adler32.update(1, array);
-                };
-                Adler32.update = function (adler, array) {
-                    var s1 = adler & 0xffff;
-                    var s2 = (adler >>> 16) & 0xffff;
-                    var len = array.length;
-                    var tlen;
-                    var i = 0;
-                    while (len > 0) {
-                        tlen = len > Adler32.OptimizationParameter ?
-                            Adler32.OptimizationParameter : len;
-                        len -= tlen;
-                        do {
-                            s1 += array[i++];
-                            s2 += s1;
-                        } while (--tlen);
-                        s1 %= 65521;
-                        s2 %= 65521;
-                    }
-                    return ((s2 << 16) | s1) >>> 0;
-                };
-                Adler32.encodeString = function (str) {
-                    if (!Adler32.encoder) {
-                        if (window["TextEncoder"]) {
-                            Adler32.encoder = new window["TextEncoder"]();
-                        }
-                        else {
-                            Adler32.encoder = {
-                                encode: function (str) {
-                                    var tmp = str.split('');
-                                    var data = new Uint8Array(tmp.length);
-                                    var i;
-                                    var il;
-                                    for (i = 0, il = tmp.length; i < il; i++) {
-                                        data[i] = (tmp[i].charCodeAt(0) & 0xff) >>> 0;
-                                    }
-                                    return data;
-                                }
-                            };
-                        }
-                    }
-                    return Adler32.encoder.encode(str);
-                };
-                Adler32.OptimizationParameter = 1024;
-                return Adler32;
-            }());
-            exports_8("Adler32", Adler32);
-        }
-    }
-});
-System.register("xdata/src/nid/zlib/Inflate", ["xdata/src/nid/zlib/RawInflate", "xdata/src/nid/zlib/CompressionMethod", "xdata/src/nid/zlib/Adler32"], function(exports_9, context_9) {
-    "use strict";
-    var __moduleName = context_9 && context_9.id;
-    var RawInflate_1, CompressionMethod_1, Adler32_1;
-    var Inflate;
-    return {
-        setters:[
-            function (RawInflate_1_1) {
-                RawInflate_1 = RawInflate_1_1;
-            },
-            function (CompressionMethod_1_1) {
-                CompressionMethod_1 = CompressionMethod_1_1;
-            },
-            function (Adler32_1_1) {
-                Adler32_1 = Adler32_1_1;
-            }],
-        execute: function() {
-            Inflate = (function () {
-                function Inflate(input, opt_params) {
-                    if (opt_params === void 0) { opt_params = null; }
-                    this.ip = 0;
-                    this.input = input;
-                    if (opt_params || !(opt_params = {})) {
-                        if (opt_params['index']) {
-                            this.ip = opt_params['index'];
-                        }
-                        if (opt_params['verify']) {
-                            this.verify = opt_params['verify'];
-                        }
-                    }
-                    this.cmf = input[this.ip++];
-                    this.flg = input[this.ip++];
-                    switch (this.cmf & 0x0f) {
-                        case CompressionMethod_1.CompressionMethod.ZLIB.DEFLATE:
-                            this.method = CompressionMethod_1.CompressionMethod.ZLIB.DEFLATE;
-                            break;
-                        default:
-                            throw new Error('unsupported compression method');
-                    }
-                    if (((this.cmf << 8) + this.flg) % 31 !== 0) {
-                        throw new Error('invalid fcheck flag:' + ((this.cmf << 8) + this.flg) % 31);
-                    }
-                    if (this.flg & 0x20) {
-                        throw new Error('fdict flag is not supported');
-                    }
-                    this.rawinflate = new RawInflate_1.RawInflate(input, {
-                        'index': this.ip,
-                        'bufferSize': opt_params['bufferSize'],
-                        'bufferType': opt_params['bufferType'],
-                        'resize': opt_params['resize']
-                    });
-                }
-                Inflate.prototype.decompress = function () {
-                    var input = this.input;
-                    var buffer;
-                    var adler32;
-                    buffer = this.rawinflate.decompress();
-                    this.ip = this.rawinflate.ip;
-                    if (this.verify) {
-                        adler32 = (input[this.ip++] << 24 | input[this.ip++] << 16 |
-                            input[this.ip++] << 8 | input[this.ip++]) >>> 0;
-                        if (adler32 !== Adler32_1.Adler32.calc(buffer)) {
-                            throw new Error('invalid adler-32 checksum');
-                        }
-                    }
-                    return buffer;
-                };
-                Inflate.BufferType = RawInflate_1.RawInflate.BufferType;
-                return Inflate;
-            }());
-            exports_9("Inflate", Inflate);
-        }
-    }
-});
-System.register("xdata/src/nid/zlib/ZLIB", ["xdata/src/nid/zlib/Inflate"], function(exports_10, context_10) {
-    "use strict";
-    var __moduleName = context_10 && context_10.id;
-    var Inflate_1;
-    var ZLIB;
-    return {
-        setters:[
-            function (Inflate_1_1) {
-                Inflate_1 = Inflate_1_1;
-            }],
-        execute: function() {
-            ZLIB = (function () {
-                function ZLIB() {
-                }
-                ZLIB.prototype.encode = function () {
-                };
-                ZLIB.prototype.decode = function (compressed) {
-                    var decompressed = new Inflate_1.Inflate(compressed).decompress();
-                };
-                return ZLIB;
-            }());
-            exports_10("ZLIB", ZLIB);
-        }
-    }
-});
-System.register("xdata/src/nid/lzma/RangeDecoder", [], function(exports_11, context_11) {
-    "use strict";
-    var __moduleName = context_11 && context_11.id;
-    var RangeDecoder;
-    return {
-        setters:[],
-        execute: function() {
-            RangeDecoder = (function () {
-                function RangeDecoder() {
-                    this.rangeI = 0;
-                    this.codeI = 1;
-                    this.loc1 = 2;
-                    this.loc2 = 3;
-                    this.in_pos = 13;
-                }
-                RangeDecoder.prototype.isFinishedOK = function () {
-                    return this.U32[this.codeI] == 0;
-                };
-                RangeDecoder.prototype.init = function () {
-                    this.U32 = new Uint32Array(4);
-                    this.U16 = new Uint16Array(4);
-                    this.corrupted = false;
-                    if (this.inStream[this.in_pos++] != 0) {
-                        this.corrupted = true;
-                    }
-                    this.U32[this.rangeI] = 0xFFFFFFFF;
-                    this.U32[this.codeI] = 0;
-                    for (var i = 0; i < 4; i++) {
-                        this.U32[this.codeI] = (this.U32[this.codeI] << 8) | this.inStream[this.in_pos++];
-                    }
-                    if (this.U32[this.codeI] == this.U32[this.rangeI]) {
-                        this.corrupted = true;
-                    }
-                };
-                RangeDecoder.prototype.normalize = function () {
-                    if (this.U32[this.rangeI] < RangeDecoder.kTopValue) {
-                        this.U32[this.rangeI] <<= 8;
-                        this.U32[this.codeI] = (this.U32[this.codeI] << 8) | this.inStream[this.in_pos++];
-                    }
-                };
-                RangeDecoder.prototype.decodeDirectBits = function (numBits) {
-                    this.U32[this.loc1] = 0;
-                    do {
-                        this.U32[this.rangeI] >>>= 1;
-                        this.U32[this.codeI] -= this.U32[this.rangeI];
-                        this.U32[this.loc2] = 0 - (this.U32[this.codeI] >>> 31);
-                        this.U32[this.codeI] += this.U32[this.rangeI] & this.U32[this.loc2];
-                        if (this.U32[this.codeI] == this.U32[this.rangeI]) {
-                            this.corrupted = true;
-                        }
-                        this.normalize();
-                        this.U32[this.loc1] <<= 1;
-                        this.U32[this.loc1] += this.U32[this.loc2] + 1;
-                    } while (--numBits);
-                    return this.U32[this.loc1];
-                };
-                RangeDecoder.prototype.decodeBit = function (prob, index) {
-                    this.U16[0] = prob[index];
-                    this.U32[2] = (this.U32[0] >>> 11) * this.U16[0];
-                    if (this.U32[1] < this.U32[2]) {
-                        this.U16[0] += ((1 << 11) - this.U16[0]) >>> 5;
-                        this.U32[0] = this.U32[2];
-                        this.U16[1] = 0;
-                    }
-                    else {
-                        this.U16[0] -= this.U16[0] >>> 5;
-                        this.U32[1] -= this.U32[2];
-                        this.U32[0] -= this.U32[2];
-                        this.U16[1] = 1;
-                    }
-                    prob[index] = this.U16[0];
-                    if (this.U32[0] < 16777216) {
-                        this.U32[0] <<= 8;
-                        this.U32[1] = (this.U32[1] << 8) | this.inStream[this.in_pos++];
-                    }
-                    return this.U16[1];
-                };
-                RangeDecoder.kTopValue = (1 << 24);
-                return RangeDecoder;
-            }());
-            exports_11("RangeDecoder", RangeDecoder);
-        }
-    }
-});
-System.register("xdata/src/nid/lzma/OutWindow", [], function(exports_12, context_12) {
-    "use strict";
-    var __moduleName = context_12 && context_12.id;
-    var OutWindow;
-    return {
-        setters:[],
-        execute: function() {
-            OutWindow = (function () {
-                function OutWindow() {
-                    this.out_pos = 0;
-                }
-                OutWindow.prototype.create = function (dictSize) {
-                    this.buf = new Uint8Array(dictSize);
-                    this.pos = 0;
-                    this.size = dictSize;
-                    this.isFull = false;
-                    this.totalPos = 0;
-                };
-                OutWindow.prototype.putByte = function (b) {
-                    this.totalPos++;
-                    this.buf[this.pos++] = b;
-                    if (this.pos == this.size) {
-                        this.pos = 0;
-                        this.isFull = true;
-                    }
-                    this.outStream[this.out_pos++] = b;
-                };
-                OutWindow.prototype.getByte = function (dist) {
-                    return this.buf[dist <= this.pos ? this.pos - dist : this.size - dist + this.pos];
-                };
-                OutWindow.prototype.copyMatch = function (dist, len) {
-                    for (; len > 0; len--) {
-                        this.putByte(this.getByte(dist));
-                    }
-                };
-                OutWindow.prototype.checkDistance = function (dist) {
-                    return dist <= this.pos || this.isFull;
-                };
-                OutWindow.prototype.isEmpty = function () {
-                    return this.pos == 0 && !this.isFull;
-                };
-                return OutWindow;
-            }());
-            exports_12("OutWindow", OutWindow);
-        }
-    }
-});
-System.register("xdata/src/nid/lzma/BitTreeDecoder", ["xdata/src/nid/lzma/LZMA"], function(exports_13, context_13) {
-    "use strict";
-    var __moduleName = context_13 && context_13.id;
-    var LZMA_2;
-    var BitTreeDecoder;
-    return {
-        setters:[
-            function (LZMA_2_1) {
-                LZMA_2 = LZMA_2_1;
-            }],
-        execute: function() {
-            BitTreeDecoder = (function () {
-                function BitTreeDecoder(numBits) {
-                    this.numBits = numBits;
-                    this.probs = new Uint16Array(1 << this.numBits);
-                }
-                BitTreeDecoder.prototype.init = function () {
-                    LZMA_2.LZMA.INIT_PROBS(this.probs);
-                };
-                BitTreeDecoder.prototype.decode = function (rc) {
-                    var m = 1;
-                    for (var i = 0; i < this.numBits; i++)
-                        m = (m << 1) + rc.decodeBit(this.probs, m);
-                    return m - (1 << this.numBits);
-                };
-                BitTreeDecoder.prototype.reverseDecode = function (rc) {
-                    return LZMA_2.LZMA.BitTreeReverseDecode(this.probs, this.numBits, rc);
-                };
-                BitTreeDecoder.constructArray = function (numBits, len) {
-                    var vec = [];
-                    for (var i = 0; i < len; i++) {
-                        vec[i] = new BitTreeDecoder(numBits);
-                    }
-                    return vec;
-                };
-                return BitTreeDecoder;
-            }());
-            exports_13("BitTreeDecoder", BitTreeDecoder);
-        }
-    }
-});
-System.register("xdata/src/nid/lzma/LenDecoder", ["xdata/src/nid/lzma/BitTreeDecoder", "xdata/src/nid/lzma/LZMA"], function(exports_14, context_14) {
-    "use strict";
-    var __moduleName = context_14 && context_14.id;
-    var BitTreeDecoder_1, LZMA_3;
-    var LenDecoder;
-    return {
-        setters:[
-            function (BitTreeDecoder_1_1) {
-                BitTreeDecoder_1 = BitTreeDecoder_1_1;
-            },
-            function (LZMA_3_1) {
-                LZMA_3 = LZMA_3_1;
-            }],
-        execute: function() {
-            LenDecoder = (function () {
-                function LenDecoder() {
-                    this.lowCoder = BitTreeDecoder_1.BitTreeDecoder.constructArray(3, 1 << LZMA_3.LZMA.kNumPosBitsMax);
-                    this.midCoder = BitTreeDecoder_1.BitTreeDecoder.constructArray(3, 1 << LZMA_3.LZMA.kNumPosBitsMax);
-                    this.highCoder = new BitTreeDecoder_1.BitTreeDecoder(8);
-                }
-                LenDecoder.prototype.init = function () {
-                    this.choice = [LZMA_3.LZMA.PROB_INIT_VAL, LZMA_3.LZMA.PROB_INIT_VAL];
-                    this.highCoder.init();
-                    for (var i = 0; i < (1 << LZMA_3.LZMA.kNumPosBitsMax); i++) {
-                        this.lowCoder[i].init();
-                        this.midCoder[i].init();
-                    }
-                };
-                LenDecoder.prototype.decode = function (rc, posState) {
-                    if (rc.decodeBit(this.choice, 0) == 0) {
-                        return this.lowCoder[posState].decode(rc);
-                    }
-                    if (rc.decodeBit(this.choice, 1) == 0) {
-                        return 8 + this.midCoder[posState].decode(rc);
-                    }
-                    return 16 + this.highCoder.decode(rc);
-                };
-                return LenDecoder;
-            }());
-            exports_14("LenDecoder", LenDecoder);
-        }
-    }
-});
-System.register("xdata/src/nid/utils/MEMORY", [], function(exports_15, context_15) {
-    "use asm";
-    "use strict";
-    var __moduleName = context_15 && context_15.id;
-    var MEMORY;
-    return {
-        setters:[],
-        execute: function() {
-            MEMORY = (function () {
-                function MEMORY() {
-                }
-                MEMORY.allocateUint8 = function (len) {
-                    MEMORY.u8 = new Uint8Array(len);
-                };
-                MEMORY.allocateUint16 = function (len) {
-                    MEMORY.u16 = new Uint16Array(len);
-                };
-                MEMORY.allocateUint32 = function (len) {
-                    MEMORY.u32 = new Uint32Array(len);
-                };
-                MEMORY.getUint8 = function () {
-                    if (!MEMORY.u8) {
-                        MEMORY.allocateUint8(10);
-                    }
-                    return MEMORY.u8Index++;
-                };
-                MEMORY.getUint16 = function () {
-                    if (!MEMORY.u16) {
-                        MEMORY.allocateUint16(24);
-                    }
-                    return MEMORY.u16Index++;
-                };
-                MEMORY.getUint32 = function () {
-                    if (!MEMORY.u32) {
-                        MEMORY.allocateUint32(10);
-                    }
-                    return MEMORY.u32Index++;
-                };
-                MEMORY.u8Index = 0;
-                MEMORY.u16Index = 0;
-                MEMORY.u32Index = 0;
-                return MEMORY;
-            }());
-            exports_15("MEMORY", MEMORY);
-        }
-    }
-});
-System.register("xdata/src/nid/lzma/LzmaDecoder", ["xdata/src/nid/lzma/RangeDecoder", "xdata/src/nid/lzma/OutWindow", "xdata/src/nid/lzma/BitTreeDecoder", "xdata/src/nid/lzma/LenDecoder", "xdata/src/nid/lzma/LZMA", "xdata/src/nid/utils/MEMORY"], function(exports_16, context_16) {
-    "use strict";
-    var __moduleName = context_16 && context_16.id;
-    var RangeDecoder_1, OutWindow_1, BitTreeDecoder_2, LenDecoder_1, LZMA_4, MEMORY_1;
-    var LzmaDecoder;
-    return {
-        setters:[
-            function (RangeDecoder_1_1) {
-                RangeDecoder_1 = RangeDecoder_1_1;
-            },
-            function (OutWindow_1_1) {
-                OutWindow_1 = OutWindow_1_1;
-            },
-            function (BitTreeDecoder_2_1) {
-                BitTreeDecoder_2 = BitTreeDecoder_2_1;
-            },
-            function (LenDecoder_1_1) {
-                LenDecoder_1 = LenDecoder_1_1;
-            },
-            function (LZMA_4_1) {
-                LZMA_4 = LZMA_4_1;
-            },
-            function (MEMORY_1_1) {
-                MEMORY_1 = MEMORY_1_1;
-            }],
-        execute: function() {
-            LzmaDecoder = (function () {
-                function LzmaDecoder() {
-                    this.posSlotDecoder = BitTreeDecoder_2.BitTreeDecoder.constructArray(6, LZMA_4.LZMA.kNumLenToPosStates);
-                    this.alignDecoder = new BitTreeDecoder_2.BitTreeDecoder(LZMA_4.LZMA.kNumAlignBits);
-                    this.posDecoders = new Uint16Array(1 + LZMA_4.LZMA.kNumFullDistances - LZMA_4.LZMA.kEndPosModelIndex);
-                    this.isMatch = new Uint16Array(LZMA_4.LZMA.kNumStates << LZMA_4.LZMA.kNumPosBitsMax);
-                    this.isRep = new Uint16Array(LZMA_4.LZMA.kNumStates);
-                    this.isRepG0 = new Uint16Array(LZMA_4.LZMA.kNumStates);
-                    this.isRepG1 = new Uint16Array(LZMA_4.LZMA.kNumStates);
-                    this.isRepG2 = new Uint16Array(LZMA_4.LZMA.kNumStates);
-                    this.isRep0Long = new Uint16Array(LZMA_4.LZMA.kNumStates << LZMA_4.LZMA.kNumPosBitsMax);
-                    this.lenDecoder = new LenDecoder_1.LenDecoder();
-                    this.repLenDecoder = new LenDecoder_1.LenDecoder();
-                    this.rangeDec = new RangeDecoder_1.RangeDecoder();
-                    this.outWindow = new OutWindow_1.OutWindow();
-                }
-                LzmaDecoder.prototype.init = function () {
-                    this.loc1 = MEMORY_1.MEMORY.getUint32() | 0;
-                    this.loc2 = MEMORY_1.MEMORY.getUint32() | 0;
-                    this.matchBitI = MEMORY_1.MEMORY.getUint16() | 0;
-                    this.matchByteI = MEMORY_1.MEMORY.getUint16() | 0;
-                    this.bitI = MEMORY_1.MEMORY.getUint16() | 0;
-                    this.symbolI = MEMORY_1.MEMORY.getUint16() | 0;
-                    this.prevByteI = MEMORY_1.MEMORY.getUint16() | 0;
-                    this.litStateI = MEMORY_1.MEMORY.getUint16() | 0;
-                    this.initLiterals();
-                    this.initDist();
-                    LZMA_4.LZMA.INIT_PROBS(this.isMatch);
-                    LZMA_4.LZMA.INIT_PROBS(this.isRep);
-                    LZMA_4.LZMA.INIT_PROBS(this.isRepG0);
-                    LZMA_4.LZMA.INIT_PROBS(this.isRepG1);
-                    LZMA_4.LZMA.INIT_PROBS(this.isRepG2);
-                    LZMA_4.LZMA.INIT_PROBS(this.isRep0Long);
-                    this.lenDecoder.init();
-                    this.repLenDecoder.init();
-                };
-                LzmaDecoder.prototype.create = function () {
-                    this.outWindow.create(this.dictSize);
-                    this.createLiterals();
-                };
-                LzmaDecoder.prototype.createLiterals = function () {
-                    this.litProbs = new Uint16Array(0x300 << (this.lc + this.lp));
-                };
-                LzmaDecoder.prototype.initLiterals = function () {
-                    var num = 0x300 << (this.lc + this.lp);
-                    for (var i = 0; i < num; i++) {
-                        this.litProbs[i] = LZMA_4.LZMA.PROB_INIT_VAL;
-                    }
-                };
-                LzmaDecoder.prototype.decodeLiteral = function (state, rep0) {
-                    MEMORY_1.MEMORY.u16[this.prevByteI] = 0;
-                    if (!this.outWindow.isEmpty())
-                        MEMORY_1.MEMORY.u16[this.prevByteI] = this.outWindow.getByte(1);
-                    MEMORY_1.MEMORY.u16[this.symbolI] = 1;
-                    MEMORY_1.MEMORY.u16[this.litStateI] = ((this.outWindow.totalPos & ((1 << this.lp) - 1)) << this.lc) + (MEMORY_1.MEMORY.u16[this.prevByteI] >>> (8 - this.lc));
-                    var probsOffset = (0x300 * MEMORY_1.MEMORY.u16[this.litStateI]) | 0;
-                    if (state >= 7) {
-                        MEMORY_1.MEMORY.u16[this.matchByteI] = this.outWindow.getByte(rep0 + 1);
-                        do {
-                            MEMORY_1.MEMORY.u16[this.matchBitI] = (MEMORY_1.MEMORY.u16[this.matchByteI] >>> 7) & 1;
-                            MEMORY_1.MEMORY.u16[this.matchByteI] <<= 1;
-                            MEMORY_1.MEMORY.u16[this.bitI] = this.rangeDec.decodeBit(this.litProbs, probsOffset + ((1 + MEMORY_1.MEMORY.u16[this.matchBitI]) << 8) + MEMORY_1.MEMORY.u16[this.symbolI]);
-                            MEMORY_1.MEMORY.u16[this.symbolI] = (MEMORY_1.MEMORY.u16[this.symbolI] << 1) | MEMORY_1.MEMORY.u16[this.bitI];
-                            if (MEMORY_1.MEMORY.u16[this.matchBitI] != MEMORY_1.MEMORY.u16[this.bitI])
-                                break;
-                        } while (MEMORY_1.MEMORY.u16[this.symbolI] < 0x100);
-                    }
-                    while (MEMORY_1.MEMORY.u16[this.symbolI] < 0x100) {
-                        MEMORY_1.MEMORY.u16[this.symbolI] = (MEMORY_1.MEMORY.u16[this.symbolI] << 1) | this.rangeDec.decodeBit(this.litProbs, probsOffset + MEMORY_1.MEMORY.u16[this.symbolI]);
-                    }
-                    this.outWindow.putByte(MEMORY_1.MEMORY.u16[this.symbolI] - 0x100);
-                };
-                LzmaDecoder.prototype.decodeDistance = function (len) {
-                    var lenState = len;
-                    if (lenState > LZMA_4.LZMA.kNumLenToPosStates - 1)
-                        lenState = LZMA_4.LZMA.kNumLenToPosStates - 1;
-                    var posSlot = this.posSlotDecoder[lenState].decode(this.rangeDec);
-                    if (posSlot < 4)
-                        return posSlot;
-                    var numDirectBits = ((posSlot >>> 1) - 1);
-                    MEMORY_1.MEMORY.u32[this.loc1] = ((2 | (posSlot & 1)) << numDirectBits);
-                    if (posSlot < LZMA_4.LZMA.kEndPosModelIndex) {
-                        MEMORY_1.MEMORY.u32[this.loc1] += LZMA_4.LZMA.BitTreeReverseDecode(this.posDecoders, numDirectBits, this.rangeDec, MEMORY_1.MEMORY.u32[this.loc1] - posSlot);
-                    }
-                    else {
-                        MEMORY_1.MEMORY.u32[this.loc1] += this.rangeDec.decodeDirectBits(numDirectBits - LZMA_4.LZMA.kNumAlignBits) << LZMA_4.LZMA.kNumAlignBits;
-                        MEMORY_1.MEMORY.u32[this.loc1] += this.alignDecoder.reverseDecode(this.rangeDec);
-                    }
-                    return MEMORY_1.MEMORY.u32[this.loc1];
-                };
-                LzmaDecoder.prototype.initDist = function () {
-                    for (var i = 0; i < LZMA_4.LZMA.kNumLenToPosStates; i++) {
-                        this.posSlotDecoder[i].init();
-                    }
-                    this.alignDecoder.init();
-                    LZMA_4.LZMA.INIT_PROBS(this.posDecoders);
-                };
-                LzmaDecoder.prototype.decodeProperties = function (properties) {
-                    var prop = new Uint8Array(4);
-                    prop[0] = properties[0];
-                    if (prop[0] >= (9 * 5 * 5)) {
-                        throw "Incorrect LZMA properties";
-                    }
-                    prop[1] = prop[0] % 9;
-                    prop[0] /= 9;
-                    prop[2] = prop[0] / 5;
-                    prop[3] = prop[0] % 5;
-                    this.lc = prop[1];
-                    this.pb = prop[2];
-                    this.lp = prop[3];
-                    this.dictSizeInProperties = 0;
-                    for (var i = 0; i < 4; i++) {
-                        this.dictSizeInProperties |= properties[i + 1] << (8 * i);
-                    }
-                    this.dictSize = this.dictSizeInProperties;
-                    if (this.dictSize < LZMA_4.LZMA.LZMA_DIC_MIN) {
-                        this.dictSize = LZMA_4.LZMA.LZMA_DIC_MIN;
-                    }
-                };
-                LzmaDecoder.prototype.updateState_Literal = function (state) {
-                    if (state < 4)
-                        return 0;
-                    else if (state < 10)
-                        return state - 3;
-                    else
-                        return state - 6;
-                };
-                LzmaDecoder.prototype.updateState_ShortRep = function (state) {
-                    return state < 7 ? 9 : 11;
-                };
-                LzmaDecoder.prototype.updateState_Rep = function (state) {
-                    return state < 7 ? 8 : 11;
-                };
-                LzmaDecoder.prototype.updateState_Match = function (state) {
-                    return state < 7 ? 7 : 10;
-                };
-                LzmaDecoder.prototype.decode = function (unpackSizeDefined, unpackSize) {
-                    this.init();
-                    this.rangeDec.init();
-                    if (unpackSizeDefined) {
-                        this.outWindow.outStream = new Uint8Array(new ArrayBuffer(unpackSize));
-                    }
-                    var rep0 = 0, rep1 = 0, rep2 = 0, rep3 = 0;
-                    var state = 0;
-                    for (;;) {
-                        if (unpackSizeDefined && unpackSize == 0 && !this.markerIsMandatory) {
-                            if (this.rangeDec.isFinishedOK()) {
-                                return LZMA_4.LZMA.LZMA_RES_FINISHED_WITHOUT_MARKER;
-                            }
-                        }
-                        var posState = this.outWindow.totalPos & ((1 << this.pb) - 1);
-                        if (this.rangeDec.decodeBit(this.isMatch, (state << LZMA_4.LZMA.kNumPosBitsMax) + posState) == 0) {
-                            if (unpackSizeDefined && unpackSize == 0) {
-                                return LZMA_4.LZMA.LZMA_RES_ERROR;
-                            }
-                            this.decodeLiteral(state, rep0);
-                            state = this.updateState_Literal(state);
-                            unpackSize--;
-                            continue;
-                        }
-                        var len;
-                        if (this.rangeDec.decodeBit(this.isRep, state) != 0) {
-                            if (unpackSizeDefined && unpackSize == 0) {
-                                return LZMA_4.LZMA.LZMA_RES_ERROR;
-                            }
-                            if (this.outWindow.isEmpty()) {
-                                return LZMA_4.LZMA.LZMA_RES_ERROR;
-                            }
-                            if (this.rangeDec.decodeBit(this.isRepG0, state) == 0) {
-                                if (this.rangeDec.decodeBit(this.isRep0Long, (state << LZMA_4.LZMA.kNumPosBitsMax) + posState) == 0) {
-                                    state = this.updateState_ShortRep(state);
-                                    this.outWindow.putByte(this.outWindow.getByte(rep0 + 1));
-                                    unpackSize--;
-                                    continue;
-                                }
-                            }
-                            else {
-                                var dist;
-                                if (this.rangeDec.decodeBit(this.isRepG1, state) == 0) {
-                                    dist = rep1;
-                                }
-                                else {
-                                    if (this.rangeDec.decodeBit(this.isRepG2, state) == 0) {
-                                        dist = rep2;
-                                    }
-                                    else {
-                                        dist = rep3;
-                                        rep3 = rep2;
-                                    }
-                                    rep2 = rep1;
-                                }
-                                rep1 = rep0;
-                                rep0 = dist;
-                            }
-                            len = this.repLenDecoder.decode(this.rangeDec, posState);
-                            state = this.updateState_Rep(state);
-                        }
-                        else {
-                            rep3 = rep2;
-                            rep2 = rep1;
-                            rep1 = rep0;
-                            len = this.lenDecoder.decode(this.rangeDec, posState);
-                            state = this.updateState_Match(state);
-                            rep0 = this.decodeDistance(len);
-                            if (rep0 == 0xFFFFFFFF) {
-                                return this.rangeDec.isFinishedOK() ?
-                                    LZMA_4.LZMA.LZMA_RES_FINISHED_WITH_MARKER :
-                                    LZMA_4.LZMA.LZMA_RES_ERROR;
-                            }
-                            if (unpackSizeDefined && unpackSize == 0) {
-                                return LZMA_4.LZMA.LZMA_RES_ERROR;
-                            }
-                            if (rep0 >= this.dictSize || !this.outWindow.checkDistance(rep0)) {
-                                return LZMA_4.LZMA.LZMA_RES_ERROR;
-                            }
-                        }
-                        len += LZMA_4.LZMA.kMatchMinLen;
-                        var isError = false;
-                        if (unpackSizeDefined && unpackSize < len) {
-                            len = unpackSize;
-                            isError = true;
-                        }
-                        this.outWindow.copyMatch(rep0 + 1, len);
-                        unpackSize -= len;
-                        if (isError) {
-                            return LZMA_4.LZMA.LZMA_RES_ERROR;
-                        }
-                    }
-                };
-                return LzmaDecoder;
-            }());
-            exports_16("LzmaDecoder", LzmaDecoder);
-        }
-    }
-});
-System.register("xdata/src/nid/lzma/LZMA", ["xdata/src/nid/lzma/LzmaDecoder"], function(exports_17, context_17) {
-    "use strict";
-    var __moduleName = context_17 && context_17.id;
-    var LzmaDecoder_1;
-    var LZMA;
-    return {
-        setters:[
-            function (LzmaDecoder_1_1) {
-                LzmaDecoder_1 = LzmaDecoder_1_1;
-            }],
-        execute: function() {
-            LZMA = (function () {
-                function LZMA() {
-                    this.decoder = new LzmaDecoder_1.LzmaDecoder();
-                }
-                LZMA.INIT_PROBS = function (p) {
-                    for (var i = 0; i < p.length; i++) {
-                        p[i] = this.PROB_INIT_VAL;
-                    }
-                };
-                LZMA.BitTreeReverseDecode = function (probs, numBits, rc, offset) {
-                    if (offset === void 0) { offset = 0; }
-                    var m = 1;
-                    var symbol = 0;
-                    for (var i = 0; i < numBits; i++) {
-                        var bit = rc.decodeBit(probs, offset + m);
-                        m <<= 1;
-                        m += bit;
-                        symbol |= (bit << i);
-                    }
-                    return symbol;
-                };
-                LZMA.prototype.decode = function (data) {
-                    this.data = data;
-                    var header = new Uint8Array(13);
-                    var i;
-                    for (i = 0; i < 13; i++) {
-                        header[i] = data[i];
-                    }
-                    this.decoder.decodeProperties(header);
-                    console.log("\nlc=" + this.decoder.lc + ", lp=" + this.decoder.lp + ", pb=" + this.decoder.pb);
-                    console.log("\nDictionary Size in properties = " + this.decoder.dictSizeInProperties);
-                    console.log("\nDictionary Size for decoding  = " + this.decoder.dictSize);
-                    var unpackSize = 0;
-                    var unpackSizeDefined = false;
-                    for (i = 0; i < 8; i++) {
-                        var b = header[5 + i];
-                        if (b != 0xFF) {
-                            unpackSizeDefined = true;
-                        }
-                        unpackSize |= b << (8 * i);
-                    }
-                    this.decoder.markerIsMandatory = !unpackSizeDefined;
-                    console.log("\n");
-                    if (unpackSizeDefined) {
-                        console.log("Uncompressed Size : " + unpackSize + " bytes");
-                    }
-                    else {
-                        console.log("End marker is expected\n");
-                    }
-                    this.decoder.rangeDec.inStream = data;
-                    console.log("\n");
-                    this.decoder.create();
-                    var res = this.decoder.decode(unpackSizeDefined, unpackSize);
-                    console.log("Read    ", this.decoder.rangeDec.in_pos);
-                    console.log("Written ", this.decoder.outWindow.out_pos);
-                    if (res == LZMA.LZMA_RES_ERROR) {
-                        throw "LZMA decoding error";
-                    }
-                    else if (res == LZMA.LZMA_RES_FINISHED_WITHOUT_MARKER) {
-                        console.log("Finished without end marker");
-                    }
-                    else if (res == LZMA.LZMA_RES_FINISHED_WITH_MARKER) {
-                        if (unpackSizeDefined) {
-                            if (this.decoder.outWindow.out_pos != unpackSize) {
-                                throw "Finished with end marker before than specified size";
-                            }
-                            console.log("Warning: ");
-                        }
-                        console.log("Finished with end marker");
-                    }
-                    else {
-                        throw "Internal Error";
-                    }
-                    console.log("\n");
-                    if (this.decoder.rangeDec.corrupted) {
-                        console.log("\nWarning: LZMA stream is corrupted\n");
-                    }
-                    return this.decoder.outWindow.outStream;
-                };
-                LZMA.LZMA_DIC_MIN = (1 << 12);
-                LZMA.LZMA_RES_ERROR = 0;
-                LZMA.LZMA_RES_FINISHED_WITH_MARKER = 1;
-                LZMA.LZMA_RES_FINISHED_WITHOUT_MARKER = 2;
-                LZMA.kNumBitModelTotalBits = 11;
-                LZMA.kNumMoveBits = 5;
-                LZMA.PROB_INIT_VAL = ((1 << LZMA.kNumBitModelTotalBits) / 2);
-                LZMA.kNumPosBitsMax = 4;
-                LZMA.kNumStates = 12;
-                LZMA.kNumLenToPosStates = 4;
-                LZMA.kNumAlignBits = 4;
-                LZMA.kStartPosModelIndex = 4;
-                LZMA.kEndPosModelIndex = 14;
-                LZMA.kNumFullDistances = (1 << (LZMA.kEndPosModelIndex >>> 1));
-                LZMA.kMatchMinLen = 2;
-                return LZMA;
-            }());
-            exports_17("LZMA", LZMA);
-        }
-    }
-});
-System.register("xdata/compression", ["xdata/src/nid/zlib/ZLIB", "xdata/src/nid/lzma/LZMA"], function(exports_18, context_18) {
-    "use strict";
-    var __moduleName = context_18 && context_18.id;
-    function exportStar_1(m) {
-        var exports = {};
-        for(var n in m) {
-            if (n !== "default") exports[n] = m[n];
-        }
-        exports_18(exports);
-    }
-    return {
-        setters:[
-            function (ZLIB_1_1) {
-                exportStar_1(ZLIB_1_1);
-            },
-            function (LZMA_5_1) {
-                exportStar_1(LZMA_5_1);
-            }],
-        execute: function() {
-        }
-    }
-});
-System.register("xdata/src/ctypes/Int64", [], function(exports_19, context_19) {
-    "use strict";
-    var __moduleName = context_19 && context_19.id;
     var Int64;
     return {
         setters:[],
@@ -2020,13 +294,13 @@ System.register("xdata/src/ctypes/Int64", [], function(exports_19, context_19) {
                 };
                 return Int64;
             }());
-            exports_19("Int64", Int64);
+            exports_2("Int64", Int64);
         }
     }
 });
-System.register("xdata/src/ctypes/UInt64", [], function(exports_20, context_20) {
+System.register("xdata/src/ctypes/UInt64", [], function(exports_3, context_3) {
     "use strict";
-    var __moduleName = context_20 && context_20.id;
+    var __moduleName = context_3 && context_3.id;
     var UInt64;
     return {
         setters:[],
@@ -2058,13 +332,13 @@ System.register("xdata/src/ctypes/UInt64", [], function(exports_20, context_20) 
                 };
                 return UInt64;
             }());
-            exports_20("UInt64", UInt64);
+            exports_3("UInt64", UInt64);
         }
     }
 });
-System.register("xdata/src/nid/utils/ByteArray", ["xdata/src/ctypes/Int64", "xdata/src/ctypes/UInt64"], function(exports_21, context_21) {
+System.register("xdata/src/nid/utils/ByteArray", ["xdata/src/ctypes/Int64", "xdata/src/ctypes/UInt64"], function(exports_4, context_4) {
     "use strict";
-    var __moduleName = context_21 && context_21.id;
+    var __moduleName = context_4 && context_4.id;
     var Int64_1, UInt64_1;
     var ByteArray;
     return {
@@ -2852,7 +1126,1733 @@ System.register("xdata/src/nid/utils/ByteArray", ["xdata/src/ctypes/Int64", "xda
                 ByteArray.SIZE_OF_FLOAT64 = 8;
                 return ByteArray;
             }());
-            exports_21("ByteArray", ByteArray);
+            exports_4("ByteArray", ByteArray);
+        }
+    }
+});
+System.register("test/ByteArrayUnitTest", ["test/tsUnit", "xdata/src/nid/utils/ByteArray"], function(exports_5, context_5) {
+    "use strict";
+    var __moduleName = context_5 && context_5.id;
+    var tsUnit_1, tsUnit_2, ByteArray_1;
+    var ByteArrayUnitTest, test, TestRunner;
+    return {
+        setters:[
+            function (tsUnit_1_1) {
+                tsUnit_1 = tsUnit_1_1;
+                tsUnit_2 = tsUnit_1_1;
+            },
+            function (ByteArray_1_1) {
+                ByteArray_1 = ByteArray_1_1;
+            }],
+        execute: function() {
+            ByteArrayUnitTest = (function (_super) {
+                __extends(ByteArrayUnitTest, _super);
+                function ByteArrayUnitTest() {
+                    _super.apply(this, arguments);
+                    this.target = new ByteArray_1.ByteArray(new ArrayBuffer(1024 * 2));
+                    this.BYTE_MAX = 127;
+                    this.BYTE_MIN = -128;
+                    this.UBYTE_MAX = 255;
+                    this.UBYTE_MIN = 0;
+                    this.INT_MAX = 2147483647;
+                    this.INT_MIN = -2147483648;
+                    this.UINT_MAX = 4294967295;
+                    this.UINT_MIN = 0;
+                    this.SHORT_MAX = 32767;
+                    this.SHORT_MIN = -32768;
+                    this.USHORT_MAX = 65535;
+                    this.USHORT_MIN = 0;
+                    this.FLOAT_MAX = 3.4028234663852886e+38;
+                    this.FLOAT_MIN = 1.1754943508222875e-38;
+                    this.DOUBLE_MAX = Number.MAX_VALUE;
+                    this.DOUBLE_MIN = Number.MIN_VALUE;
+                    this.UTF_STR = "this is a utf8 encoded string";
+                    this.SIZE_OF_BOOLEAN = ByteArray_1.ByteArray.SIZE_OF_BOOLEAN;
+                    this.SIZE_OF_INT8 = ByteArray_1.ByteArray.SIZE_OF_INT8;
+                    this.SIZE_OF_INT16 = ByteArray_1.ByteArray.SIZE_OF_INT16;
+                    this.SIZE_OF_INT32 = ByteArray_1.ByteArray.SIZE_OF_INT32;
+                    this.SIZE_OF_UINT8 = ByteArray_1.ByteArray.SIZE_OF_UINT8;
+                    this.SIZE_OF_UINT16 = ByteArray_1.ByteArray.SIZE_OF_UINT16;
+                    this.SIZE_OF_UINT32 = ByteArray_1.ByteArray.SIZE_OF_UINT32;
+                    this.SIZE_OF_FLOAT32 = ByteArray_1.ByteArray.SIZE_OF_FLOAT32;
+                    this.SIZE_OF_FLOAT64 = ByteArray_1.ByteArray.SIZE_OF_FLOAT64;
+                }
+                ByteArrayUnitTest.prototype.writeAndReadBoolean = function () {
+                    this.target.writeBoolean(true);
+                    this.target.position = this.target.position - this.SIZE_OF_BOOLEAN;
+                    var result = this.target.readBoolean();
+                    this.areIdentical(true, result);
+                    this.target.writeBoolean(false);
+                    this.target.position = this.target.position - this.SIZE_OF_BOOLEAN;
+                    var result = this.target.readBoolean();
+                    this.areIdentical(false, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadByte = function () {
+                    this.target.writeByte(this.BYTE_MAX);
+                    this.target.writeByte(this.BYTE_MIN);
+                    this.target.position = this.target.position - (2 * this.SIZE_OF_INT8);
+                    var result = this.target.readByte();
+                    this.areIdentical(this.BYTE_MAX, result);
+                    result = this.target.readByte();
+                    this.areIdentical(this.BYTE_MIN, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadUnsignedByte = function () {
+                    this.target.writeUnsignedByte(this.UBYTE_MAX);
+                    this.target.writeUnsignedByte(this.UBYTE_MIN);
+                    this.target.position = this.target.position - (2 * this.SIZE_OF_UINT8);
+                    var result = this.target.readUnsignedByte();
+                    this.areIdentical(this.UBYTE_MAX, result);
+                    result = this.target.readUnsignedByte();
+                    this.areIdentical(this.UBYTE_MIN, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadDouble = function () {
+                    this.target.writeDouble(this.DOUBLE_MAX);
+                    this.target.writeDouble(this.DOUBLE_MIN);
+                    this.target.position = this.target.position - (2 * this.SIZE_OF_FLOAT64);
+                    var result = this.target.readDouble();
+                    this.areIdentical(this.DOUBLE_MAX, result);
+                    result = this.target.readDouble();
+                    this.areIdentical(this.DOUBLE_MIN, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadFloat = function () {
+                    this.target.writeFloat(this.FLOAT_MAX);
+                    this.target.writeFloat(this.FLOAT_MIN);
+                    this.target.position = this.target.position - (2 * this.SIZE_OF_FLOAT32);
+                    var result = this.target.readFloat();
+                    this.areIdentical(this.FLOAT_MAX, result);
+                    var result = this.target.readFloat();
+                    this.areIdentical(this.FLOAT_MIN, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadInt = function () {
+                    this.target.writeInt(this.INT_MAX);
+                    this.target.writeInt(this.INT_MIN);
+                    this.target.position = this.target.position - (2 * this.SIZE_OF_INT32);
+                    var result = this.target.readInt();
+                    this.areIdentical(this.INT_MAX, result);
+                    result = this.target.readInt();
+                    this.areIdentical(this.INT_MIN, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadUnsignedInt = function () {
+                    this.target.writeUnsignedInt(this.UINT_MAX);
+                    this.target.writeUnsignedInt(this.UINT_MIN);
+                    this.target.position = this.target.position - (2 * this.SIZE_OF_UINT32);
+                    var result = this.target.readUnsignedInt();
+                    this.areIdentical(this.UINT_MAX, result);
+                    result = this.target.readInt();
+                    this.areIdentical(this.UINT_MIN, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadShort = function () {
+                    this.target.writeShort(this.SHORT_MAX);
+                    this.target.writeShort(this.SHORT_MIN);
+                    this.target.position = this.target.position - (2 * this.SIZE_OF_INT16);
+                    var result = this.target.readShort();
+                    this.areIdentical(this.SHORT_MAX, result);
+                    result = this.target.readShort();
+                    this.areIdentical(this.SHORT_MIN, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadUnsignedShort = function () {
+                    this.target.writeUnsignedShort(this.USHORT_MAX);
+                    this.target.writeUnsignedShort(this.USHORT_MIN);
+                    this.target.position = this.target.position - (2 * this.SIZE_OF_UINT16);
+                    var result = this.target.readUnsignedShort();
+                    this.areIdentical(this.USHORT_MAX, result);
+                    result = this.target.readUnsignedShort();
+                    this.areIdentical(this.USHORT_MIN, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadUTF = function () {
+                    this.target.writeUTF(this.UTF_STR);
+                    this.target.position = this.target.position - (this.SIZE_OF_UINT16 + this.UTF_STR.length);
+                    var result = this.target.readUTF();
+                    this.areIdentical(this.UTF_STR, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadUTFBytes = function () {
+                    this.target.writeUTFBytes(this.UTF_STR);
+                    this.target.position = this.target.position - this.UTF_STR.length;
+                    var result = this.target.readUTFBytes(this.UTF_STR.length);
+                    this.areIdentical(this.UTF_STR, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadUint8Array = function () {
+                    var _array = new Uint8Array(new ArrayBuffer(4));
+                    _array[0] = 1;
+                    _array[1] = 11;
+                    _array[2] = 22;
+                    _array[3] = 33;
+                    this.target.writeUint8Array(_array);
+                    this.target.position = this.target.position - _array.length;
+                    var result = this.target.readUint8Array(_array.length);
+                    this.areIdenticalArray(_array, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadUint16Array = function () {
+                    var size = 4 * this.SIZE_OF_UINT16;
+                    var _array = new Uint16Array(new ArrayBuffer(size));
+                    _array[0] = 1;
+                    _array[1] = 11;
+                    _array[2] = 22;
+                    _array[3] = 33;
+                    this.target.writeUint16Array(_array);
+                    this.target.position = this.target.position - size;
+                    var result = this.target.readUint16Array(_array.length);
+                    this.areIdenticalArray(_array, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadUint32Array = function () {
+                    var size = 4 * this.SIZE_OF_UINT32;
+                    var _array = new Uint32Array(new ArrayBuffer(size));
+                    _array[0] = 1;
+                    _array[1] = 11;
+                    _array[2] = 22;
+                    _array[3] = 33;
+                    this.target.writeUint32Array(_array);
+                    this.target.position = this.target.position - size;
+                    var result = this.target.readUint32Array(_array.length);
+                    this.areIdenticalArray(_array, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadInt8Array = function () {
+                    var _array = new Int8Array(new ArrayBuffer(4));
+                    _array[0] = 1;
+                    _array[1] = 11;
+                    _array[2] = 22;
+                    _array[3] = 33;
+                    this.target.writeInt8Array(_array);
+                    this.target.position = this.target.position - _array.length;
+                    var result = this.target.readInt8Array(_array.length);
+                    this.areIdenticalArray(_array, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadInt16Array = function () {
+                    var size = 4 * this.SIZE_OF_INT16;
+                    var _array = new Int16Array(new ArrayBuffer(size));
+                    _array[0] = 1;
+                    _array[1] = 11;
+                    _array[2] = 22;
+                    _array[3] = 33;
+                    this.target.writeInt16Array(_array);
+                    this.target.position = this.target.position - size;
+                    var result = this.target.readInt16Array(_array.length);
+                    this.areIdenticalArray(_array, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadInt32Array = function () {
+                    var size = 4 * this.SIZE_OF_INT32;
+                    var _array = new Int32Array(new ArrayBuffer(size));
+                    _array[0] = 1;
+                    _array[1] = 11;
+                    _array[2] = 22;
+                    _array[3] = 33;
+                    this.target.writeInt32Array(_array);
+                    this.target.position = this.target.position - size;
+                    var result = this.target.readInt32Array(_array.length);
+                    this.areIdenticalArray(_array, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadFloat32Array = function () {
+                    var size = 4 * this.SIZE_OF_FLOAT32;
+                    var _array = new Float32Array(new ArrayBuffer(size));
+                    _array[0] = 1.02563;
+                    _array[1] = 11.056256;
+                    _array[2] = 22.0165465;
+                    _array[3] = 33.65486;
+                    this.target.writeFloat32Array(_array);
+                    this.target.position = this.target.position - size;
+                    var result = this.target.readFloat32Array(_array.length);
+                    this.areIdenticalArray(_array, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadFloat64Array = function () {
+                    var size = 4 * this.SIZE_OF_FLOAT64;
+                    var _array = new Float64Array(new ArrayBuffer(size));
+                    _array[0] = 1.02563;
+                    _array[1] = 11.056256;
+                    _array[2] = 22.0165465;
+                    _array[3] = 33.65486;
+                    this.target.writeFloat64Array(_array);
+                    this.target.position = this.target.position - size;
+                    var result = this.target.readFloat64Array(_array.length);
+                    this.areIdenticalArray(_array, result);
+                };
+                return ByteArrayUnitTest;
+            }(tsUnit_1.TestClass));
+            test = new tsUnit_2.Test();
+            test.addTestClass(new ByteArrayUnitTest());
+            TestRunner = {
+                run: function run() {
+                    test.showResults(document.getElementById('results'), test.run());
+                }
+            };
+            TestRunner.run();
+        }
+    }
+});
+System.register("xdata/src/nid/lzma/RangeDecoder", [], function(exports_6, context_6) {
+    "use strict";
+    var __moduleName = context_6 && context_6.id;
+    var RangeDecoder;
+    return {
+        setters:[],
+        execute: function() {
+            RangeDecoder = (function () {
+                function RangeDecoder() {
+                    this.rangeI = 0;
+                    this.codeI = 1;
+                    this.loc1 = 2;
+                    this.loc2 = 3;
+                    this.in_pos = 13;
+                }
+                RangeDecoder.prototype.isFinishedOK = function () {
+                    return this.U32[this.codeI] == 0;
+                };
+                RangeDecoder.prototype.init = function () {
+                    this.U32 = new Uint32Array(4);
+                    this.U16 = new Uint16Array(4);
+                    this.corrupted = false;
+                    if (this.inStream[this.in_pos++] != 0) {
+                        this.corrupted = true;
+                    }
+                    this.U32[this.rangeI] = 0xFFFFFFFF;
+                    this.U32[this.codeI] = 0;
+                    for (var i = 0; i < 4; i++) {
+                        this.U32[this.codeI] = (this.U32[this.codeI] << 8) | this.inStream[this.in_pos++];
+                    }
+                    if (this.U32[this.codeI] == this.U32[this.rangeI]) {
+                        this.corrupted = true;
+                    }
+                };
+                RangeDecoder.prototype.normalize = function () {
+                    if (this.U32[this.rangeI] < RangeDecoder.kTopValue) {
+                        this.U32[this.rangeI] <<= 8;
+                        this.U32[this.codeI] = (this.U32[this.codeI] << 8) | this.inStream[this.in_pos++];
+                    }
+                };
+                RangeDecoder.prototype.decodeDirectBits = function (numBits) {
+                    this.U32[this.loc1] = 0;
+                    do {
+                        this.U32[this.rangeI] >>>= 1;
+                        this.U32[this.codeI] -= this.U32[this.rangeI];
+                        this.U32[this.loc2] = 0 - (this.U32[this.codeI] >>> 31);
+                        this.U32[this.codeI] += this.U32[this.rangeI] & this.U32[this.loc2];
+                        if (this.U32[this.codeI] == this.U32[this.rangeI]) {
+                            this.corrupted = true;
+                        }
+                        this.normalize();
+                        this.U32[this.loc1] <<= 1;
+                        this.U32[this.loc1] += this.U32[this.loc2] + 1;
+                    } while (--numBits);
+                    return this.U32[this.loc1];
+                };
+                RangeDecoder.prototype.decodeBit = function (prob, index) {
+                    this.U16[0] = prob[index];
+                    this.U32[2] = (this.U32[0] >>> 11) * this.U16[0];
+                    if (this.U32[1] < this.U32[2]) {
+                        this.U16[0] += ((1 << 11) - this.U16[0]) >>> 5;
+                        this.U32[0] = this.U32[2];
+                        this.U16[1] = 0;
+                    }
+                    else {
+                        this.U16[0] -= this.U16[0] >>> 5;
+                        this.U32[1] -= this.U32[2];
+                        this.U32[0] -= this.U32[2];
+                        this.U16[1] = 1;
+                    }
+                    prob[index] = this.U16[0];
+                    if (this.U32[0] < 16777216) {
+                        this.U32[0] <<= 8;
+                        this.U32[1] = (this.U32[1] << 8) | this.inStream[this.in_pos++];
+                    }
+                    return this.U16[1];
+                };
+                RangeDecoder.kTopValue = (1 << 24);
+                return RangeDecoder;
+            }());
+            exports_6("RangeDecoder", RangeDecoder);
+        }
+    }
+});
+System.register("xdata/src/nid/lzma/OutWindow", [], function(exports_7, context_7) {
+    "use strict";
+    var __moduleName = context_7 && context_7.id;
+    var OutWindow;
+    return {
+        setters:[],
+        execute: function() {
+            OutWindow = (function () {
+                function OutWindow() {
+                    this.out_pos = 0;
+                }
+                OutWindow.prototype.create = function (dictSize) {
+                    this.buf = new Uint8Array(dictSize);
+                    this.pos = 0;
+                    this.size = dictSize;
+                    this.isFull = false;
+                    this.totalPos = 0;
+                };
+                OutWindow.prototype.putByte = function (b) {
+                    this.totalPos++;
+                    this.buf[this.pos++] = b;
+                    if (this.pos == this.size) {
+                        this.pos = 0;
+                        this.isFull = true;
+                    }
+                    this.outStream[this.out_pos++] = b;
+                };
+                OutWindow.prototype.getByte = function (dist) {
+                    return this.buf[dist <= this.pos ? this.pos - dist : this.size - dist + this.pos];
+                };
+                OutWindow.prototype.copyMatch = function (dist, len) {
+                    for (; len > 0; len--) {
+                        this.putByte(this.getByte(dist));
+                    }
+                };
+                OutWindow.prototype.checkDistance = function (dist) {
+                    return dist <= this.pos || this.isFull;
+                };
+                OutWindow.prototype.isEmpty = function () {
+                    return this.pos == 0 && !this.isFull;
+                };
+                return OutWindow;
+            }());
+            exports_7("OutWindow", OutWindow);
+        }
+    }
+});
+System.register("xdata/src/nid/lzma/BitTreeDecoder", ["xdata/src/nid/lzma/LZMA"], function(exports_8, context_8) {
+    "use strict";
+    var __moduleName = context_8 && context_8.id;
+    var LZMA_1;
+    var BitTreeDecoder;
+    return {
+        setters:[
+            function (LZMA_1_1) {
+                LZMA_1 = LZMA_1_1;
+            }],
+        execute: function() {
+            BitTreeDecoder = (function () {
+                function BitTreeDecoder(numBits) {
+                    this.numBits = numBits;
+                    this.probs = new Uint16Array(1 << this.numBits);
+                }
+                BitTreeDecoder.prototype.init = function () {
+                    LZMA_1.LZMA.INIT_PROBS(this.probs);
+                };
+                BitTreeDecoder.prototype.decode = function (rc) {
+                    var m = 1;
+                    for (var i = 0; i < this.numBits; i++)
+                        m = (m << 1) + rc.decodeBit(this.probs, m);
+                    return m - (1 << this.numBits);
+                };
+                BitTreeDecoder.prototype.reverseDecode = function (rc) {
+                    return LZMA_1.LZMA.BitTreeReverseDecode(this.probs, this.numBits, rc);
+                };
+                BitTreeDecoder.constructArray = function (numBits, len) {
+                    var vec = [];
+                    for (var i = 0; i < len; i++) {
+                        vec[i] = new BitTreeDecoder(numBits);
+                    }
+                    return vec;
+                };
+                return BitTreeDecoder;
+            }());
+            exports_8("BitTreeDecoder", BitTreeDecoder);
+        }
+    }
+});
+System.register("xdata/src/nid/lzma/LenDecoder", ["xdata/src/nid/lzma/BitTreeDecoder", "xdata/src/nid/lzma/LZMA"], function(exports_9, context_9) {
+    "use strict";
+    var __moduleName = context_9 && context_9.id;
+    var BitTreeDecoder_1, LZMA_2;
+    var LenDecoder;
+    return {
+        setters:[
+            function (BitTreeDecoder_1_1) {
+                BitTreeDecoder_1 = BitTreeDecoder_1_1;
+            },
+            function (LZMA_2_1) {
+                LZMA_2 = LZMA_2_1;
+            }],
+        execute: function() {
+            LenDecoder = (function () {
+                function LenDecoder() {
+                    this.lowCoder = BitTreeDecoder_1.BitTreeDecoder.constructArray(3, 1 << LZMA_2.LZMA.kNumPosBitsMax);
+                    this.midCoder = BitTreeDecoder_1.BitTreeDecoder.constructArray(3, 1 << LZMA_2.LZMA.kNumPosBitsMax);
+                    this.highCoder = new BitTreeDecoder_1.BitTreeDecoder(8);
+                }
+                LenDecoder.prototype.init = function () {
+                    this.choice = [LZMA_2.LZMA.PROB_INIT_VAL, LZMA_2.LZMA.PROB_INIT_VAL];
+                    this.highCoder.init();
+                    for (var i = 0; i < (1 << LZMA_2.LZMA.kNumPosBitsMax); i++) {
+                        this.lowCoder[i].init();
+                        this.midCoder[i].init();
+                    }
+                };
+                LenDecoder.prototype.decode = function (rc, posState) {
+                    if (rc.decodeBit(this.choice, 0) == 0) {
+                        return this.lowCoder[posState].decode(rc);
+                    }
+                    if (rc.decodeBit(this.choice, 1) == 0) {
+                        return 8 + this.midCoder[posState].decode(rc);
+                    }
+                    return 16 + this.highCoder.decode(rc);
+                };
+                return LenDecoder;
+            }());
+            exports_9("LenDecoder", LenDecoder);
+        }
+    }
+});
+System.register("xdata/src/nid/utils/MEMORY", [], function(exports_10, context_10) {
+    "use asm";
+    "use strict";
+    var __moduleName = context_10 && context_10.id;
+    var MEMORY;
+    return {
+        setters:[],
+        execute: function() {
+            MEMORY = (function () {
+                function MEMORY() {
+                }
+                MEMORY.allocateUint8 = function (len) {
+                    MEMORY.u8 = new Uint8Array(len);
+                };
+                MEMORY.allocateUint16 = function (len) {
+                    MEMORY.u16 = new Uint16Array(len);
+                };
+                MEMORY.allocateUint32 = function (len) {
+                    MEMORY.u32 = new Uint32Array(len);
+                };
+                MEMORY.getUint8 = function () {
+                    if (!MEMORY.u8) {
+                        MEMORY.allocateUint8(10);
+                    }
+                    return MEMORY.u8Index++;
+                };
+                MEMORY.getUint16 = function () {
+                    if (!MEMORY.u16) {
+                        MEMORY.allocateUint16(24);
+                    }
+                    return MEMORY.u16Index++;
+                };
+                MEMORY.getUint32 = function () {
+                    if (!MEMORY.u32) {
+                        MEMORY.allocateUint32(10);
+                    }
+                    return MEMORY.u32Index++;
+                };
+                MEMORY.u8Index = 0;
+                MEMORY.u16Index = 0;
+                MEMORY.u32Index = 0;
+                return MEMORY;
+            }());
+            exports_10("MEMORY", MEMORY);
+        }
+    }
+});
+System.register("xdata/src/nid/lzma/LzmaDecoder", ["xdata/src/nid/lzma/RangeDecoder", "xdata/src/nid/lzma/OutWindow", "xdata/src/nid/lzma/BitTreeDecoder", "xdata/src/nid/lzma/LenDecoder", "xdata/src/nid/lzma/LZMA", "xdata/src/nid/utils/MEMORY"], function(exports_11, context_11) {
+    "use strict";
+    var __moduleName = context_11 && context_11.id;
+    var RangeDecoder_1, OutWindow_1, BitTreeDecoder_2, LenDecoder_1, LZMA_3, MEMORY_1;
+    var LzmaDecoder;
+    return {
+        setters:[
+            function (RangeDecoder_1_1) {
+                RangeDecoder_1 = RangeDecoder_1_1;
+            },
+            function (OutWindow_1_1) {
+                OutWindow_1 = OutWindow_1_1;
+            },
+            function (BitTreeDecoder_2_1) {
+                BitTreeDecoder_2 = BitTreeDecoder_2_1;
+            },
+            function (LenDecoder_1_1) {
+                LenDecoder_1 = LenDecoder_1_1;
+            },
+            function (LZMA_3_1) {
+                LZMA_3 = LZMA_3_1;
+            },
+            function (MEMORY_1_1) {
+                MEMORY_1 = MEMORY_1_1;
+            }],
+        execute: function() {
+            LzmaDecoder = (function () {
+                function LzmaDecoder() {
+                    this.posSlotDecoder = BitTreeDecoder_2.BitTreeDecoder.constructArray(6, LZMA_3.LZMA.kNumLenToPosStates);
+                    this.alignDecoder = new BitTreeDecoder_2.BitTreeDecoder(LZMA_3.LZMA.kNumAlignBits);
+                    this.posDecoders = new Uint16Array(1 + LZMA_3.LZMA.kNumFullDistances - LZMA_3.LZMA.kEndPosModelIndex);
+                    this.isMatch = new Uint16Array(LZMA_3.LZMA.kNumStates << LZMA_3.LZMA.kNumPosBitsMax);
+                    this.isRep = new Uint16Array(LZMA_3.LZMA.kNumStates);
+                    this.isRepG0 = new Uint16Array(LZMA_3.LZMA.kNumStates);
+                    this.isRepG1 = new Uint16Array(LZMA_3.LZMA.kNumStates);
+                    this.isRepG2 = new Uint16Array(LZMA_3.LZMA.kNumStates);
+                    this.isRep0Long = new Uint16Array(LZMA_3.LZMA.kNumStates << LZMA_3.LZMA.kNumPosBitsMax);
+                    this.lenDecoder = new LenDecoder_1.LenDecoder();
+                    this.repLenDecoder = new LenDecoder_1.LenDecoder();
+                    this.rangeDec = new RangeDecoder_1.RangeDecoder();
+                    this.outWindow = new OutWindow_1.OutWindow();
+                }
+                LzmaDecoder.prototype.init = function () {
+                    this.loc1 = MEMORY_1.MEMORY.getUint32() | 0;
+                    this.loc2 = MEMORY_1.MEMORY.getUint32() | 0;
+                    this.matchBitI = MEMORY_1.MEMORY.getUint16() | 0;
+                    this.matchByteI = MEMORY_1.MEMORY.getUint16() | 0;
+                    this.bitI = MEMORY_1.MEMORY.getUint16() | 0;
+                    this.symbolI = MEMORY_1.MEMORY.getUint16() | 0;
+                    this.prevByteI = MEMORY_1.MEMORY.getUint16() | 0;
+                    this.litStateI = MEMORY_1.MEMORY.getUint16() | 0;
+                    this.initLiterals();
+                    this.initDist();
+                    LZMA_3.LZMA.INIT_PROBS(this.isMatch);
+                    LZMA_3.LZMA.INIT_PROBS(this.isRep);
+                    LZMA_3.LZMA.INIT_PROBS(this.isRepG0);
+                    LZMA_3.LZMA.INIT_PROBS(this.isRepG1);
+                    LZMA_3.LZMA.INIT_PROBS(this.isRepG2);
+                    LZMA_3.LZMA.INIT_PROBS(this.isRep0Long);
+                    this.lenDecoder.init();
+                    this.repLenDecoder.init();
+                };
+                LzmaDecoder.prototype.create = function () {
+                    this.outWindow.create(this.dictSize);
+                    this.createLiterals();
+                };
+                LzmaDecoder.prototype.createLiterals = function () {
+                    this.litProbs = new Uint16Array(0x300 << (this.lc + this.lp));
+                };
+                LzmaDecoder.prototype.initLiterals = function () {
+                    var num = 0x300 << (this.lc + this.lp);
+                    for (var i = 0; i < num; i++) {
+                        this.litProbs[i] = LZMA_3.LZMA.PROB_INIT_VAL;
+                    }
+                };
+                LzmaDecoder.prototype.decodeLiteral = function (state, rep0) {
+                    MEMORY_1.MEMORY.u16[this.prevByteI] = 0;
+                    if (!this.outWindow.isEmpty())
+                        MEMORY_1.MEMORY.u16[this.prevByteI] = this.outWindow.getByte(1);
+                    MEMORY_1.MEMORY.u16[this.symbolI] = 1;
+                    MEMORY_1.MEMORY.u16[this.litStateI] = ((this.outWindow.totalPos & ((1 << this.lp) - 1)) << this.lc) + (MEMORY_1.MEMORY.u16[this.prevByteI] >>> (8 - this.lc));
+                    var probsOffset = (0x300 * MEMORY_1.MEMORY.u16[this.litStateI]) | 0;
+                    if (state >= 7) {
+                        MEMORY_1.MEMORY.u16[this.matchByteI] = this.outWindow.getByte(rep0 + 1);
+                        do {
+                            MEMORY_1.MEMORY.u16[this.matchBitI] = (MEMORY_1.MEMORY.u16[this.matchByteI] >>> 7) & 1;
+                            MEMORY_1.MEMORY.u16[this.matchByteI] <<= 1;
+                            MEMORY_1.MEMORY.u16[this.bitI] = this.rangeDec.decodeBit(this.litProbs, probsOffset + ((1 + MEMORY_1.MEMORY.u16[this.matchBitI]) << 8) + MEMORY_1.MEMORY.u16[this.symbolI]);
+                            MEMORY_1.MEMORY.u16[this.symbolI] = (MEMORY_1.MEMORY.u16[this.symbolI] << 1) | MEMORY_1.MEMORY.u16[this.bitI];
+                            if (MEMORY_1.MEMORY.u16[this.matchBitI] != MEMORY_1.MEMORY.u16[this.bitI])
+                                break;
+                        } while (MEMORY_1.MEMORY.u16[this.symbolI] < 0x100);
+                    }
+                    while (MEMORY_1.MEMORY.u16[this.symbolI] < 0x100) {
+                        MEMORY_1.MEMORY.u16[this.symbolI] = (MEMORY_1.MEMORY.u16[this.symbolI] << 1) | this.rangeDec.decodeBit(this.litProbs, probsOffset + MEMORY_1.MEMORY.u16[this.symbolI]);
+                    }
+                    this.outWindow.putByte(MEMORY_1.MEMORY.u16[this.symbolI] - 0x100);
+                };
+                LzmaDecoder.prototype.decodeDistance = function (len) {
+                    var lenState = len;
+                    if (lenState > LZMA_3.LZMA.kNumLenToPosStates - 1)
+                        lenState = LZMA_3.LZMA.kNumLenToPosStates - 1;
+                    var posSlot = this.posSlotDecoder[lenState].decode(this.rangeDec);
+                    if (posSlot < 4)
+                        return posSlot;
+                    var numDirectBits = ((posSlot >>> 1) - 1);
+                    MEMORY_1.MEMORY.u32[this.loc1] = ((2 | (posSlot & 1)) << numDirectBits);
+                    if (posSlot < LZMA_3.LZMA.kEndPosModelIndex) {
+                        MEMORY_1.MEMORY.u32[this.loc1] += LZMA_3.LZMA.BitTreeReverseDecode(this.posDecoders, numDirectBits, this.rangeDec, MEMORY_1.MEMORY.u32[this.loc1] - posSlot);
+                    }
+                    else {
+                        MEMORY_1.MEMORY.u32[this.loc1] += this.rangeDec.decodeDirectBits(numDirectBits - LZMA_3.LZMA.kNumAlignBits) << LZMA_3.LZMA.kNumAlignBits;
+                        MEMORY_1.MEMORY.u32[this.loc1] += this.alignDecoder.reverseDecode(this.rangeDec);
+                    }
+                    return MEMORY_1.MEMORY.u32[this.loc1];
+                };
+                LzmaDecoder.prototype.initDist = function () {
+                    for (var i = 0; i < LZMA_3.LZMA.kNumLenToPosStates; i++) {
+                        this.posSlotDecoder[i].init();
+                    }
+                    this.alignDecoder.init();
+                    LZMA_3.LZMA.INIT_PROBS(this.posDecoders);
+                };
+                LzmaDecoder.prototype.decodeProperties = function (properties) {
+                    var prop = new Uint8Array(4);
+                    prop[0] = properties[0];
+                    if (prop[0] >= (9 * 5 * 5)) {
+                        throw "Incorrect LZMA properties";
+                    }
+                    prop[1] = prop[0] % 9;
+                    prop[0] /= 9;
+                    prop[2] = prop[0] / 5;
+                    prop[3] = prop[0] % 5;
+                    this.lc = prop[1];
+                    this.pb = prop[2];
+                    this.lp = prop[3];
+                    this.dictSizeInProperties = 0;
+                    for (var i = 0; i < 4; i++) {
+                        this.dictSizeInProperties |= properties[i + 1] << (8 * i);
+                    }
+                    this.dictSize = this.dictSizeInProperties;
+                    if (this.dictSize < LZMA_3.LZMA.LZMA_DIC_MIN) {
+                        this.dictSize = LZMA_3.LZMA.LZMA_DIC_MIN;
+                    }
+                };
+                LzmaDecoder.prototype.updateState_Literal = function (state) {
+                    if (state < 4)
+                        return 0;
+                    else if (state < 10)
+                        return state - 3;
+                    else
+                        return state - 6;
+                };
+                LzmaDecoder.prototype.updateState_ShortRep = function (state) {
+                    return state < 7 ? 9 : 11;
+                };
+                LzmaDecoder.prototype.updateState_Rep = function (state) {
+                    return state < 7 ? 8 : 11;
+                };
+                LzmaDecoder.prototype.updateState_Match = function (state) {
+                    return state < 7 ? 7 : 10;
+                };
+                LzmaDecoder.prototype.decode = function (unpackSizeDefined, unpackSize) {
+                    this.init();
+                    this.rangeDec.init();
+                    if (unpackSizeDefined) {
+                        this.outWindow.outStream = new Uint8Array(new ArrayBuffer(unpackSize));
+                    }
+                    var rep0 = 0, rep1 = 0, rep2 = 0, rep3 = 0;
+                    var state = 0;
+                    for (;;) {
+                        if (unpackSizeDefined && unpackSize == 0 && !this.markerIsMandatory) {
+                            if (this.rangeDec.isFinishedOK()) {
+                                return LZMA_3.LZMA.LZMA_RES_FINISHED_WITHOUT_MARKER;
+                            }
+                        }
+                        var posState = this.outWindow.totalPos & ((1 << this.pb) - 1);
+                        if (this.rangeDec.decodeBit(this.isMatch, (state << LZMA_3.LZMA.kNumPosBitsMax) + posState) == 0) {
+                            if (unpackSizeDefined && unpackSize == 0) {
+                                return LZMA_3.LZMA.LZMA_RES_ERROR;
+                            }
+                            this.decodeLiteral(state, rep0);
+                            state = this.updateState_Literal(state);
+                            unpackSize--;
+                            continue;
+                        }
+                        var len;
+                        if (this.rangeDec.decodeBit(this.isRep, state) != 0) {
+                            if (unpackSizeDefined && unpackSize == 0) {
+                                return LZMA_3.LZMA.LZMA_RES_ERROR;
+                            }
+                            if (this.outWindow.isEmpty()) {
+                                return LZMA_3.LZMA.LZMA_RES_ERROR;
+                            }
+                            if (this.rangeDec.decodeBit(this.isRepG0, state) == 0) {
+                                if (this.rangeDec.decodeBit(this.isRep0Long, (state << LZMA_3.LZMA.kNumPosBitsMax) + posState) == 0) {
+                                    state = this.updateState_ShortRep(state);
+                                    this.outWindow.putByte(this.outWindow.getByte(rep0 + 1));
+                                    unpackSize--;
+                                    continue;
+                                }
+                            }
+                            else {
+                                var dist;
+                                if (this.rangeDec.decodeBit(this.isRepG1, state) == 0) {
+                                    dist = rep1;
+                                }
+                                else {
+                                    if (this.rangeDec.decodeBit(this.isRepG2, state) == 0) {
+                                        dist = rep2;
+                                    }
+                                    else {
+                                        dist = rep3;
+                                        rep3 = rep2;
+                                    }
+                                    rep2 = rep1;
+                                }
+                                rep1 = rep0;
+                                rep0 = dist;
+                            }
+                            len = this.repLenDecoder.decode(this.rangeDec, posState);
+                            state = this.updateState_Rep(state);
+                        }
+                        else {
+                            rep3 = rep2;
+                            rep2 = rep1;
+                            rep1 = rep0;
+                            len = this.lenDecoder.decode(this.rangeDec, posState);
+                            state = this.updateState_Match(state);
+                            rep0 = this.decodeDistance(len);
+                            if (rep0 == 0xFFFFFFFF) {
+                                return this.rangeDec.isFinishedOK() ?
+                                    LZMA_3.LZMA.LZMA_RES_FINISHED_WITH_MARKER :
+                                    LZMA_3.LZMA.LZMA_RES_ERROR;
+                            }
+                            if (unpackSizeDefined && unpackSize == 0) {
+                                return LZMA_3.LZMA.LZMA_RES_ERROR;
+                            }
+                            if (rep0 >= this.dictSize || !this.outWindow.checkDistance(rep0)) {
+                                return LZMA_3.LZMA.LZMA_RES_ERROR;
+                            }
+                        }
+                        len += LZMA_3.LZMA.kMatchMinLen;
+                        var isError = false;
+                        if (unpackSizeDefined && unpackSize < len) {
+                            len = unpackSize;
+                            isError = true;
+                        }
+                        this.outWindow.copyMatch(rep0 + 1, len);
+                        unpackSize -= len;
+                        if (isError) {
+                            return LZMA_3.LZMA.LZMA_RES_ERROR;
+                        }
+                    }
+                };
+                return LzmaDecoder;
+            }());
+            exports_11("LzmaDecoder", LzmaDecoder);
+        }
+    }
+});
+System.register("xdata/src/nid/lzma/LZMA", ["xdata/src/nid/lzma/LzmaDecoder"], function(exports_12, context_12) {
+    "use strict";
+    var __moduleName = context_12 && context_12.id;
+    var LzmaDecoder_1;
+    var LZMA;
+    return {
+        setters:[
+            function (LzmaDecoder_1_1) {
+                LzmaDecoder_1 = LzmaDecoder_1_1;
+            }],
+        execute: function() {
+            LZMA = (function () {
+                function LZMA() {
+                    this.decoder = new LzmaDecoder_1.LzmaDecoder();
+                }
+                LZMA.INIT_PROBS = function (p) {
+                    for (var i = 0; i < p.length; i++) {
+                        p[i] = this.PROB_INIT_VAL;
+                    }
+                };
+                LZMA.BitTreeReverseDecode = function (probs, numBits, rc, offset) {
+                    if (offset === void 0) { offset = 0; }
+                    var m = 1;
+                    var symbol = 0;
+                    for (var i = 0; i < numBits; i++) {
+                        var bit = rc.decodeBit(probs, offset + m);
+                        m <<= 1;
+                        m += bit;
+                        symbol |= (bit << i);
+                    }
+                    return symbol;
+                };
+                LZMA.prototype.decode = function (data) {
+                    this.data = data;
+                    var header = new Uint8Array(13);
+                    var i;
+                    for (i = 0; i < 13; i++) {
+                        header[i] = data[i];
+                    }
+                    this.decoder.decodeProperties(header);
+                    console.log("\nlc=" + this.decoder.lc + ", lp=" + this.decoder.lp + ", pb=" + this.decoder.pb);
+                    console.log("\nDictionary Size in properties = " + this.decoder.dictSizeInProperties);
+                    console.log("\nDictionary Size for decoding  = " + this.decoder.dictSize);
+                    var unpackSize = 0;
+                    var unpackSizeDefined = false;
+                    for (i = 0; i < 8; i++) {
+                        var b = header[5 + i];
+                        if (b != 0xFF) {
+                            unpackSizeDefined = true;
+                        }
+                        unpackSize |= b << (8 * i);
+                    }
+                    this.decoder.markerIsMandatory = !unpackSizeDefined;
+                    console.log("\n");
+                    if (unpackSizeDefined) {
+                        console.log("Uncompressed Size : " + unpackSize + " bytes");
+                    }
+                    else {
+                        console.log("End marker is expected\n");
+                    }
+                    this.decoder.rangeDec.inStream = data;
+                    console.log("\n");
+                    this.decoder.create();
+                    var res = this.decoder.decode(unpackSizeDefined, unpackSize);
+                    console.log("Read    ", this.decoder.rangeDec.in_pos);
+                    console.log("Written ", this.decoder.outWindow.out_pos);
+                    if (res == LZMA.LZMA_RES_ERROR) {
+                        throw "LZMA decoding error";
+                    }
+                    else if (res == LZMA.LZMA_RES_FINISHED_WITHOUT_MARKER) {
+                        console.log("Finished without end marker");
+                    }
+                    else if (res == LZMA.LZMA_RES_FINISHED_WITH_MARKER) {
+                        if (unpackSizeDefined) {
+                            if (this.decoder.outWindow.out_pos != unpackSize) {
+                                throw "Finished with end marker before than specified size";
+                            }
+                            console.log("Warning: ");
+                        }
+                        console.log("Finished with end marker");
+                    }
+                    else {
+                        throw "Internal Error";
+                    }
+                    console.log("\n");
+                    if (this.decoder.rangeDec.corrupted) {
+                        console.log("\nWarning: LZMA stream is corrupted\n");
+                    }
+                    return this.decoder.outWindow.outStream;
+                };
+                LZMA.LZMA_DIC_MIN = (1 << 12);
+                LZMA.LZMA_RES_ERROR = 0;
+                LZMA.LZMA_RES_FINISHED_WITH_MARKER = 1;
+                LZMA.LZMA_RES_FINISHED_WITHOUT_MARKER = 2;
+                LZMA.kNumBitModelTotalBits = 11;
+                LZMA.kNumMoveBits = 5;
+                LZMA.PROB_INIT_VAL = ((1 << LZMA.kNumBitModelTotalBits) / 2);
+                LZMA.kNumPosBitsMax = 4;
+                LZMA.kNumStates = 12;
+                LZMA.kNumLenToPosStates = 4;
+                LZMA.kNumAlignBits = 4;
+                LZMA.kStartPosModelIndex = 4;
+                LZMA.kEndPosModelIndex = 14;
+                LZMA.kNumFullDistances = (1 << (LZMA.kEndPosModelIndex >>> 1));
+                LZMA.kMatchMinLen = 2;
+                return LZMA;
+            }());
+            exports_12("LZMA", LZMA);
+        }
+    }
+});
+System.register("test/LzmaTest", ["xdata/src/nid/lzma/LZMA", "xdata/src/nid/utils/ByteArray"], function(exports_13, context_13) {
+    "use strict";
+    var __moduleName = context_13 && context_13.id;
+    var LZMA_4, ByteArray_2;
+    var LzmaTest;
+    return {
+        setters:[
+            function (LZMA_4_1) {
+                LZMA_4 = LZMA_4_1;
+            },
+            function (ByteArray_2_1) {
+                ByteArray_2 = ByteArray_2_1;
+            }],
+        execute: function() {
+            LzmaTest = (function () {
+                function LzmaTest() {
+                    this.decoder2 = new LZMA_4.LZMA();
+                    this.ENCODE = 1;
+                    this.DECODE = 2;
+                    this.command = 0;
+                    this.command2 = 0;
+                    window.onload = this.init.bind(this);
+                }
+                LzmaTest.prototype.init = function () {
+                    var _this = this;
+                    var self = this;
+                    this.decoder = new Worker('../modules/xdata/workers/lzma-worker-bootstrap.js');
+                    this.reader = new FileReader();
+                    this.reader2 = new FileReader();
+                    this.reader.onload = function (e) {
+                        var inData = new Uint8Array(e.target["result"]);
+                        console.log(inData.length);
+                        console.time("decode");
+                        _this.decode(inData, function (result) {
+                            var outData = new ByteArray_2.ByteArray(result);
+                            console.timeEnd("decode");
+                            console.log(outData.length);
+                        });
+                    };
+                    this.reader2.onload = function (e) {
+                        var inData = new Uint8Array(e.target["result"]);
+                        console.log(inData.length);
+                        console.time("decode");
+                        var result = _this.decoder2.decode(inData);
+                        var outData = new ByteArray_2.ByteArray(result.buffer);
+                        console.timeEnd("decode");
+                        console.log(outData.length);
+                    };
+                    var fileInput = document.getElementById("fileBrowser");
+                    var fileInput2 = document.getElementById("fileBrowser2");
+                    fileInput.onchange = function (e) {
+                        self.file = this.files[0];
+                        self.reader.readAsArrayBuffer(self.file);
+                    };
+                    fileInput2.onchange = function (e) {
+                        self.file2 = this.files[0];
+                        self.reader2.readAsArrayBuffer(self.file2);
+                    };
+                };
+                LzmaTest.prototype.decode = function (data, callback) {
+                    var self = this;
+                    this.decoder.onmessage = function (e) {
+                        if (e.data.command == self.ENCODE) {
+                        }
+                        else if (e.data.command == self.DECODE) {
+                            callback(e.data.result);
+                        }
+                    };
+                    this.decoder.postMessage({ command: this.DECODE, data: data.buffer }, [data.buffer]);
+                };
+                return LzmaTest;
+            }());
+            exports_13("LzmaTest", LzmaTest);
+        }
+    }
+});
+System.register("test/SimpleTest", ["xdata/src/nid/utils/ByteArray"], function(exports_14, context_14) {
+    "use strict";
+    var __moduleName = context_14 && context_14.id;
+    var ByteArray_3;
+    var SimpleTest;
+    return {
+        setters:[
+            function (ByteArray_3_1) {
+                ByteArray_3 = ByteArray_3_1;
+            }],
+        execute: function() {
+            SimpleTest = (function () {
+                function SimpleTest() {
+                    var byteArray = new ByteArray_3.ByteArray();
+                    byteArray.writeShort(52);
+                    byteArray.writeInt(-56256);
+                    byteArray.writeUnsignedInt(652);
+                    byteArray.writeDouble(Math.random() * Number.MAX_VALUE);
+                    byteArray.position = 0;
+                    console.log(byteArray.readShort());
+                    console.log(byteArray.readInt());
+                    console.log(byteArray.readUnsignedInt());
+                    console.log(byteArray.readDouble());
+                }
+                return SimpleTest;
+            }());
+            exports_14("SimpleTest", SimpleTest);
+            new SimpleTest();
+        }
+    }
+});
+System.register("xdata/src/nid/zlib/Huffman", [], function(exports_15, context_15) {
+    "use strict";
+    var __moduleName = context_15 && context_15.id;
+    var Huffman;
+    return {
+        setters:[],
+        execute: function() {
+            Huffman = (function () {
+                function Huffman() {
+                }
+                Huffman.buildHuffmanTable = function (lengths) {
+                    var listSize = lengths.length;
+                    var maxCodeLength = 0;
+                    var minCodeLength = Number.POSITIVE_INFINITY;
+                    var size;
+                    var table;
+                    var bitLength;
+                    var code;
+                    var skip;
+                    var reversed;
+                    var rtemp;
+                    var i;
+                    var il;
+                    var j;
+                    var value;
+                    for (i = 0, il = listSize; i < il; ++i) {
+                        if (lengths[i] > maxCodeLength) {
+                            maxCodeLength = lengths[i];
+                        }
+                        if (lengths[i] < minCodeLength) {
+                            minCodeLength = lengths[i];
+                        }
+                    }
+                    size = 1 << maxCodeLength;
+                    table = new Uint32Array(size);
+                    for (bitLength = 1, code = 0, skip = 2; bitLength <= maxCodeLength;) {
+                        for (i = 0; i < listSize; ++i) {
+                            if (lengths[i] === bitLength) {
+                                for (reversed = 0, rtemp = code, j = 0; j < bitLength; ++j) {
+                                    reversed = (reversed << 1) | (rtemp & 1);
+                                    rtemp >>= 1;
+                                }
+                                value = (bitLength << 16) | i;
+                                for (j = reversed; j < size; j += skip) {
+                                    table[j] = value;
+                                }
+                                ++code;
+                            }
+                        }
+                        ++bitLength;
+                        code <<= 1;
+                        skip <<= 1;
+                    }
+                    return [table, maxCodeLength, minCodeLength];
+                };
+                return Huffman;
+            }());
+            exports_15("Huffman", Huffman);
+        }
+    }
+});
+System.register("xdata/src/nid/zlib/RawInflate", ["xdata/src/nid/zlib/Huffman"], function(exports_16, context_16) {
+    "use strict";
+    var __moduleName = context_16 && context_16.id;
+    var Huffman_1;
+    var RawInflate;
+    return {
+        setters:[
+            function (Huffman_1_1) {
+                Huffman_1 = Huffman_1_1;
+            }],
+        execute: function() {
+            RawInflate = (function () {
+                function RawInflate(input, opt_params) {
+                    this.ZLIB_RAW_INFLATE_BUFFER_SIZE = 0x8000;
+                    if (!RawInflate.FixedLiteralLengthTable) {
+                        var lengths = new Uint8Array(288);
+                        var i, il;
+                        for (i = 0, il = lengths.length; i < il; ++i) {
+                            lengths[i] =
+                                (i <= 143) ? 8 :
+                                    (i <= 255) ? 9 :
+                                        (i <= 279) ? 7 :
+                                            8;
+                        }
+                        RawInflate.FixedLiteralLengthTable = Huffman_1.Huffman.buildHuffmanTable(lengths);
+                    }
+                    if (!RawInflate.FixedDistanceTable) {
+                        var lengths = new Uint8Array(30);
+                        var i, il;
+                        for (i = 0, il = lengths.length; i < il; ++i) {
+                            lengths[i] = 5;
+                        }
+                        RawInflate.FixedDistanceTable = Huffman_1.Huffman.buildHuffmanTable(lengths);
+                    }
+                    this.blocks = [];
+                    this.bufferSize = this.ZLIB_RAW_INFLATE_BUFFER_SIZE;
+                    this.totalpos = 0;
+                    this.ip = 0;
+                    this.bitsbuf = 0;
+                    this.bitsbuflen = 0;
+                    this.input = input;
+                    this.output;
+                    this.bfinal = false;
+                    this.bufferType = RawInflate.BufferType.ADAPTIVE;
+                    this.resize = false;
+                    if (opt_params || !(opt_params = {})) {
+                        if (opt_params['index']) {
+                            this.ip = opt_params['index'];
+                        }
+                        if (opt_params['bufferSize']) {
+                            this.bufferSize = opt_params['bufferSize'];
+                        }
+                        if (opt_params['bufferType']) {
+                            this.bufferType = opt_params['bufferType'];
+                        }
+                        if (opt_params['resize']) {
+                            this.resize = opt_params['resize'];
+                        }
+                    }
+                    switch (this.bufferType) {
+                        case RawInflate.BufferType.BLOCK:
+                            this.op = RawInflate.MaxBackwardLength;
+                            this.output =
+                                new Uint8Array(RawInflate.MaxBackwardLength +
+                                    this.bufferSize +
+                                    RawInflate.MaxCopyLength);
+                            break;
+                        case RawInflate.BufferType.ADAPTIVE:
+                            this.op = 0;
+                            this.output = new Uint8Array(this.bufferSize);
+                            this.expandBuffer = this.expandBufferAdaptive;
+                            this.concatBuffer = this.concatBufferDynamic;
+                            this.decodeHuffman = this.decodeHuffmanAdaptive;
+                            break;
+                        default:
+                            throw new Error('invalid inflate mode');
+                    }
+                }
+                RawInflate.prototype.decompress = function () {
+                    while (!this.bfinal) {
+                        this.parseBlock();
+                    }
+                    return this.concatBuffer();
+                };
+                RawInflate.prototype.parseBlock = function () {
+                    var hdr = this.readBits(3);
+                    if (hdr & 0x1) {
+                        this.bfinal = true;
+                    }
+                    hdr >>>= 1;
+                    switch (hdr) {
+                        case 0:
+                            this.parseUncompressedBlock();
+                            break;
+                        case 1:
+                            this.parseFixedHuffmanBlock();
+                            break;
+                        case 2:
+                            this.parseDynamicHuffmanBlock();
+                            break;
+                        default:
+                            throw new Error('unknown BTYPE: ' + hdr);
+                    }
+                };
+                RawInflate.prototype.readBits = function (length) {
+                    var bitsbuf = this.bitsbuf;
+                    var bitsbuflen = this.bitsbuflen;
+                    var input = this.input;
+                    var ip = this.ip;
+                    var inputLength = input.length;
+                    var octet;
+                    while (bitsbuflen < length) {
+                        if (ip >= inputLength) {
+                            throw new Error('input buffer is broken');
+                        }
+                        bitsbuf |= input[ip++] << bitsbuflen;
+                        bitsbuflen += 8;
+                    }
+                    octet = bitsbuf & ((1 << length) - 1);
+                    bitsbuf >>>= length;
+                    bitsbuflen -= length;
+                    this.bitsbuf = bitsbuf;
+                    this.bitsbuflen = bitsbuflen;
+                    this.ip = ip;
+                    return octet;
+                };
+                RawInflate.prototype.readCodeByTable = function (table) {
+                    var bitsbuf = this.bitsbuf;
+                    var bitsbuflen = this.bitsbuflen;
+                    var input = this.input;
+                    var ip = this.ip;
+                    var inputLength = input.length;
+                    var codeTable = table[0];
+                    var maxCodeLength = table[1];
+                    var codeWithLength;
+                    var codeLength;
+                    while (bitsbuflen < maxCodeLength) {
+                        if (ip >= inputLength) {
+                            break;
+                        }
+                        bitsbuf |= input[ip++] << bitsbuflen;
+                        bitsbuflen += 8;
+                    }
+                    codeWithLength = codeTable[bitsbuf & ((1 << maxCodeLength) - 1)];
+                    codeLength = codeWithLength >>> 16;
+                    this.bitsbuf = bitsbuf >> codeLength;
+                    this.bitsbuflen = bitsbuflen - codeLength;
+                    this.ip = ip;
+                    return codeWithLength & 0xffff;
+                };
+                RawInflate.prototype.parseUncompressedBlock = function () {
+                    var input = this.input;
+                    var ip = this.ip;
+                    var output = this.output;
+                    var op = this.op;
+                    var inputLength = input.length;
+                    var len;
+                    var nlen;
+                    var olength = output.length;
+                    var preCopy;
+                    this.bitsbuf = 0;
+                    this.bitsbuflen = 0;
+                    if (ip + 1 >= inputLength) {
+                        throw new Error('invalid uncompressed block header: LEN');
+                    }
+                    len = input[ip++] | (input[ip++] << 8);
+                    if (ip + 1 >= inputLength) {
+                        throw new Error('invalid uncompressed block header: NLEN');
+                    }
+                    nlen = input[ip++] | (input[ip++] << 8);
+                    if (len === ~nlen) {
+                        throw new Error('invalid uncompressed block header: length verify');
+                    }
+                    if (ip + len > input.length) {
+                        throw new Error('input buffer is broken');
+                    }
+                    switch (this.bufferType) {
+                        case RawInflate.BufferType.BLOCK:
+                            while (op + len > output.length) {
+                                preCopy = olength - op;
+                                len -= preCopy;
+                                output.set(input.subarray(ip, ip + preCopy), op);
+                                op += preCopy;
+                                ip += preCopy;
+                                this.op = op;
+                                output = this.expandBuffer();
+                                op = this.op;
+                            }
+                            break;
+                        case RawInflate.BufferType.ADAPTIVE:
+                            while (op + len > output.length) {
+                                output = this.expandBuffer({ fixRatio: 2 });
+                            }
+                            break;
+                        default:
+                            throw new Error('invalid inflate mode');
+                    }
+                    output.set(input.subarray(ip, ip + len), op);
+                    op += len;
+                    ip += len;
+                    this.ip = ip;
+                    this.op = op;
+                    this.output = output;
+                };
+                RawInflate.prototype.parseFixedHuffmanBlock = function () {
+                    this.decodeHuffman(RawInflate.FixedLiteralLengthTable, RawInflate.FixedDistanceTable);
+                };
+                RawInflate.prototype.parseDynamicHuffmanBlock = function () {
+                    var hlit = this.readBits(5) + 257;
+                    var hdist = this.readBits(5) + 1;
+                    var hclen = this.readBits(4) + 4;
+                    var codeLengths = new Uint8Array(RawInflate.Order.length);
+                    var codeLengthsTable;
+                    var litlenLengths;
+                    var distLengths;
+                    var i;
+                    for (i = 0; i < hclen; ++i) {
+                        codeLengths[RawInflate.Order[i]] = this.readBits(3);
+                    }
+                    codeLengthsTable = Huffman_1.Huffman.buildHuffmanTable(codeLengths);
+                    litlenLengths = new Uint8Array(hlit);
+                    distLengths = new Uint8Array(hdist);
+                    this.prev = 0;
+                    this.decodeHuffman(Huffman_1.Huffman.buildHuffmanTable(this.decode.call(this, hlit, codeLengthsTable, litlenLengths)), Huffman_1.Huffman.buildHuffmanTable(this.decode.call(this, hdist, codeLengthsTable, distLengths)));
+                };
+                RawInflate.prototype.decode = function (num, table, lengths) {
+                    var code;
+                    var prev = this.prev;
+                    var repeat;
+                    var i;
+                    for (i = 0; i < num;) {
+                        code = this.readCodeByTable(table);
+                        switch (code) {
+                            case 16:
+                                repeat = 3 + this.readBits(2);
+                                while (repeat--) {
+                                    lengths[i++] = prev;
+                                }
+                                break;
+                            case 17:
+                                repeat = 3 + this.readBits(3);
+                                while (repeat--) {
+                                    lengths[i++] = 0;
+                                }
+                                prev = 0;
+                                break;
+                            case 18:
+                                repeat = 11 + this.readBits(7);
+                                while (repeat--) {
+                                    lengths[i++] = 0;
+                                }
+                                prev = 0;
+                                break;
+                            default:
+                                lengths[i++] = code;
+                                prev = code;
+                                break;
+                        }
+                    }
+                    this.prev = prev;
+                    return lengths;
+                };
+                RawInflate.prototype.decodeHuffman = function (litlen, dist) {
+                    var output = this.output;
+                    var op = this.op;
+                    this.currentLitlenTable = litlen;
+                    var olength = output.length - RawInflate.MaxCopyLength;
+                    var code;
+                    var ti;
+                    var codeDist;
+                    var codeLength;
+                    while ((code = this.readCodeByTable(litlen)) !== 256) {
+                        if (code < 256) {
+                            if (op >= olength) {
+                                this.op = op;
+                                output = this.expandBuffer();
+                                op = this.op;
+                            }
+                            output[op++] = code;
+                            continue;
+                        }
+                        ti = code - 257;
+                        codeLength = RawInflate.LengthCodeTable[ti];
+                        if (RawInflate.LengthExtraTable[ti] > 0) {
+                            codeLength += this.readBits(RawInflate.LengthExtraTable[ti]);
+                        }
+                        code = this.readCodeByTable(dist);
+                        codeDist = RawInflate.DistCodeTable[code];
+                        if (RawInflate.DistExtraTable[code] > 0) {
+                            codeDist += this.readBits(RawInflate.DistExtraTable[code]);
+                        }
+                        if (op >= olength) {
+                            this.op = op;
+                            output = this.expandBuffer();
+                            op = this.op;
+                        }
+                        while (codeLength--) {
+                            output[op] = output[(op++) - codeDist];
+                        }
+                    }
+                    while (this.bitsbuflen >= 8) {
+                        this.bitsbuflen -= 8;
+                        this.ip--;
+                    }
+                    this.op = op;
+                };
+                RawInflate.prototype.decodeHuffmanAdaptive = function (litlen, dist) {
+                    var output = this.output;
+                    var op = this.op;
+                    this.currentLitlenTable = litlen;
+                    var olength = output.length;
+                    var code;
+                    var ti;
+                    var codeDist;
+                    var codeLength;
+                    while ((code = this.readCodeByTable(litlen)) !== 256) {
+                        if (code < 256) {
+                            if (op >= olength) {
+                                output = this.expandBuffer();
+                                olength = output.length;
+                            }
+                            output[op++] = code;
+                            continue;
+                        }
+                        ti = code - 257;
+                        codeLength = RawInflate.LengthCodeTable[ti];
+                        if (RawInflate.LengthExtraTable[ti] > 0) {
+                            codeLength += this.readBits(RawInflate.LengthExtraTable[ti]);
+                        }
+                        code = this.readCodeByTable(dist);
+                        codeDist = RawInflate.DistCodeTable[code];
+                        if (RawInflate.DistExtraTable[code] > 0) {
+                            codeDist += this.readBits(RawInflate.DistExtraTable[code]);
+                        }
+                        if (op + codeLength > olength) {
+                            output = this.expandBuffer();
+                            olength = output.length;
+                        }
+                        while (codeLength--) {
+                            output[op] = output[(op++) - codeDist];
+                        }
+                    }
+                    while (this.bitsbuflen >= 8) {
+                        this.bitsbuflen -= 8;
+                        this.ip--;
+                    }
+                    this.op = op;
+                };
+                RawInflate.prototype.expandBuffer = function (opt_param) {
+                    if (opt_param === void 0) { opt_param = null; }
+                    var buffer = new Uint8Array(this.op - RawInflate.MaxBackwardLength);
+                    var backward = this.op - RawInflate.MaxBackwardLength;
+                    var i;
+                    var il;
+                    var output = this.output;
+                    buffer.set(output.subarray(RawInflate.MaxBackwardLength, buffer.length));
+                    this.blocks.push(buffer);
+                    this.totalpos += buffer.length;
+                    output.set(output.subarray(backward, backward + RawInflate.MaxBackwardLength));
+                    this.op = RawInflate.MaxBackwardLength;
+                    return output;
+                };
+                RawInflate.prototype.expandBufferAdaptive = function (opt_param) {
+                    var buffer;
+                    var ratio = (this.input.length / this.ip + 1) | 0;
+                    var maxHuffCode;
+                    var newSize;
+                    var maxInflateSize;
+                    var input = this.input;
+                    var output = this.output;
+                    if (opt_param) {
+                        if (typeof opt_param.fixRatio === 'number') {
+                            ratio = opt_param.fixRatio;
+                        }
+                        if (typeof opt_param.addRatio === 'number') {
+                            ratio += opt_param.addRatio;
+                        }
+                    }
+                    if (ratio < 2) {
+                        maxHuffCode =
+                            (input.length - this.ip) / this.currentLitlenTable[2];
+                        maxInflateSize = (maxHuffCode / 2 * 258) | 0;
+                        newSize = maxInflateSize < output.length ?
+                            output.length + maxInflateSize :
+                            output.length << 1;
+                    }
+                    else {
+                        newSize = output.length * ratio;
+                    }
+                    buffer = new Uint8Array(newSize);
+                    buffer.set(output);
+                    this.output = buffer;
+                    return this.output;
+                };
+                RawInflate.prototype.concatBuffer = function () {
+                    var pos = 0;
+                    var limit = this.totalpos + (this.op - RawInflate.MaxBackwardLength);
+                    var output = this.output;
+                    var blocks = this.blocks;
+                    var block;
+                    var buffer = new Uint8Array(limit);
+                    var i;
+                    var il;
+                    var j;
+                    var jl;
+                    if (blocks.length === 0) {
+                        return this.output.subarray(RawInflate.MaxBackwardLength, this.op);
+                    }
+                    for (i = 0, il = blocks.length; i < il; ++i) {
+                        block = blocks[i];
+                        for (j = 0, jl = block.length; j < jl; ++j) {
+                            buffer[pos++] = block[j];
+                        }
+                    }
+                    for (i = RawInflate.MaxBackwardLength, il = this.op; i < il; ++i) {
+                        buffer[pos++] = output[i];
+                    }
+                    this.blocks = [];
+                    this.buffer = buffer;
+                    return this.buffer;
+                };
+                RawInflate.prototype.concatBufferDynamic = function () {
+                    var buffer;
+                    var op = this.op;
+                    if (this.resize) {
+                        buffer = new Uint8Array(op);
+                        buffer.set(this.output.subarray(0, op));
+                    }
+                    else {
+                        buffer = this.output.subarray(0, op);
+                    }
+                    this.buffer = buffer;
+                    return this.buffer;
+                };
+                RawInflate.BufferType = {
+                    BLOCK: 0,
+                    ADAPTIVE: 1
+                };
+                RawInflate.MaxBackwardLength = 32768;
+                RawInflate.MaxCopyLength = 32768;
+                RawInflate.Order = new Uint16Array([16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15]);
+                RawInflate.LengthCodeTable = new Uint16Array([
+                    0x0003, 0x0004, 0x0005, 0x0006, 0x0007, 0x0008, 0x0009, 0x000a, 0x000b,
+                    0x000d, 0x000f, 0x0011, 0x0013, 0x0017, 0x001b, 0x001f, 0x0023, 0x002b,
+                    0x0033, 0x003b, 0x0043, 0x0053, 0x0063, 0x0073, 0x0083, 0x00a3, 0x00c3,
+                    0x00e3, 0x0102, 0x0102, 0x0102
+                ]);
+                RawInflate.LengthExtraTable = new Uint8Array([
+                    0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5,
+                    5, 5, 0, 0, 0
+                ]);
+                RawInflate.DistCodeTable = new Uint16Array([
+                    0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0007, 0x0009, 0x000d, 0x0011,
+                    0x0019, 0x0021, 0x0031, 0x0041, 0x0061, 0x0081, 0x00c1, 0x0101, 0x0181,
+                    0x0201, 0x0301, 0x0401, 0x0601, 0x0801, 0x0c01, 0x1001, 0x1801, 0x2001,
+                    0x3001, 0x4001, 0x6001
+                ]);
+                RawInflate.DistExtraTable = new Uint8Array([
+                    0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11,
+                    11, 12, 12, 13, 13
+                ]);
+                return RawInflate;
+            }());
+            exports_16("RawInflate", RawInflate);
+        }
+    }
+});
+System.register("xdata/src/nid/zlib/CompressionMethod", [], function(exports_17, context_17) {
+    "use strict";
+    var __moduleName = context_17 && context_17.id;
+    var CompressionMethod;
+    return {
+        setters:[],
+        execute: function() {
+            CompressionMethod = (function () {
+                function CompressionMethod() {
+                }
+                CompressionMethod.ZLIB = {
+                    DEFLATE: 8,
+                    RESERVED: 15
+                };
+                CompressionMethod.ZIP = {
+                    STORE: 0,
+                    DEFLATE: 8
+                };
+                return CompressionMethod;
+            }());
+            exports_17("CompressionMethod", CompressionMethod);
+        }
+    }
+});
+System.register("xdata/src/nid/zlib/Adler32", [], function(exports_18, context_18) {
+    "use strict";
+    var __moduleName = context_18 && context_18.id;
+    var Adler32;
+    return {
+        setters:[],
+        execute: function() {
+            Adler32 = (function () {
+                function Adler32() {
+                }
+                Adler32.calc = function (array) {
+                    if (typeof (array) === 'string') {
+                        array = Adler32.encodeString(array);
+                    }
+                    return Adler32.update(1, array);
+                };
+                Adler32.update = function (adler, array) {
+                    var s1 = adler & 0xffff;
+                    var s2 = (adler >>> 16) & 0xffff;
+                    var len = array.length;
+                    var tlen;
+                    var i = 0;
+                    while (len > 0) {
+                        tlen = len > Adler32.OptimizationParameter ?
+                            Adler32.OptimizationParameter : len;
+                        len -= tlen;
+                        do {
+                            s1 += array[i++];
+                            s2 += s1;
+                        } while (--tlen);
+                        s1 %= 65521;
+                        s2 %= 65521;
+                    }
+                    return ((s2 << 16) | s1) >>> 0;
+                };
+                Adler32.encodeString = function (str) {
+                    if (!Adler32.encoder) {
+                        if (window["TextEncoder"]) {
+                            Adler32.encoder = new window["TextEncoder"]();
+                        }
+                        else {
+                            Adler32.encoder = {
+                                encode: function (str) {
+                                    var tmp = str.split('');
+                                    var data = new Uint8Array(tmp.length);
+                                    var i;
+                                    var il;
+                                    for (i = 0, il = tmp.length; i < il; i++) {
+                                        data[i] = (tmp[i].charCodeAt(0) & 0xff) >>> 0;
+                                    }
+                                    return data;
+                                }
+                            };
+                        }
+                    }
+                    return Adler32.encoder.encode(str);
+                };
+                Adler32.OptimizationParameter = 1024;
+                return Adler32;
+            }());
+            exports_18("Adler32", Adler32);
+        }
+    }
+});
+System.register("xdata/src/nid/zlib/Inflate", ["xdata/src/nid/zlib/RawInflate", "xdata/src/nid/zlib/CompressionMethod", "xdata/src/nid/zlib/Adler32"], function(exports_19, context_19) {
+    "use strict";
+    var __moduleName = context_19 && context_19.id;
+    var RawInflate_1, CompressionMethod_1, Adler32_1;
+    var Inflate;
+    return {
+        setters:[
+            function (RawInflate_1_1) {
+                RawInflate_1 = RawInflate_1_1;
+            },
+            function (CompressionMethod_1_1) {
+                CompressionMethod_1 = CompressionMethod_1_1;
+            },
+            function (Adler32_1_1) {
+                Adler32_1 = Adler32_1_1;
+            }],
+        execute: function() {
+            Inflate = (function () {
+                function Inflate(input, opt_params) {
+                    if (opt_params === void 0) { opt_params = null; }
+                    this.ip = 0;
+                    this.input = input;
+                    if (opt_params || !(opt_params = {})) {
+                        if (opt_params['index']) {
+                            this.ip = opt_params['index'];
+                        }
+                        if (opt_params['verify']) {
+                            this.verify = opt_params['verify'];
+                        }
+                    }
+                    this.cmf = input[this.ip++];
+                    this.flg = input[this.ip++];
+                    switch (this.cmf & 0x0f) {
+                        case CompressionMethod_1.CompressionMethod.ZLIB.DEFLATE:
+                            this.method = CompressionMethod_1.CompressionMethod.ZLIB.DEFLATE;
+                            break;
+                        default:
+                            throw new Error('unsupported compression method');
+                    }
+                    if (((this.cmf << 8) + this.flg) % 31 !== 0) {
+                        throw new Error('invalid fcheck flag:' + ((this.cmf << 8) + this.flg) % 31);
+                    }
+                    if (this.flg & 0x20) {
+                        throw new Error('fdict flag is not supported');
+                    }
+                    this.rawinflate = new RawInflate_1.RawInflate(input, {
+                        'index': this.ip,
+                        'bufferSize': opt_params['bufferSize'],
+                        'bufferType': opt_params['bufferType'],
+                        'resize': opt_params['resize']
+                    });
+                }
+                Inflate.prototype.decompress = function () {
+                    var input = this.input;
+                    var buffer;
+                    var adler32;
+                    buffer = this.rawinflate.decompress();
+                    this.ip = this.rawinflate.ip;
+                    if (this.verify) {
+                        adler32 = (input[this.ip++] << 24 | input[this.ip++] << 16 |
+                            input[this.ip++] << 8 | input[this.ip++]) >>> 0;
+                        if (adler32 !== Adler32_1.Adler32.calc(buffer)) {
+                            throw new Error('invalid adler-32 checksum');
+                        }
+                    }
+                    return buffer;
+                };
+                Inflate.BufferType = RawInflate_1.RawInflate.BufferType;
+                return Inflate;
+            }());
+            exports_19("Inflate", Inflate);
+        }
+    }
+});
+System.register("xdata/src/nid/zlib/ZLIB", ["xdata/src/nid/zlib/Inflate"], function(exports_20, context_20) {
+    "use strict";
+    var __moduleName = context_20 && context_20.id;
+    var Inflate_1;
+    var ZLIB;
+    return {
+        setters:[
+            function (Inflate_1_1) {
+                Inflate_1 = Inflate_1_1;
+            }],
+        execute: function() {
+            ZLIB = (function () {
+                function ZLIB() {
+                }
+                ZLIB.prototype.encode = function () {
+                };
+                ZLIB.prototype.decode = function (compressed) {
+                    var decompressed = new Inflate_1.Inflate(compressed).decompress();
+                };
+                return ZLIB;
+            }());
+            exports_20("ZLIB", ZLIB);
+        }
+    }
+});
+System.register("xdata/compression", ["xdata/src/nid/zlib/ZLIB", "xdata/src/nid/lzma/LZMA"], function(exports_21, context_21) {
+    "use strict";
+    var __moduleName = context_21 && context_21.id;
+    function exportStar_1(m) {
+        var exports = {};
+        for(var n in m) {
+            if (n !== "default") exports[n] = m[n];
+        }
+        exports_21(exports);
+    }
+    return {
+        setters:[
+            function (ZLIB_1_1) {
+                exportStar_1(ZLIB_1_1);
+            },
+            function (LZMA_5_1) {
+                exportStar_1(LZMA_5_1);
+            }],
+        execute: function() {
         }
     }
 });

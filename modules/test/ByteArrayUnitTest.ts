@@ -1,6 +1,6 @@
-import {ByteArray} from "../modules/xdata/src/nid/utils/ByteArray";
 import {TestClass} from "./tsUnit";
 import {Test} from "./tsUnit";
+import {ByteArray} from "../xdata/src/nid/utils/ByteArray";
 
 class ByteArrayUnitTest extends TestClass {
 	

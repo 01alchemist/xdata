@@ -1,5 +1,5 @@
-import {ByteArray} from "../modules/xdata/src/nid/utils/ByteArray";
-import {LZMA} from "../modules/xdata/src/nid/lzma/LZMA";
+import {LZMA} from "../xdata/src/nid/lzma/LZMA";
+import {ByteArray} from "../xdata/src/nid/utils/ByteArray";
 /**
  * Created by Nidin Vinayakan on 04-03-2016.
  */

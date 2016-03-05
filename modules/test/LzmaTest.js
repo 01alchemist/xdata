@@ -1,15 +1,15 @@
-System.register(["../modules/xdata/src/nid/utils/ByteArray", "../modules/xdata/src/nid/lzma/LZMA"], function(exports_1, context_1) {
+System.register(["../xdata/src/nid/lzma/LZMA", "../xdata/src/nid/utils/ByteArray"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var ByteArray_1, LZMA_1;
+    var LZMA_1, ByteArray_1;
     var LzmaTest;
     return {
         setters:[
-            function (ByteArray_1_1) {
-                ByteArray_1 = ByteArray_1_1;
-            },
             function (LZMA_1_1) {
                 LZMA_1 = LZMA_1_1;
+            },
+            function (ByteArray_1_1) {
+                ByteArray_1 = ByteArray_1_1;
             }],
         execute: function() {
             LzmaTest = (function () {

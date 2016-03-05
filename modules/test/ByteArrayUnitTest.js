@@ -1,4 +1,4 @@
-System.register(["../modules/xdata/src/nid/utils/ByteArray", "./tsUnit"], function(exports_1, context_1) {
+System.register(["./tsUnit", "../xdata/src/nid/utils/ByteArray"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -6,16 +6,16 @@ System.register(["../modules/xdata/src/nid/utils/ByteArray", "./tsUnit"], functi
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var ByteArray_1, tsUnit_1, tsUnit_2;
+    var tsUnit_1, tsUnit_2, ByteArray_1;
     var ByteArrayUnitTest, test, TestRunner;
     return {
         setters:[
-            function (ByteArray_1_1) {
-                ByteArray_1 = ByteArray_1_1;
-            },
             function (tsUnit_1_1) {
                 tsUnit_1 = tsUnit_1_1;
                 tsUnit_2 = tsUnit_1_1;
+            },
+            function (ByteArray_1_1) {
+                ByteArray_1 = ByteArray_1_1;
             }],
         execute: function() {
             ByteArrayUnitTest = (function (_super) {

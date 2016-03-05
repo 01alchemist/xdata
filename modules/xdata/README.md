@@ -17,7 +17,9 @@ npm registry [https://www.npmjs.com/package/xdata](https://www.npmjs.com/package
 
 ###Usage 
 
-    import {DataArray,ByteArray,BitArray,LZMAHelper,ZLIBHelper} from "xdata/core"
+    import {DataArray,ByteArray,BitArray} from "xdata/core"
+    import {LZMAHelper,ZLIBHelper} from "xdata/helpers"
+    import {LZMA, ZLIB} from "xdata/compression"
 
 ###Classes
 - **_1. BitArray_**
