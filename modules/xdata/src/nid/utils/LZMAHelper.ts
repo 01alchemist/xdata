@@ -5,15 +5,20 @@ import {LZMA} from "../lzma/LZMA";
 export class LZMAHelper {
     static decoder:LZMA = new LZMA();
     static decoderAsync:Worker;
-    static enableAsync:boolean = false;
+    static enableAsync:boolean = true;
     static callback:Function;
     static ENCODE:number = 1;
     static DECODE:number = 2;
+    private static workerScript = "../modules/xdata/workers/lzma-worker-bootstrap.js";
 
-    static init():void {
-        var command = 0;
+    static init(workerScript?:string):void {
+
+        if(workerScript){
+            LZMAHelper.workerScript = workerScript;
+        }
+
         if (LZMAHelper.enableAsync) {
-            LZMAHelper.decoderAsync = new Worker('LZMAWorker.min.js');
+            LZMAHelper.decoderAsync = new Worker(LZMAHelper.workerScript);
             LZMAHelper.decoderAsync.onmessage = function (e) {
 
                 var receivedData:any = e.data;
@@ -34,7 +39,7 @@ export class LZMAHelper {
      * @returns {null}
      */
     static encode(data:ArrayBuffer):ArrayBuffer {
-        return null;
+        throw "LZMA encoder not implemented!";
     }
 
     static decodeBuffer(data:ArrayBuffer):ArrayBuffer {
@@ -52,7 +57,7 @@ export class LZMAHelper {
      */
     static encodeAsync(data:ArrayBuffer, _callback:Function):void {
         if (LZMAHelper.enableAsync) {
-
+            throw "LZMA encoder not implemented!";
         } else {
             console.log('Error! Asynchronous encoding is disabled');
         }
@@ -71,4 +76,3 @@ export class LZMAHelper {
         }
     }
 }
-LZMAHelper.init();

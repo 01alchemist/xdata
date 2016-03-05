@@ -4,12 +4,18 @@ import {ZLIB} from "../zlib/ZLIB";
  */
 export class ZLIBHelper {
     static decoder:ZLIB = new ZLIB();
-    static decoderAsync:Worker = new Worker('ZLIBWorker.min.js');
+    static decoderAsync:Worker;
     static callback:Function;
     static ENCODE:number = 1;
     static DECODE:number = 2;
+    private static workerScript = "../modules/xdata/workers/zlib-worker-bootstrap.js";
 
-    static init():void {
+    static init(workerScript?:string):void {
+
+        if(workerScript){
+            ZLIBHelper.workerScript = workerScript;
+        }
+        ZLIBHelper.decoderAsync = new Worker(ZLIBHelper.workerScript);
         ZLIBHelper.decoderAsync.onmessage = function (e) {
 
             var receivedData:any = e.data;
@@ -50,7 +56,7 @@ export class ZLIBHelper {
      * @param _callback
      */
     static encodeBufferAsync(data:ArrayBuffer, _callback:Function):void {
-
+        throw "ZLIB encoder not implemented!";
     }
 
     static decodeBufferAsync(data:ArrayBuffer, _callback:Function):void {
@@ -62,4 +68,3 @@ export class ZLIBHelper {
         }
     }
 }
-ZLIBHelper.init();
