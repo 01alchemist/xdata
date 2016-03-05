@@ -66,10 +66,9 @@ export class LZMA {
 
         this.decoder.decodeProperties(header);
 
-        console.log("\nlc=" + this.decoder.lc + ", lp=" + this.decoder.lp + ", pb=" + this.decoder.pb);
-        console.log("\nDictionary Size in properties = " + this.decoder.dictSizeInProperties);
-        console.log("\nDictionary Size for decoding  = " + this.decoder.dictSize);
-        //return this.ucdata;
+        //console.log("\nlc=" + this.decoder.lc + ", lp=" + this.decoder.lp + ", pb=" + this.decoder.pb);
+        //console.log("\nDictionary Size in properties = " + this.decoder.dictSizeInProperties);
+        //console.log("\nDictionary Size for decoding  = " + this.decoder.dictSize);
         var unpackSize:number = 0;//UInt64
         var unpackSizeDefined:boolean = false;
         for (i = 0; i < 8; i++) {
@@ -82,42 +81,42 @@ export class LZMA {
 
         this.decoder.markerIsMandatory = !unpackSizeDefined;
 
-        console.log("\n");
+        //console.log("\n");
         if (unpackSizeDefined) {
-            console.log("Uncompressed Size : " + unpackSize + " bytes");
+            //console.log("Uncompressed Size : " + unpackSize + " bytes");
         } else {
-            console.log("End marker is expected\n");
+            //console.log("End marker is expected\n");
         }
         this.decoder.rangeDec.inStream = data;
-        console.log("\n");
+        //console.log("\n");
 
         this.decoder.create();
         // we support the streams that have uncompressed size and marker.
         var res:number = this.decoder.decode(unpackSizeDefined, unpackSize); //int
 
-        console.log("Read    ", this.decoder.rangeDec.in_pos);
-        console.log("Written ", this.decoder.outWindow.out_pos);
+        //console.log("Read    ", this.decoder.rangeDec.in_pos);
+        //console.log("Written ", this.decoder.outWindow.out_pos);
 
         if (res == LZMA.LZMA_RES_ERROR) {
             throw "LZMA decoding error";
         }
         else if (res == LZMA.LZMA_RES_FINISHED_WITHOUT_MARKER) {
-            console.log("Finished without end marker");
+            //console.log("Finished without end marker");
         }
         else if (res == LZMA.LZMA_RES_FINISHED_WITH_MARKER) {
             if (unpackSizeDefined) {
                 if (this.decoder.outWindow.out_pos != unpackSize) {
                     throw "Finished with end marker before than specified size";
                 }
-                console.log("Warning: ");
+                //console.log("Warning: ");
             }
-            console.log("Finished with end marker");
+            //console.log("Finished with end marker");
         }
         else {
             throw "Internal Error";
         }
 
-        console.log("\n");
+        //console.log("\n");
 
         if (this.decoder.rangeDec.corrupted) {
             console.log("\nWarning: LZMA stream is corrupted\n");
