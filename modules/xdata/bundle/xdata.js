@@ -3,9 +3,623 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-System.register("src/nid/zlib/Huffman", [], function(exports_1, context_1) {
+System.register("test/tsUnit", [], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
+    var Test, TestContext, TestClass, FakeFunction, Fake, TestDefintion, TestError, TestDescription, TestResult;
+    return {
+        setters:[],
+        execute: function() {
+            Test = (function () {
+                function Test() {
+                    this.tests = [];
+                    this.testClass = new TestClass();
+                }
+                Test.prototype.addTestClass = function (testClass, name) {
+                    if (name === void 0) { name = 'Tests'; }
+                    this.tests.push(new TestDefintion(testClass, name));
+                };
+                Test.prototype.isReservedFunctionName = function (functionName) {
+                    for (var prop in this.testClass) {
+                        if (prop === functionName) {
+                            return true;
+                        }
+                    }
+                    return false;
+                };
+                Test.prototype.run = function () {
+                    var testContext = new TestContext();
+                    var testResult = new TestResult();
+                    for (var i = 0; i < this.tests.length; ++i) {
+                        var testClass = this.tests[i].testClass;
+                        var testName = this.tests[i].name;
+                        for (var prop in testClass) {
+                            if (!this.isReservedFunctionName(prop)) {
+                                if (typeof testClass[prop] === 'function') {
+                                    if (typeof testClass['setUp'] === 'function') {
+                                        testClass['setUp']();
+                                    }
+                                    try {
+                                        testClass[prop](testContext);
+                                        testResult.passes.push(new TestDescription(testName, prop, 'OK'));
+                                    }
+                                    catch (err) {
+                                        testResult.errors.push(new TestDescription(testName, prop, err));
+                                    }
+                                    if (typeof testClass['tearDown'] === 'function') {
+                                        testClass['tearDown']();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    return testResult;
+                };
+                Test.prototype.showResults = function (target, result) {
+                    var template = '<article>' +
+                        '<h1>' + this.getTestResult(result) + '</h1>' +
+                        '<p>' + this.getTestSummary(result) + '</p>' +
+                        '<section id="tsFail">' +
+                        '<h2>Errors</h2>' +
+                        '<ul class="bad">' + this.getTestResultList(result.errors) + '</ul>' +
+                        '</section>' +
+                        '<section id="tsOkay">' +
+                        '<h2>Passing Tests</h2>' +
+                        '<ul class="good">' + this.getTestResultList(result.passes) + '</ul>' +
+                        '</section>' +
+                        '</article>';
+                    target.innerHTML = template;
+                };
+                Test.prototype.getTestResult = function (result) {
+                    return result.errors.length === 0 ? 'Test Passed' : 'Test Failed';
+                };
+                Test.prototype.getTestSummary = function (result) {
+                    return 'Total tests: <span id="tsUnitTotalCout">' + (result.passes.length + result.errors.length).toString() + '</span>. ' +
+                        'Passed tests: <span id="tsUnitPassCount" class="good">' + result.passes.length + '</span>. ' +
+                        'Failed tests: <span id="tsUnitFailCount" class="bad">' + result.errors.length + '</span>.';
+                };
+                Test.prototype.getTestResultList = function (testResults) {
+                    var list = '';
+                    var group = '';
+                    var isFirst = true;
+                    for (var i = 0; i < testResults.length; ++i) {
+                        var result = testResults[i];
+                        if (result.testName !== group) {
+                            group = result.testName;
+                            if (isFirst) {
+                                isFirst = false;
+                            }
+                            else {
+                                list += '</li></ul>';
+                            }
+                            list += '<li>' + result.testName + '<ul>';
+                        }
+                        list += '<li>' + result.funcName + '(): ' + this.encodeHtmlEntities(result.message) + '</li>';
+                    }
+                    return list + '</ul>';
+                };
+                Test.prototype.encodeHtmlEntities = function (input) {
+                    var entitiesToReplace = { '&': '&amp;', '<': '&lt;', '>': '&gt;' };
+                    input.replace(/[&<>]/g, function (entity) {
+                        return entitiesToReplace[entity] || entity;
+                    });
+                    return input;
+                };
+                return Test;
+            }());
+            exports_1("Test", Test);
+            TestContext = (function () {
+                function TestContext() {
+                }
+                TestContext.prototype.setUp = function () {
+                };
+                TestContext.prototype.tearDown = function () {
+                };
+                TestContext.prototype.areIdentical = function (a, b) {
+                    if (a !== b) {
+                        throw 'areIdentical failed when passed ' +
+                            '{' + (typeof a) + '} "' + a + '" and ' +
+                            '{' + (typeof b) + '} "' + b + '"';
+                    }
+                };
+                TestContext.prototype.areIdenticalArray = function (a, b) {
+                    var r;
+                    r = a.length == b.length;
+                    if (r) {
+                        for (var i = 0; i < a.length; i++) {
+                            if (a[i] != b[i]) {
+                                r = false;
+                                break;
+                            }
+                        }
+                    }
+                    if (!r) {
+                        throw 'areIdentical failed when passed ' +
+                            '{' + (typeof a) + '} "' + a + '" and ' +
+                            '{' + (typeof b) + '} "' + b + '"';
+                    }
+                };
+                TestContext.prototype.areNotIdentical = function (a, b) {
+                    if (a === b) {
+                        throw 'areNotIdentical failed when passed ' +
+                            '{' + (typeof a) + '} "' + a + '" and ' +
+                            '{' + (typeof b) + '} "' + b + '"';
+                    }
+                };
+                TestContext.prototype.isTrue = function (a) {
+                    if (!a) {
+                        throw 'isTrue failed when passed ' +
+                            '{' + (typeof a) + '} "' + a + '"';
+                    }
+                };
+                TestContext.prototype.isFalse = function (a) {
+                    if (a) {
+                        throw 'isFalse failed when passed ' +
+                            '{' + (typeof a) + '} "' + a + '"';
+                    }
+                };
+                TestContext.prototype.isTruthy = function (a) {
+                    if (!a) {
+                        throw 'isTrue failed when passed ' +
+                            '{' + (typeof a) + '} "' + a + '"';
+                    }
+                };
+                TestContext.prototype.isFalsey = function (a) {
+                    if (a) {
+                        throw 'isFalse failed when passed ' +
+                            '{' + (typeof a) + '} "' + a + '"';
+                    }
+                };
+                TestContext.prototype.throws = function (a) {
+                    var isThrown = false;
+                    try {
+                        a();
+                    }
+                    catch (ex) {
+                        isThrown = true;
+                    }
+                    if (!isThrown) {
+                        throw 'did not throw an error';
+                    }
+                };
+                TestContext.prototype.fail = function () {
+                    throw 'fail';
+                };
+                return TestContext;
+            }());
+            exports_1("TestContext", TestContext);
+            TestClass = (function (_super) {
+                __extends(TestClass, _super);
+                function TestClass() {
+                    _super.apply(this, arguments);
+                }
+                return TestClass;
+            }(TestContext));
+            exports_1("TestClass", TestClass);
+            FakeFunction = (function () {
+                function FakeFunction(name, delgate) {
+                    this.name = name;
+                    this.delgate = delgate;
+                }
+                return FakeFunction;
+            }());
+            exports_1("FakeFunction", FakeFunction);
+            Fake = (function () {
+                function Fake(obj) {
+                    for (var prop in obj) {
+                        if (typeof obj[prop] === 'function') {
+                            this[prop] = function () {
+                            };
+                        }
+                        else {
+                            this[prop] = null;
+                        }
+                    }
+                }
+                Fake.prototype.create = function () {
+                    return this;
+                };
+                Fake.prototype.addFunction = function (name, delegate) {
+                    this[name] = delegate;
+                };
+                Fake.prototype.addProperty = function (name, value) {
+                    this[name] = value;
+                };
+                return Fake;
+            }());
+            exports_1("Fake", Fake);
+            TestDefintion = (function () {
+                function TestDefintion(testClass, name) {
+                    this.testClass = testClass;
+                    this.name = name;
+                }
+                return TestDefintion;
+            }());
+            TestError = (function () {
+                function TestError(name, message) {
+                    this.name = name;
+                    this.message = message;
+                }
+                return TestError;
+            }());
+            TestDescription = (function () {
+                function TestDescription(testName, funcName, message) {
+                    this.testName = testName;
+                    this.funcName = funcName;
+                    this.message = message;
+                }
+                return TestDescription;
+            }());
+            exports_1("TestDescription", TestDescription);
+            TestResult = (function () {
+                function TestResult() {
+                    this.passes = [];
+                    this.errors = [];
+                }
+                return TestResult;
+            }());
+            exports_1("TestResult", TestResult);
+        }
+    }
+});
+System.register("test/ByteArrayUnitTest", ["../modules/xdata/src/nid/utils/ByteArray", "test/tsUnit"], function(exports_2, context_2) {
+    "use strict";
+    var __moduleName = context_2 && context_2.id;
+    var ByteArray_1, tsUnit_1, tsUnit_2;
+    var ByteArrayUnitTest, test, TestRunner;
+    return {
+        setters:[
+            function (ByteArray_1_1) {
+                ByteArray_1 = ByteArray_1_1;
+            },
+            function (tsUnit_1_1) {
+                tsUnit_1 = tsUnit_1_1;
+                tsUnit_2 = tsUnit_1_1;
+            }],
+        execute: function() {
+            ByteArrayUnitTest = (function (_super) {
+                __extends(ByteArrayUnitTest, _super);
+                function ByteArrayUnitTest() {
+                    _super.apply(this, arguments);
+                    this.target = new ByteArray_1.ByteArray(new ArrayBuffer(1024 * 2));
+                    this.BYTE_MAX = 127;
+                    this.BYTE_MIN = -128;
+                    this.UBYTE_MAX = 255;
+                    this.UBYTE_MIN = 0;
+                    this.INT_MAX = 2147483647;
+                    this.INT_MIN = -2147483648;
+                    this.UINT_MAX = 4294967295;
+                    this.UINT_MIN = 0;
+                    this.SHORT_MAX = 32767;
+                    this.SHORT_MIN = -32768;
+                    this.USHORT_MAX = 65535;
+                    this.USHORT_MIN = 0;
+                    this.FLOAT_MAX = 3.4028234663852886e+38;
+                    this.FLOAT_MIN = 1.1754943508222875e-38;
+                    this.DOUBLE_MAX = Number.MAX_VALUE;
+                    this.DOUBLE_MIN = Number.MIN_VALUE;
+                    this.UTF_STR = "this is a utf8 encoded string";
+                    this.SIZE_OF_BOOLEAN = ByteArray_1.ByteArray.SIZE_OF_BOOLEAN;
+                    this.SIZE_OF_INT8 = ByteArray_1.ByteArray.SIZE_OF_INT8;
+                    this.SIZE_OF_INT16 = ByteArray_1.ByteArray.SIZE_OF_INT16;
+                    this.SIZE_OF_INT32 = ByteArray_1.ByteArray.SIZE_OF_INT32;
+                    this.SIZE_OF_UINT8 = ByteArray_1.ByteArray.SIZE_OF_UINT8;
+                    this.SIZE_OF_UINT16 = ByteArray_1.ByteArray.SIZE_OF_UINT16;
+                    this.SIZE_OF_UINT32 = ByteArray_1.ByteArray.SIZE_OF_UINT32;
+                    this.SIZE_OF_FLOAT32 = ByteArray_1.ByteArray.SIZE_OF_FLOAT32;
+                    this.SIZE_OF_FLOAT64 = ByteArray_1.ByteArray.SIZE_OF_FLOAT64;
+                }
+                ByteArrayUnitTest.prototype.writeAndReadBoolean = function () {
+                    this.target.writeBoolean(true);
+                    this.target.position = this.target.position - this.SIZE_OF_BOOLEAN;
+                    var result = this.target.readBoolean();
+                    this.areIdentical(true, result);
+                    this.target.writeBoolean(false);
+                    this.target.position = this.target.position - this.SIZE_OF_BOOLEAN;
+                    var result = this.target.readBoolean();
+                    this.areIdentical(false, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadByte = function () {
+                    this.target.writeByte(this.BYTE_MAX);
+                    this.target.writeByte(this.BYTE_MIN);
+                    this.target.position = this.target.position - (2 * this.SIZE_OF_INT8);
+                    var result = this.target.readByte();
+                    this.areIdentical(this.BYTE_MAX, result);
+                    result = this.target.readByte();
+                    this.areIdentical(this.BYTE_MIN, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadUnsignedByte = function () {
+                    this.target.writeUnsignedByte(this.UBYTE_MAX);
+                    this.target.writeUnsignedByte(this.UBYTE_MIN);
+                    this.target.position = this.target.position - (2 * this.SIZE_OF_UINT8);
+                    var result = this.target.readUnsignedByte();
+                    this.areIdentical(this.UBYTE_MAX, result);
+                    result = this.target.readUnsignedByte();
+                    this.areIdentical(this.UBYTE_MIN, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadDouble = function () {
+                    this.target.writeDouble(this.DOUBLE_MAX);
+                    this.target.writeDouble(this.DOUBLE_MIN);
+                    this.target.position = this.target.position - (2 * this.SIZE_OF_FLOAT64);
+                    var result = this.target.readDouble();
+                    this.areIdentical(this.DOUBLE_MAX, result);
+                    result = this.target.readDouble();
+                    this.areIdentical(this.DOUBLE_MIN, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadFloat = function () {
+                    this.target.writeFloat(this.FLOAT_MAX);
+                    this.target.writeFloat(this.FLOAT_MIN);
+                    this.target.position = this.target.position - (2 * this.SIZE_OF_FLOAT32);
+                    var result = this.target.readFloat();
+                    this.areIdentical(this.FLOAT_MAX, result);
+                    var result = this.target.readFloat();
+                    this.areIdentical(this.FLOAT_MIN, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadInt = function () {
+                    this.target.writeInt(this.INT_MAX);
+                    this.target.writeInt(this.INT_MIN);
+                    this.target.position = this.target.position - (2 * this.SIZE_OF_INT32);
+                    var result = this.target.readInt();
+                    this.areIdentical(this.INT_MAX, result);
+                    result = this.target.readInt();
+                    this.areIdentical(this.INT_MIN, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadUnsignedInt = function () {
+                    this.target.writeUnsignedInt(this.UINT_MAX);
+                    this.target.writeUnsignedInt(this.UINT_MIN);
+                    this.target.position = this.target.position - (2 * this.SIZE_OF_UINT32);
+                    var result = this.target.readUnsignedInt();
+                    this.areIdentical(this.UINT_MAX, result);
+                    result = this.target.readInt();
+                    this.areIdentical(this.UINT_MIN, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadShort = function () {
+                    this.target.writeShort(this.SHORT_MAX);
+                    this.target.writeShort(this.SHORT_MIN);
+                    this.target.position = this.target.position - (2 * this.SIZE_OF_INT16);
+                    var result = this.target.readShort();
+                    this.areIdentical(this.SHORT_MAX, result);
+                    result = this.target.readShort();
+                    this.areIdentical(this.SHORT_MIN, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadUnsignedShort = function () {
+                    this.target.writeUnsignedShort(this.USHORT_MAX);
+                    this.target.writeUnsignedShort(this.USHORT_MIN);
+                    this.target.position = this.target.position - (2 * this.SIZE_OF_UINT16);
+                    var result = this.target.readUnsignedShort();
+                    this.areIdentical(this.USHORT_MAX, result);
+                    result = this.target.readUnsignedShort();
+                    this.areIdentical(this.USHORT_MIN, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadUTF = function () {
+                    this.target.writeUTF(this.UTF_STR);
+                    this.target.position = this.target.position - (this.SIZE_OF_UINT16 + this.UTF_STR.length);
+                    var result = this.target.readUTF();
+                    this.areIdentical(this.UTF_STR, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadUTFBytes = function () {
+                    this.target.writeUTFBytes(this.UTF_STR);
+                    this.target.position = this.target.position - this.UTF_STR.length;
+                    var result = this.target.readUTFBytes(this.UTF_STR.length);
+                    this.areIdentical(this.UTF_STR, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadUint8Array = function () {
+                    var _array = new Uint8Array(new ArrayBuffer(4));
+                    _array[0] = 1;
+                    _array[1] = 11;
+                    _array[2] = 22;
+                    _array[3] = 33;
+                    this.target.writeUint8Array(_array);
+                    this.target.position = this.target.position - _array.length;
+                    var result = this.target.readUint8Array(_array.length);
+                    this.areIdenticalArray(_array, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadUint16Array = function () {
+                    var size = 4 * this.SIZE_OF_UINT16;
+                    var _array = new Uint16Array(new ArrayBuffer(size));
+                    _array[0] = 1;
+                    _array[1] = 11;
+                    _array[2] = 22;
+                    _array[3] = 33;
+                    this.target.writeUint16Array(_array);
+                    this.target.position = this.target.position - size;
+                    var result = this.target.readUint16Array(_array.length);
+                    this.areIdenticalArray(_array, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadUint32Array = function () {
+                    var size = 4 * this.SIZE_OF_UINT32;
+                    var _array = new Uint32Array(new ArrayBuffer(size));
+                    _array[0] = 1;
+                    _array[1] = 11;
+                    _array[2] = 22;
+                    _array[3] = 33;
+                    this.target.writeUint32Array(_array);
+                    this.target.position = this.target.position - size;
+                    var result = this.target.readUint32Array(_array.length);
+                    this.areIdenticalArray(_array, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadInt8Array = function () {
+                    var _array = new Int8Array(new ArrayBuffer(4));
+                    _array[0] = 1;
+                    _array[1] = 11;
+                    _array[2] = 22;
+                    _array[3] = 33;
+                    this.target.writeInt8Array(_array);
+                    this.target.position = this.target.position - _array.length;
+                    var result = this.target.readInt8Array(_array.length);
+                    this.areIdenticalArray(_array, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadInt16Array = function () {
+                    var size = 4 * this.SIZE_OF_INT16;
+                    var _array = new Int16Array(new ArrayBuffer(size));
+                    _array[0] = 1;
+                    _array[1] = 11;
+                    _array[2] = 22;
+                    _array[3] = 33;
+                    this.target.writeInt16Array(_array);
+                    this.target.position = this.target.position - size;
+                    var result = this.target.readInt16Array(_array.length);
+                    this.areIdenticalArray(_array, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadInt32Array = function () {
+                    var size = 4 * this.SIZE_OF_INT32;
+                    var _array = new Int32Array(new ArrayBuffer(size));
+                    _array[0] = 1;
+                    _array[1] = 11;
+                    _array[2] = 22;
+                    _array[3] = 33;
+                    this.target.writeInt32Array(_array);
+                    this.target.position = this.target.position - size;
+                    var result = this.target.readInt32Array(_array.length);
+                    this.areIdenticalArray(_array, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadFloat32Array = function () {
+                    var size = 4 * this.SIZE_OF_FLOAT32;
+                    var _array = new Float32Array(new ArrayBuffer(size));
+                    _array[0] = 1.02563;
+                    _array[1] = 11.056256;
+                    _array[2] = 22.0165465;
+                    _array[3] = 33.65486;
+                    this.target.writeFloat32Array(_array);
+                    this.target.position = this.target.position - size;
+                    var result = this.target.readFloat32Array(_array.length);
+                    this.areIdenticalArray(_array, result);
+                };
+                ByteArrayUnitTest.prototype.writeAndReadFloat64Array = function () {
+                    var size = 4 * this.SIZE_OF_FLOAT64;
+                    var _array = new Float64Array(new ArrayBuffer(size));
+                    _array[0] = 1.02563;
+                    _array[1] = 11.056256;
+                    _array[2] = 22.0165465;
+                    _array[3] = 33.65486;
+                    this.target.writeFloat64Array(_array);
+                    this.target.position = this.target.position - size;
+                    var result = this.target.readFloat64Array(_array.length);
+                    this.areIdenticalArray(_array, result);
+                };
+                return ByteArrayUnitTest;
+            }(tsUnit_1.TestClass));
+            test = new tsUnit_2.Test();
+            test.addTestClass(new ByteArrayUnitTest());
+            TestRunner = {
+                run: function run() {
+                    test.showResults(document.getElementById('results'), test.run());
+                }
+            };
+            TestRunner.run();
+        }
+    }
+});
+System.register("test/LzmaTest", ["../modules/xdata/src/nid/utils/ByteArray", "../modules/xdata/src/nid/lzma/LZMA"], function(exports_3, context_3) {
+    "use strict";
+    var __moduleName = context_3 && context_3.id;
+    var ByteArray_2, LZMA_1;
+    var LzmaTest;
+    return {
+        setters:[
+            function (ByteArray_2_1) {
+                ByteArray_2 = ByteArray_2_1;
+            },
+            function (LZMA_1_1) {
+                LZMA_1 = LZMA_1_1;
+            }],
+        execute: function() {
+            LzmaTest = (function () {
+                function LzmaTest() {
+                    this.decoder2 = new LZMA_1.LZMA();
+                    this.ENCODE = 1;
+                    this.DECODE = 2;
+                    this.command = 0;
+                    this.command2 = 0;
+                    window.onload = this.init.bind(this);
+                }
+                LzmaTest.prototype.init = function () {
+                    var _this = this;
+                    var self = this;
+                    this.decoder = new Worker('../modules/xdata/workers/lzma-worker-bootstrap.js');
+                    this.reader = new FileReader();
+                    this.reader2 = new FileReader();
+                    this.reader.onload = function (e) {
+                        var inData = new Uint8Array(e.target["result"]);
+                        console.log(inData.length);
+                        console.time("decode");
+                        _this.decode(inData, function (result) {
+                            var outData = new ByteArray_2.ByteArray(result);
+                            console.timeEnd("decode");
+                            console.log(outData.length);
+                        });
+                    };
+                    this.reader2.onload = function (e) {
+                        var inData = new Uint8Array(e.target["result"]);
+                        console.log(inData.length);
+                        console.time("decode");
+                        var result = _this.decoder2.decode(inData);
+                        var outData = new ByteArray_2.ByteArray(result.buffer);
+                        console.timeEnd("decode");
+                        console.log(outData.length);
+                    };
+                    var fileInput = document.getElementById("fileBrowser");
+                    var fileInput2 = document.getElementById("fileBrowser2");
+                    fileInput.onchange = function (e) {
+                        self.file = this.files[0];
+                        self.reader.readAsArrayBuffer(self.file);
+                    };
+                    fileInput2.onchange = function (e) {
+                        self.file2 = this.files[0];
+                        self.reader2.readAsArrayBuffer(self.file2);
+                    };
+                };
+                LzmaTest.prototype.decode = function (data, callback) {
+                    var self = this;
+                    this.decoder.onmessage = function (e) {
+                        if (e.data.command == self.ENCODE) {
+                        }
+                        else if (e.data.command == self.DECODE) {
+                            callback(e.data.result);
+                        }
+                    };
+                    this.decoder.postMessage({ command: this.DECODE, data: data.buffer }, [data.buffer]);
+                };
+                return LzmaTest;
+            }());
+            exports_3("LzmaTest", LzmaTest);
+        }
+    }
+});
+System.register("test/SimpleTest", ["../modules/xdata/src/nid/utils/ByteArray"], function(exports_4, context_4) {
+    "use strict";
+    var __moduleName = context_4 && context_4.id;
+    var ByteArray_3;
+    var SimpleTest;
+    return {
+        setters:[
+            function (ByteArray_3_1) {
+                ByteArray_3 = ByteArray_3_1;
+            }],
+        execute: function() {
+            SimpleTest = (function () {
+                function SimpleTest() {
+                    var byteArray = new ByteArray_3.ByteArray();
+                    byteArray.writeShort(52);
+                    byteArray.writeInt(-56256);
+                    byteArray.writeUnsignedInt(652);
+                    byteArray.writeDouble(Math.random() * Number.MAX_VALUE);
+                    byteArray.position = 0;
+                    console.log(byteArray.readShort());
+                    console.log(byteArray.readInt());
+                    console.log(byteArray.readUnsignedInt());
+                    console.log(byteArray.readDouble());
+                }
+                return SimpleTest;
+            }());
+            exports_4("SimpleTest", SimpleTest);
+            new SimpleTest();
+        }
+    }
+});
+System.register("xdata/src/nid/zlib/Huffman", [], function(exports_5, context_5) {
+    "use strict";
+    var __moduleName = context_5 && context_5.id;
     var Huffman;
     return {
         setters:[],
@@ -60,13 +674,13 @@ System.register("src/nid/zlib/Huffman", [], function(exports_1, context_1) {
                 };
                 return Huffman;
             }());
-            exports_1("Huffman", Huffman);
+            exports_5("Huffman", Huffman);
         }
     }
 });
-System.register("src/nid/zlib/RawInflate", ["src/nid/zlib/Huffman"], function(exports_2, context_2) {
+System.register("xdata/src/nid/zlib/RawInflate", ["xdata/src/nid/zlib/Huffman"], function(exports_6, context_6) {
     "use strict";
-    var __moduleName = context_2 && context_2.id;
+    var __moduleName = context_6 && context_6.id;
     var Huffman_1;
     var RawInflate;
     return {
@@ -527,13 +1141,13 @@ System.register("src/nid/zlib/RawInflate", ["src/nid/zlib/Huffman"], function(ex
                 ]);
                 return RawInflate;
             }());
-            exports_2("RawInflate", RawInflate);
+            exports_6("RawInflate", RawInflate);
         }
     }
 });
-System.register("src/nid/zlib/CompressionMethod", [], function(exports_3, context_3) {
+System.register("xdata/src/nid/zlib/CompressionMethod", [], function(exports_7, context_7) {
     "use strict";
-    var __moduleName = context_3 && context_3.id;
+    var __moduleName = context_7 && context_7.id;
     var CompressionMethod;
     return {
         setters:[],
@@ -551,13 +1165,13 @@ System.register("src/nid/zlib/CompressionMethod", [], function(exports_3, contex
                 };
                 return CompressionMethod;
             }());
-            exports_3("CompressionMethod", CompressionMethod);
+            exports_7("CompressionMethod", CompressionMethod);
         }
     }
 });
-System.register("src/nid/zlib/Adler32", [], function(exports_4, context_4) {
+System.register("xdata/src/nid/zlib/Adler32", [], function(exports_8, context_8) {
     "use strict";
-    var __moduleName = context_4 && context_4.id;
+    var __moduleName = context_8 && context_8.id;
     var Adler32;
     return {
         setters:[],
@@ -615,13 +1229,13 @@ System.register("src/nid/zlib/Adler32", [], function(exports_4, context_4) {
                 Adler32.OptimizationParameter = 1024;
                 return Adler32;
             }());
-            exports_4("Adler32", Adler32);
+            exports_8("Adler32", Adler32);
         }
     }
 });
-System.register("src/nid/zlib/Inflate", ["src/nid/zlib/RawInflate", "src/nid/zlib/CompressionMethod", "src/nid/zlib/Adler32"], function(exports_5, context_5) {
+System.register("xdata/src/nid/zlib/Inflate", ["xdata/src/nid/zlib/RawInflate", "xdata/src/nid/zlib/CompressionMethod", "xdata/src/nid/zlib/Adler32"], function(exports_9, context_9) {
     "use strict";
-    var __moduleName = context_5 && context_5.id;
+    var __moduleName = context_9 && context_9.id;
     var RawInflate_1, CompressionMethod_1, Adler32_1;
     var Inflate;
     return {
@@ -689,13 +1303,13 @@ System.register("src/nid/zlib/Inflate", ["src/nid/zlib/RawInflate", "src/nid/zli
                 Inflate.BufferType = RawInflate_1.RawInflate.BufferType;
                 return Inflate;
             }());
-            exports_5("Inflate", Inflate);
+            exports_9("Inflate", Inflate);
         }
     }
 });
-System.register("src/nid/zlib/ZLIB", ["src/nid/zlib/Inflate"], function(exports_6, context_6) {
+System.register("xdata/src/nid/zlib/ZLIB", ["xdata/src/nid/zlib/Inflate"], function(exports_10, context_10) {
     "use strict";
-    var __moduleName = context_6 && context_6.id;
+    var __moduleName = context_10 && context_10.id;
     var Inflate_1;
     var ZLIB;
     return {
@@ -714,13 +1328,13 @@ System.register("src/nid/zlib/ZLIB", ["src/nid/zlib/Inflate"], function(exports_
                 };
                 return ZLIB;
             }());
-            exports_6("ZLIB", ZLIB);
+            exports_10("ZLIB", ZLIB);
         }
     }
 });
-System.register("src/nid/lzma/RangeDecoder", [], function(exports_7, context_7) {
+System.register("xdata/src/nid/lzma/RangeDecoder", [], function(exports_11, context_11) {
     "use strict";
-    var __moduleName = context_7 && context_7.id;
+    var __moduleName = context_11 && context_11.id;
     var RangeDecoder;
     return {
         setters:[],
@@ -798,13 +1412,13 @@ System.register("src/nid/lzma/RangeDecoder", [], function(exports_7, context_7) 
                 RangeDecoder.kTopValue = (1 << 24);
                 return RangeDecoder;
             }());
-            exports_7("RangeDecoder", RangeDecoder);
+            exports_11("RangeDecoder", RangeDecoder);
         }
     }
 });
-System.register("src/nid/lzma/OutWindow", [], function(exports_8, context_8) {
+System.register("xdata/src/nid/lzma/OutWindow", [], function(exports_12, context_12) {
     "use strict";
-    var __moduleName = context_8 && context_8.id;
+    var __moduleName = context_12 && context_12.id;
     var OutWindow;
     return {
         setters:[],
@@ -845,19 +1459,19 @@ System.register("src/nid/lzma/OutWindow", [], function(exports_8, context_8) {
                 };
                 return OutWindow;
             }());
-            exports_8("OutWindow", OutWindow);
+            exports_12("OutWindow", OutWindow);
         }
     }
 });
-System.register("src/nid/lzma/BitTreeDecoder", ["src/nid/lzma/LZMA"], function(exports_9, context_9) {
+System.register("xdata/src/nid/lzma/BitTreeDecoder", ["xdata/src/nid/lzma/LZMA"], function(exports_13, context_13) {
     "use strict";
-    var __moduleName = context_9 && context_9.id;
-    var LZMA_1;
+    var __moduleName = context_13 && context_13.id;
+    var LZMA_2;
     var BitTreeDecoder;
     return {
         setters:[
-            function (LZMA_1_1) {
-                LZMA_1 = LZMA_1_1;
+            function (LZMA_2_1) {
+                LZMA_2 = LZMA_2_1;
             }],
         execute: function() {
             BitTreeDecoder = (function () {
@@ -866,7 +1480,7 @@ System.register("src/nid/lzma/BitTreeDecoder", ["src/nid/lzma/LZMA"], function(e
                     this.probs = new Uint16Array(1 << this.numBits);
                 }
                 BitTreeDecoder.prototype.init = function () {
-                    LZMA_1.LZMA.INIT_PROBS(this.probs);
+                    LZMA_2.LZMA.INIT_PROBS(this.probs);
                 };
                 BitTreeDecoder.prototype.decode = function (rc) {
                     var m = 1;
@@ -875,7 +1489,7 @@ System.register("src/nid/lzma/BitTreeDecoder", ["src/nid/lzma/LZMA"], function(e
                     return m - (1 << this.numBits);
                 };
                 BitTreeDecoder.prototype.reverseDecode = function (rc) {
-                    return LZMA_1.LZMA.BitTreeReverseDecode(this.probs, this.numBits, rc);
+                    return LZMA_2.LZMA.BitTreeReverseDecode(this.probs, this.numBits, rc);
                 };
                 BitTreeDecoder.constructArray = function (numBits, len) {
                     var vec = [];
@@ -886,34 +1500,34 @@ System.register("src/nid/lzma/BitTreeDecoder", ["src/nid/lzma/LZMA"], function(e
                 };
                 return BitTreeDecoder;
             }());
-            exports_9("BitTreeDecoder", BitTreeDecoder);
+            exports_13("BitTreeDecoder", BitTreeDecoder);
         }
     }
 });
-System.register("src/nid/lzma/LenDecoder", ["src/nid/lzma/BitTreeDecoder", "src/nid/lzma/LZMA"], function(exports_10, context_10) {
+System.register("xdata/src/nid/lzma/LenDecoder", ["xdata/src/nid/lzma/BitTreeDecoder", "xdata/src/nid/lzma/LZMA"], function(exports_14, context_14) {
     "use strict";
-    var __moduleName = context_10 && context_10.id;
-    var BitTreeDecoder_1, LZMA_2;
+    var __moduleName = context_14 && context_14.id;
+    var BitTreeDecoder_1, LZMA_3;
     var LenDecoder;
     return {
         setters:[
             function (BitTreeDecoder_1_1) {
                 BitTreeDecoder_1 = BitTreeDecoder_1_1;
             },
-            function (LZMA_2_1) {
-                LZMA_2 = LZMA_2_1;
+            function (LZMA_3_1) {
+                LZMA_3 = LZMA_3_1;
             }],
         execute: function() {
             LenDecoder = (function () {
                 function LenDecoder() {
-                    this.lowCoder = BitTreeDecoder_1.BitTreeDecoder.constructArray(3, 1 << LZMA_2.LZMA.kNumPosBitsMax);
-                    this.midCoder = BitTreeDecoder_1.BitTreeDecoder.constructArray(3, 1 << LZMA_2.LZMA.kNumPosBitsMax);
+                    this.lowCoder = BitTreeDecoder_1.BitTreeDecoder.constructArray(3, 1 << LZMA_3.LZMA.kNumPosBitsMax);
+                    this.midCoder = BitTreeDecoder_1.BitTreeDecoder.constructArray(3, 1 << LZMA_3.LZMA.kNumPosBitsMax);
                     this.highCoder = new BitTreeDecoder_1.BitTreeDecoder(8);
                 }
                 LenDecoder.prototype.init = function () {
-                    this.choice = [LZMA_2.LZMA.PROB_INIT_VAL, LZMA_2.LZMA.PROB_INIT_VAL];
+                    this.choice = [LZMA_3.LZMA.PROB_INIT_VAL, LZMA_3.LZMA.PROB_INIT_VAL];
                     this.highCoder.init();
-                    for (var i = 0; i < (1 << LZMA_2.LZMA.kNumPosBitsMax); i++) {
+                    for (var i = 0; i < (1 << LZMA_3.LZMA.kNumPosBitsMax); i++) {
                         this.lowCoder[i].init();
                         this.midCoder[i].init();
                     }
@@ -929,14 +1543,14 @@ System.register("src/nid/lzma/LenDecoder", ["src/nid/lzma/BitTreeDecoder", "src/
                 };
                 return LenDecoder;
             }());
-            exports_10("LenDecoder", LenDecoder);
+            exports_14("LenDecoder", LenDecoder);
         }
     }
 });
-System.register("src/nid/utils/MEMORY", [], function(exports_11, context_11) {
+System.register("xdata/src/nid/utils/MEMORY", [], function(exports_15, context_15) {
     "use asm";
     "use strict";
-    var __moduleName = context_11 && context_11.id;
+    var __moduleName = context_15 && context_15.id;
     var MEMORY;
     return {
         setters:[],
@@ -976,14 +1590,14 @@ System.register("src/nid/utils/MEMORY", [], function(exports_11, context_11) {
                 MEMORY.u32Index = 0;
                 return MEMORY;
             }());
-            exports_11("MEMORY", MEMORY);
+            exports_15("MEMORY", MEMORY);
         }
     }
 });
-System.register("src/nid/lzma/LzmaDecoder", ["src/nid/lzma/RangeDecoder", "src/nid/lzma/OutWindow", "src/nid/lzma/BitTreeDecoder", "src/nid/lzma/LenDecoder", "src/nid/lzma/LZMA", "src/nid/utils/MEMORY"], function(exports_12, context_12) {
+System.register("xdata/src/nid/lzma/LzmaDecoder", ["xdata/src/nid/lzma/RangeDecoder", "xdata/src/nid/lzma/OutWindow", "xdata/src/nid/lzma/BitTreeDecoder", "xdata/src/nid/lzma/LenDecoder", "xdata/src/nid/lzma/LZMA", "xdata/src/nid/utils/MEMORY"], function(exports_16, context_16) {
     "use strict";
-    var __moduleName = context_12 && context_12.id;
-    var RangeDecoder_1, OutWindow_1, BitTreeDecoder_2, LenDecoder_1, LZMA_3, MEMORY_1;
+    var __moduleName = context_16 && context_16.id;
+    var RangeDecoder_1, OutWindow_1, BitTreeDecoder_2, LenDecoder_1, LZMA_4, MEMORY_1;
     var LzmaDecoder;
     return {
         setters:[
@@ -999,8 +1613,8 @@ System.register("src/nid/lzma/LzmaDecoder", ["src/nid/lzma/RangeDecoder", "src/n
             function (LenDecoder_1_1) {
                 LenDecoder_1 = LenDecoder_1_1;
             },
-            function (LZMA_3_1) {
-                LZMA_3 = LZMA_3_1;
+            function (LZMA_4_1) {
+                LZMA_4 = LZMA_4_1;
             },
             function (MEMORY_1_1) {
                 MEMORY_1 = MEMORY_1_1;
@@ -1008,15 +1622,15 @@ System.register("src/nid/lzma/LzmaDecoder", ["src/nid/lzma/RangeDecoder", "src/n
         execute: function() {
             LzmaDecoder = (function () {
                 function LzmaDecoder() {
-                    this.posSlotDecoder = BitTreeDecoder_2.BitTreeDecoder.constructArray(6, LZMA_3.LZMA.kNumLenToPosStates);
-                    this.alignDecoder = new BitTreeDecoder_2.BitTreeDecoder(LZMA_3.LZMA.kNumAlignBits);
-                    this.posDecoders = new Uint16Array(1 + LZMA_3.LZMA.kNumFullDistances - LZMA_3.LZMA.kEndPosModelIndex);
-                    this.isMatch = new Uint16Array(LZMA_3.LZMA.kNumStates << LZMA_3.LZMA.kNumPosBitsMax);
-                    this.isRep = new Uint16Array(LZMA_3.LZMA.kNumStates);
-                    this.isRepG0 = new Uint16Array(LZMA_3.LZMA.kNumStates);
-                    this.isRepG1 = new Uint16Array(LZMA_3.LZMA.kNumStates);
-                    this.isRepG2 = new Uint16Array(LZMA_3.LZMA.kNumStates);
-                    this.isRep0Long = new Uint16Array(LZMA_3.LZMA.kNumStates << LZMA_3.LZMA.kNumPosBitsMax);
+                    this.posSlotDecoder = BitTreeDecoder_2.BitTreeDecoder.constructArray(6, LZMA_4.LZMA.kNumLenToPosStates);
+                    this.alignDecoder = new BitTreeDecoder_2.BitTreeDecoder(LZMA_4.LZMA.kNumAlignBits);
+                    this.posDecoders = new Uint16Array(1 + LZMA_4.LZMA.kNumFullDistances - LZMA_4.LZMA.kEndPosModelIndex);
+                    this.isMatch = new Uint16Array(LZMA_4.LZMA.kNumStates << LZMA_4.LZMA.kNumPosBitsMax);
+                    this.isRep = new Uint16Array(LZMA_4.LZMA.kNumStates);
+                    this.isRepG0 = new Uint16Array(LZMA_4.LZMA.kNumStates);
+                    this.isRepG1 = new Uint16Array(LZMA_4.LZMA.kNumStates);
+                    this.isRepG2 = new Uint16Array(LZMA_4.LZMA.kNumStates);
+                    this.isRep0Long = new Uint16Array(LZMA_4.LZMA.kNumStates << LZMA_4.LZMA.kNumPosBitsMax);
                     this.lenDecoder = new LenDecoder_1.LenDecoder();
                     this.repLenDecoder = new LenDecoder_1.LenDecoder();
                     this.rangeDec = new RangeDecoder_1.RangeDecoder();
@@ -1033,12 +1647,12 @@ System.register("src/nid/lzma/LzmaDecoder", ["src/nid/lzma/RangeDecoder", "src/n
                     this.litStateI = MEMORY_1.MEMORY.getUint16() | 0;
                     this.initLiterals();
                     this.initDist();
-                    LZMA_3.LZMA.INIT_PROBS(this.isMatch);
-                    LZMA_3.LZMA.INIT_PROBS(this.isRep);
-                    LZMA_3.LZMA.INIT_PROBS(this.isRepG0);
-                    LZMA_3.LZMA.INIT_PROBS(this.isRepG1);
-                    LZMA_3.LZMA.INIT_PROBS(this.isRepG2);
-                    LZMA_3.LZMA.INIT_PROBS(this.isRep0Long);
+                    LZMA_4.LZMA.INIT_PROBS(this.isMatch);
+                    LZMA_4.LZMA.INIT_PROBS(this.isRep);
+                    LZMA_4.LZMA.INIT_PROBS(this.isRepG0);
+                    LZMA_4.LZMA.INIT_PROBS(this.isRepG1);
+                    LZMA_4.LZMA.INIT_PROBS(this.isRepG2);
+                    LZMA_4.LZMA.INIT_PROBS(this.isRep0Long);
                     this.lenDecoder.init();
                     this.repLenDecoder.init();
                 };
@@ -1052,7 +1666,7 @@ System.register("src/nid/lzma/LzmaDecoder", ["src/nid/lzma/RangeDecoder", "src/n
                 LzmaDecoder.prototype.initLiterals = function () {
                     var num = 0x300 << (this.lc + this.lp);
                     for (var i = 0; i < num; i++) {
-                        this.litProbs[i] = LZMA_3.LZMA.PROB_INIT_VAL;
+                        this.litProbs[i] = LZMA_4.LZMA.PROB_INIT_VAL;
                     }
                 };
                 LzmaDecoder.prototype.decodeLiteral = function (state, rep0) {
@@ -1080,28 +1694,28 @@ System.register("src/nid/lzma/LzmaDecoder", ["src/nid/lzma/RangeDecoder", "src/n
                 };
                 LzmaDecoder.prototype.decodeDistance = function (len) {
                     var lenState = len;
-                    if (lenState > LZMA_3.LZMA.kNumLenToPosStates - 1)
-                        lenState = LZMA_3.LZMA.kNumLenToPosStates - 1;
+                    if (lenState > LZMA_4.LZMA.kNumLenToPosStates - 1)
+                        lenState = LZMA_4.LZMA.kNumLenToPosStates - 1;
                     var posSlot = this.posSlotDecoder[lenState].decode(this.rangeDec);
                     if (posSlot < 4)
                         return posSlot;
                     var numDirectBits = ((posSlot >>> 1) - 1);
                     MEMORY_1.MEMORY.u32[this.loc1] = ((2 | (posSlot & 1)) << numDirectBits);
-                    if (posSlot < LZMA_3.LZMA.kEndPosModelIndex) {
-                        MEMORY_1.MEMORY.u32[this.loc1] += LZMA_3.LZMA.BitTreeReverseDecode(this.posDecoders, numDirectBits, this.rangeDec, MEMORY_1.MEMORY.u32[this.loc1] - posSlot);
+                    if (posSlot < LZMA_4.LZMA.kEndPosModelIndex) {
+                        MEMORY_1.MEMORY.u32[this.loc1] += LZMA_4.LZMA.BitTreeReverseDecode(this.posDecoders, numDirectBits, this.rangeDec, MEMORY_1.MEMORY.u32[this.loc1] - posSlot);
                     }
                     else {
-                        MEMORY_1.MEMORY.u32[this.loc1] += this.rangeDec.decodeDirectBits(numDirectBits - LZMA_3.LZMA.kNumAlignBits) << LZMA_3.LZMA.kNumAlignBits;
+                        MEMORY_1.MEMORY.u32[this.loc1] += this.rangeDec.decodeDirectBits(numDirectBits - LZMA_4.LZMA.kNumAlignBits) << LZMA_4.LZMA.kNumAlignBits;
                         MEMORY_1.MEMORY.u32[this.loc1] += this.alignDecoder.reverseDecode(this.rangeDec);
                     }
                     return MEMORY_1.MEMORY.u32[this.loc1];
                 };
                 LzmaDecoder.prototype.initDist = function () {
-                    for (var i = 0; i < LZMA_3.LZMA.kNumLenToPosStates; i++) {
+                    for (var i = 0; i < LZMA_4.LZMA.kNumLenToPosStates; i++) {
                         this.posSlotDecoder[i].init();
                     }
                     this.alignDecoder.init();
-                    LZMA_3.LZMA.INIT_PROBS(this.posDecoders);
+                    LZMA_4.LZMA.INIT_PROBS(this.posDecoders);
                 };
                 LzmaDecoder.prototype.decodeProperties = function (properties) {
                     var prop = new Uint8Array(4);
@@ -1121,8 +1735,8 @@ System.register("src/nid/lzma/LzmaDecoder", ["src/nid/lzma/RangeDecoder", "src/n
                         this.dictSizeInProperties |= properties[i + 1] << (8 * i);
                     }
                     this.dictSize = this.dictSizeInProperties;
-                    if (this.dictSize < LZMA_3.LZMA.LZMA_DIC_MIN) {
-                        this.dictSize = LZMA_3.LZMA.LZMA_DIC_MIN;
+                    if (this.dictSize < LZMA_4.LZMA.LZMA_DIC_MIN) {
+                        this.dictSize = LZMA_4.LZMA.LZMA_DIC_MIN;
                     }
                 };
                 LzmaDecoder.prototype.updateState_Literal = function (state) {
@@ -1153,13 +1767,13 @@ System.register("src/nid/lzma/LzmaDecoder", ["src/nid/lzma/RangeDecoder", "src/n
                     for (;;) {
                         if (unpackSizeDefined && unpackSize == 0 && !this.markerIsMandatory) {
                             if (this.rangeDec.isFinishedOK()) {
-                                return LZMA_3.LZMA.LZMA_RES_FINISHED_WITHOUT_MARKER;
+                                return LZMA_4.LZMA.LZMA_RES_FINISHED_WITHOUT_MARKER;
                             }
                         }
                         var posState = this.outWindow.totalPos & ((1 << this.pb) - 1);
-                        if (this.rangeDec.decodeBit(this.isMatch, (state << LZMA_3.LZMA.kNumPosBitsMax) + posState) == 0) {
+                        if (this.rangeDec.decodeBit(this.isMatch, (state << LZMA_4.LZMA.kNumPosBitsMax) + posState) == 0) {
                             if (unpackSizeDefined && unpackSize == 0) {
-                                return LZMA_3.LZMA.LZMA_RES_ERROR;
+                                return LZMA_4.LZMA.LZMA_RES_ERROR;
                             }
                             this.decodeLiteral(state, rep0);
                             state = this.updateState_Literal(state);
@@ -1169,13 +1783,13 @@ System.register("src/nid/lzma/LzmaDecoder", ["src/nid/lzma/RangeDecoder", "src/n
                         var len;
                         if (this.rangeDec.decodeBit(this.isRep, state) != 0) {
                             if (unpackSizeDefined && unpackSize == 0) {
-                                return LZMA_3.LZMA.LZMA_RES_ERROR;
+                                return LZMA_4.LZMA.LZMA_RES_ERROR;
                             }
                             if (this.outWindow.isEmpty()) {
-                                return LZMA_3.LZMA.LZMA_RES_ERROR;
+                                return LZMA_4.LZMA.LZMA_RES_ERROR;
                             }
                             if (this.rangeDec.decodeBit(this.isRepG0, state) == 0) {
-                                if (this.rangeDec.decodeBit(this.isRep0Long, (state << LZMA_3.LZMA.kNumPosBitsMax) + posState) == 0) {
+                                if (this.rangeDec.decodeBit(this.isRep0Long, (state << LZMA_4.LZMA.kNumPosBitsMax) + posState) == 0) {
                                     state = this.updateState_ShortRep(state);
                                     this.outWindow.putByte(this.outWindow.getByte(rep0 + 1));
                                     unpackSize--;
@@ -1212,17 +1826,17 @@ System.register("src/nid/lzma/LzmaDecoder", ["src/nid/lzma/RangeDecoder", "src/n
                             rep0 = this.decodeDistance(len);
                             if (rep0 == 0xFFFFFFFF) {
                                 return this.rangeDec.isFinishedOK() ?
-                                    LZMA_3.LZMA.LZMA_RES_FINISHED_WITH_MARKER :
-                                    LZMA_3.LZMA.LZMA_RES_ERROR;
+                                    LZMA_4.LZMA.LZMA_RES_FINISHED_WITH_MARKER :
+                                    LZMA_4.LZMA.LZMA_RES_ERROR;
                             }
                             if (unpackSizeDefined && unpackSize == 0) {
-                                return LZMA_3.LZMA.LZMA_RES_ERROR;
+                                return LZMA_4.LZMA.LZMA_RES_ERROR;
                             }
                             if (rep0 >= this.dictSize || !this.outWindow.checkDistance(rep0)) {
-                                return LZMA_3.LZMA.LZMA_RES_ERROR;
+                                return LZMA_4.LZMA.LZMA_RES_ERROR;
                             }
                         }
-                        len += LZMA_3.LZMA.kMatchMinLen;
+                        len += LZMA_4.LZMA.kMatchMinLen;
                         var isError = false;
                         if (unpackSizeDefined && unpackSize < len) {
                             len = unpackSize;
@@ -1231,19 +1845,19 @@ System.register("src/nid/lzma/LzmaDecoder", ["src/nid/lzma/RangeDecoder", "src/n
                         this.outWindow.copyMatch(rep0 + 1, len);
                         unpackSize -= len;
                         if (isError) {
-                            return LZMA_3.LZMA.LZMA_RES_ERROR;
+                            return LZMA_4.LZMA.LZMA_RES_ERROR;
                         }
                     }
                 };
                 return LzmaDecoder;
             }());
-            exports_12("LzmaDecoder", LzmaDecoder);
+            exports_16("LzmaDecoder", LzmaDecoder);
         }
     }
 });
-System.register("src/nid/lzma/LZMA", ["src/nid/lzma/LzmaDecoder"], function(exports_13, context_13) {
+System.register("xdata/src/nid/lzma/LZMA", ["xdata/src/nid/lzma/LzmaDecoder"], function(exports_17, context_17) {
     "use strict";
-    var __moduleName = context_13 && context_13.id;
+    var __moduleName = context_17 && context_17.id;
     var LzmaDecoder_1;
     var LZMA;
     return {
@@ -1348,13 +1962,35 @@ System.register("src/nid/lzma/LZMA", ["src/nid/lzma/LzmaDecoder"], function(expo
                 LZMA.kMatchMinLen = 2;
                 return LZMA;
             }());
-            exports_13("LZMA", LZMA);
+            exports_17("LZMA", LZMA);
         }
     }
 });
-System.register("src/ctypes/Int64", [], function(exports_14, context_14) {
+System.register("xdata/compression", ["xdata/src/nid/zlib/ZLIB", "xdata/src/nid/lzma/LZMA"], function(exports_18, context_18) {
     "use strict";
-    var __moduleName = context_14 && context_14.id;
+    var __moduleName = context_18 && context_18.id;
+    function exportStar_1(m) {
+        var exports = {};
+        for(var n in m) {
+            if (n !== "default") exports[n] = m[n];
+        }
+        exports_18(exports);
+    }
+    return {
+        setters:[
+            function (ZLIB_1_1) {
+                exportStar_1(ZLIB_1_1);
+            },
+            function (LZMA_5_1) {
+                exportStar_1(LZMA_5_1);
+            }],
+        execute: function() {
+        }
+    }
+});
+System.register("xdata/src/ctypes/Int64", [], function(exports_19, context_19) {
+    "use strict";
+    var __moduleName = context_19 && context_19.id;
     var Int64;
     return {
         setters:[],
@@ -1384,13 +2020,13 @@ System.register("src/ctypes/Int64", [], function(exports_14, context_14) {
                 };
                 return Int64;
             }());
-            exports_14("Int64", Int64);
+            exports_19("Int64", Int64);
         }
     }
 });
-System.register("src/ctypes/UInt64", [], function(exports_15, context_15) {
+System.register("xdata/src/ctypes/UInt64", [], function(exports_20, context_20) {
     "use strict";
-    var __moduleName = context_15 && context_15.id;
+    var __moduleName = context_20 && context_20.id;
     var UInt64;
     return {
         setters:[],
@@ -1422,13 +2058,13 @@ System.register("src/ctypes/UInt64", [], function(exports_15, context_15) {
                 };
                 return UInt64;
             }());
-            exports_15("UInt64", UInt64);
+            exports_20("UInt64", UInt64);
         }
     }
 });
-System.register("src/nid/utils/ByteArray", ["src/ctypes/Int64", "src/ctypes/UInt64"], function(exports_16, context_16) {
+System.register("xdata/src/nid/utils/ByteArray", ["xdata/src/ctypes/Int64", "xdata/src/ctypes/UInt64"], function(exports_21, context_21) {
     "use strict";
-    var __moduleName = context_16 && context_16.id;
+    var __moduleName = context_21 && context_21.id;
     var Int64_1, UInt64_1;
     var ByteArray;
     return {
@@ -2216,19 +2852,19 @@ System.register("src/nid/utils/ByteArray", ["src/ctypes/Int64", "src/ctypes/UInt
                 ByteArray.SIZE_OF_FLOAT64 = 8;
                 return ByteArray;
             }());
-            exports_16("ByteArray", ByteArray);
+            exports_21("ByteArray", ByteArray);
         }
     }
 });
-System.register("src/nid/utils/BitArray", ["src/nid/utils/ByteArray"], function(exports_17, context_17) {
+System.register("xdata/src/nid/utils/BitArray", ["xdata/src/nid/utils/ByteArray"], function(exports_22, context_22) {
     "use strict";
-    var __moduleName = context_17 && context_17.id;
-    var ByteArray_1;
+    var __moduleName = context_22 && context_22.id;
+    var ByteArray_4;
     var BitArray;
     return {
         setters:[
-            function (ByteArray_1_1) {
-                ByteArray_1 = ByteArray_1_1;
+            function (ByteArray_4_1) {
+                ByteArray_4 = ByteArray_4_1;
             }],
         execute: function() {
             BitArray = (function (_super) {
@@ -2327,14 +2963,14 @@ System.register("src/nid/utils/BitArray", ["src/nid/utils/ByteArray"], function(
                     return bits;
                 };
                 return BitArray;
-            }(ByteArray_1.ByteArray));
-            exports_17("BitArray", BitArray);
+            }(ByteArray_4.ByteArray));
+            exports_22("BitArray", BitArray);
         }
     }
 });
-System.register("src/nid/utils/CompressionAlgorithm", [], function(exports_18, context_18) {
+System.register("xdata/src/nid/utils/CompressionAlgorithm", [], function(exports_23, context_23) {
     "use strict";
-    var __moduleName = context_18 && context_18.id;
+    var __moduleName = context_23 && context_23.id;
     var CompressionAlgorithm;
     return {
         setters:[],
@@ -2347,28 +2983,34 @@ System.register("src/nid/utils/CompressionAlgorithm", [], function(exports_18, c
                 CompressionAlgorithm.ZLIB = "zlib";
                 return CompressionAlgorithm;
             }());
-            exports_18("CompressionAlgorithm", CompressionAlgorithm);
+            exports_23("CompressionAlgorithm", CompressionAlgorithm);
         }
     }
 });
-System.register("src/nid/utils/LZMAHelper", ["src/nid/lzma/LZMA"], function(exports_19, context_19) {
+System.register("xdata/src/nid/utils/LZMAHelper", ["xdata/src/nid/lzma/LZMA"], function(exports_24, context_24) {
     "use strict";
-    var __moduleName = context_19 && context_19.id;
-    var LZMA_4;
+    var __moduleName = context_24 && context_24.id;
+    var LZMA_6;
     var LZMAHelper;
     return {
         setters:[
-            function (LZMA_4_1) {
-                LZMA_4 = LZMA_4_1;
+            function (LZMA_6_1) {
+                LZMA_6 = LZMA_6_1;
             }],
         execute: function() {
             LZMAHelper = (function () {
                 function LZMAHelper() {
                 }
-                LZMAHelper.init = function () {
-                    var command = 0;
+                LZMAHelper.init = function (workerScript) {
+                    if (workerScript) {
+                        LZMAHelper.workerScript = workerScript;
+                    }
+                    if (LZMAHelper.decoderAsync) {
+                        LZMAHelper.decoderAsync.terminate();
+                        LZMAHelper.decoderAsync = null;
+                    }
                     if (LZMAHelper.enableAsync) {
-                        LZMAHelper.decoderAsync = new Worker('LZMAWorker.min.js');
+                        LZMAHelper.decoderAsync = new Worker(LZMAHelper.workerScript);
                         LZMAHelper.decoderAsync.onmessage = function (e) {
                             var receivedData = e.data;
                             if (receivedData.command === LZMAHelper.ENCODE) {
@@ -2381,7 +3023,7 @@ System.register("src/nid/utils/LZMAHelper", ["src/nid/lzma/LZMA"], function(expo
                     }
                 };
                 LZMAHelper.encode = function (data) {
-                    return null;
+                    throw "LZMA encoder not implemented!";
                 };
                 LZMAHelper.decodeBuffer = function (data) {
                     return LZMAHelper.decoder.decode(new Uint8Array(data)).buffer;
@@ -2391,6 +3033,7 @@ System.register("src/nid/utils/LZMAHelper", ["src/nid/lzma/LZMA"], function(expo
                 };
                 LZMAHelper.encodeAsync = function (data, _callback) {
                     if (LZMAHelper.enableAsync) {
+                        throw "LZMA encoder not implemented!";
                     }
                     else {
                         console.log('Error! Asynchronous encoding is disabled');
@@ -2410,26 +3053,26 @@ System.register("src/nid/utils/LZMAHelper", ["src/nid/lzma/LZMA"], function(expo
                         console.log('Error! Asynchronous decoding is disabled');
                     }
                 };
-                LZMAHelper.decoder = new LZMA_4.LZMA();
-                LZMAHelper.enableAsync = false;
+                LZMAHelper.decoder = new LZMA_6.LZMA();
+                LZMAHelper.enableAsync = true;
                 LZMAHelper.ENCODE = 1;
                 LZMAHelper.DECODE = 2;
+                LZMAHelper.workerScript = "../modules/xdata/workers/lzma-worker-bootstrap.js";
                 return LZMAHelper;
             }());
-            exports_19("LZMAHelper", LZMAHelper);
-            LZMAHelper.init();
+            exports_24("LZMAHelper", LZMAHelper);
         }
     }
 });
-System.register("src/nid/utils/DataArray", ["src/nid/utils/ByteArray", "src/nid/utils/CompressionAlgorithm", "src/nid/utils/LZMAHelper"], function(exports_20, context_20) {
+System.register("xdata/src/nid/utils/DataArray", ["xdata/src/nid/utils/ByteArray", "xdata/src/nid/utils/CompressionAlgorithm", "xdata/src/nid/utils/LZMAHelper"], function(exports_25, context_25) {
     "use strict";
-    var __moduleName = context_20 && context_20.id;
-    var ByteArray_2, CompressionAlgorithm_1, LZMAHelper_1;
+    var __moduleName = context_25 && context_25.id;
+    var ByteArray_5, CompressionAlgorithm_1, LZMAHelper_1;
     var DataArray;
     return {
         setters:[
-            function (ByteArray_2_1) {
-                ByteArray_2 = ByteArray_2_1;
+            function (ByteArray_5_1) {
+                ByteArray_5 = ByteArray_5_1;
             },
             function (CompressionAlgorithm_1_1) {
                 CompressionAlgorithm_1 = CompressionAlgorithm_1_1;
@@ -2549,57 +3192,140 @@ System.register("src/nid/utils/DataArray", ["src/nid/utils/ByteArray", "src/nid/
                 DataArray.BIG_ENDIAN = "bigEndian";
                 DataArray.LITTLE_ENDIAN = "littleEndian";
                 return DataArray;
-            }(ByteArray_2.ByteArray));
-            exports_20("DataArray", DataArray);
+            }(ByteArray_5.ByteArray));
+            exports_25("DataArray", DataArray);
         }
     }
 });
-System.register("core", ["src/nid/zlib/ZLIB", "src/nid/lzma/LZMA", "src/nid/utils/ByteArray", "src/nid/utils/BitArray", "src/nid/utils/DataArray"], function(exports_21, context_21) {
+System.register("xdata/core", ["xdata/src/nid/utils/ByteArray", "xdata/src/nid/utils/BitArray", "xdata/src/nid/utils/DataArray"], function(exports_26, context_26) {
     "use strict";
-    var __moduleName = context_21 && context_21.id;
-    function exportStar_1(m) {
+    var __moduleName = context_26 && context_26.id;
+    function exportStar_2(m) {
         var exports = {};
         for(var n in m) {
             if (n !== "default") exports[n] = m[n];
         }
-        exports_21(exports);
+        exports_26(exports);
     }
     return {
         setters:[
-            function (ZLIB_1_1) {
-                exportStar_1(ZLIB_1_1);
-            },
-            function (LZMA_5_1) {
-                exportStar_1(LZMA_5_1);
-            },
-            function (ByteArray_3_1) {
-                exportStar_1(ByteArray_3_1);
+            function (ByteArray_6_1) {
+                exportStar_2(ByteArray_6_1);
             },
             function (BitArray_1_1) {
-                exportStar_1(BitArray_1_1);
+                exportStar_2(BitArray_1_1);
             },
             function (DataArray_1_1) {
-                exportStar_1(DataArray_1_1);
+                exportStar_2(DataArray_1_1);
             }],
         execute: function() {
         }
     }
 });
-System.register("src/nid/lzma/LZMAWorker", ["src/nid/lzma/LZMA"], function(exports_22, context_22) {
+System.register("xdata/src/nid/utils/ZLIBHelper", ["xdata/src/nid/zlib/ZLIB"], function(exports_27, context_27) {
     "use strict";
-    var __moduleName = context_22 && context_22.id;
-    var LZMA_6;
+    var __moduleName = context_27 && context_27.id;
+    var ZLIB_2;
+    var ZLIBHelper;
+    return {
+        setters:[
+            function (ZLIB_2_1) {
+                ZLIB_2 = ZLIB_2_1;
+            }],
+        execute: function() {
+            ZLIBHelper = (function () {
+                function ZLIBHelper() {
+                }
+                ZLIBHelper.init = function (workerScript) {
+                    if (workerScript) {
+                        ZLIBHelper.workerScript = workerScript;
+                    }
+                    if (ZLIBHelper.decoderAsync) {
+                        ZLIBHelper.decoderAsync.terminate();
+                        ZLIBHelper.decoderAsync = null;
+                    }
+                    ZLIBHelper.decoderAsync = new Worker(ZLIBHelper.workerScript);
+                    ZLIBHelper.decoderAsync.onmessage = function (e) {
+                        var receivedData = e.data;
+                        if (receivedData.command === ZLIBHelper.ENCODE) {
+                        }
+                        else if (receivedData.command === ZLIBHelper.DECODE) {
+                            ZLIBHelper.callback(receivedData.result);
+                            ZLIBHelper.callback = null;
+                        }
+                    };
+                };
+                ZLIBHelper.encodeBuffer = function (data) {
+                    throw "ZLIB encoder not implemented!";
+                };
+                ZLIBHelper.encode = function (data) {
+                    throw "ZLIB encoder not implemented!";
+                };
+                ZLIBHelper.decodeBuffer = function (data) {
+                    return ZLIBHelper.decoder.decode(new Uint8Array(data)).buffer;
+                };
+                ZLIBHelper.decode = function (data) {
+                    return ZLIBHelper.decoder.decode(data);
+                };
+                ZLIBHelper.encodeBufferAsync = function (data, _callback) {
+                    throw "ZLIB encoder not implemented!";
+                };
+                ZLIBHelper.decodeBufferAsync = function (data, _callback) {
+                    if (ZLIBHelper.callback == null) {
+                        ZLIBHelper.callback = _callback;
+                        ZLIBHelper.decoderAsync.postMessage({ command: ZLIBHelper.DECODE, data: data }, [data]);
+                    }
+                    else {
+                        console.log('Warning! Another ZLIB decoding is running...');
+                    }
+                };
+                ZLIBHelper.decoder = new ZLIB_2.ZLIB();
+                ZLIBHelper.ENCODE = 1;
+                ZLIBHelper.DECODE = 2;
+                ZLIBHelper.workerScript = "../modules/xdata/workers/zlib-worker-bootstrap.js";
+                return ZLIBHelper;
+            }());
+            exports_27("ZLIBHelper", ZLIBHelper);
+        }
+    }
+});
+System.register("xdata/helpers", ["xdata/src/nid/utils/LZMAHelper", "xdata/src/nid/utils/ZLIBHelper"], function(exports_28, context_28) {
+    "use strict";
+    var __moduleName = context_28 && context_28.id;
+    function exportStar_3(m) {
+        var exports = {};
+        for(var n in m) {
+            if (n !== "default") exports[n] = m[n];
+        }
+        exports_28(exports);
+    }
+    return {
+        setters:[
+            function (LZMAHelper_2_1) {
+                exportStar_3(LZMAHelper_2_1);
+            },
+            function (ZLIBHelper_1_1) {
+                exportStar_3(ZLIBHelper_1_1);
+            }],
+        execute: function() {
+        }
+    }
+});
+System.register("xdata/src/nid/lzma/LZMAWorker", ["xdata/src/nid/lzma/LZMA"], function(exports_29, context_29) {
+    "use strict";
+    var __moduleName = context_29 && context_29.id;
+    var LZMA_7;
     var LZMAWorker, zlma_w;
     return {
         setters:[
-            function (LZMA_6_1) {
-                LZMA_6 = LZMA_6_1;
+            function (LZMA_7_1) {
+                LZMA_7 = LZMA_7_1;
             }],
         execute: function() {
             LZMAWorker = (function () {
                 function LZMAWorker() {
                     var _this = this;
-                    this.decoder = new LZMA_6.LZMA();
+                    this.decoder = new LZMA_7.LZMA();
                     addEventListener('message', function (e) {
                         _this.payload = e.data;
                         if (_this.payload.command === LZMAWorker.DECODE) {
@@ -2617,14 +3343,14 @@ System.register("src/nid/lzma/LZMAWorker", ["src/nid/lzma/LZMA"], function(expor
                 LZMAWorker.DECODE = 2;
                 return LZMAWorker;
             }());
-            exports_22("LZMAWorker", LZMAWorker);
+            exports_29("LZMAWorker", LZMAWorker);
             zlma_w = new LZMAWorker();
         }
     }
 });
-System.register("src/nid/utils/HalfPrecisionWriter", [], function(exports_23, context_23) {
+System.register("xdata/src/nid/utils/HalfPrecisionWriter", [], function(exports_30, context_30) {
     "use strict";
-    var __moduleName = context_23 && context_23.id;
+    var __moduleName = context_30 && context_30.id;
     var HalfPrecisionWriter;
     return {
         setters:[],
@@ -2701,13 +3427,13 @@ System.register("src/nid/utils/HalfPrecisionWriter", [], function(exports_23, co
                 };
                 return HalfPrecisionWriter;
             }());
-            exports_23("HalfPrecisionWriter", HalfPrecisionWriter);
+            exports_30("HalfPrecisionWriter", HalfPrecisionWriter);
         }
     }
 });
-System.register("src/nid/utils/StringUtils", [], function(exports_24, context_24) {
+System.register("xdata/src/nid/utils/StringUtils", [], function(exports_31, context_31) {
     "use strict";
-    var __moduleName = context_24 && context_24.id;
+    var __moduleName = context_31 && context_31.id;
     var StringUtils;
     return {
         setters:[],
@@ -2739,72 +3465,13 @@ System.register("src/nid/utils/StringUtils", [], function(exports_24, context_24
                 };
                 return StringUtils;
             }());
-            exports_24("StringUtils", StringUtils);
+            exports_31("StringUtils", StringUtils);
         }
     }
 });
-System.register("src/nid/utils/ZLIBHelper", ["src/nid/zlib/ZLIB"], function(exports_25, context_25) {
+System.register("xdata/src/nid/zlib/CRC32", [], function(exports_32, context_32) {
     "use strict";
-    var __moduleName = context_25 && context_25.id;
-    var ZLIB_2;
-    var ZLIBHelper;
-    return {
-        setters:[
-            function (ZLIB_2_1) {
-                ZLIB_2 = ZLIB_2_1;
-            }],
-        execute: function() {
-            ZLIBHelper = (function () {
-                function ZLIBHelper() {
-                }
-                ZLIBHelper.init = function () {
-                    ZLIBHelper.decoderAsync.onmessage = function (e) {
-                        var receivedData = e.data;
-                        if (receivedData.command === ZLIBHelper.ENCODE) {
-                        }
-                        else if (receivedData.command === ZLIBHelper.DECODE) {
-                            ZLIBHelper.callback(receivedData.result);
-                            ZLIBHelper.callback = null;
-                        }
-                    };
-                };
-                ZLIBHelper.encodeBuffer = function (data) {
-                    throw "ZLIB encoder not implemented!";
-                };
-                ZLIBHelper.encode = function (data) {
-                    throw "ZLIB encoder not implemented!";
-                };
-                ZLIBHelper.decodeBuffer = function (data) {
-                    return ZLIBHelper.decoder.decode(new Uint8Array(data)).buffer;
-                };
-                ZLIBHelper.decode = function (data) {
-                    return ZLIBHelper.decoder.decode(data);
-                };
-                ZLIBHelper.encodeBufferAsync = function (data, _callback) {
-                };
-                ZLIBHelper.decodeBufferAsync = function (data, _callback) {
-                    if (ZLIBHelper.callback == null) {
-                        ZLIBHelper.callback = _callback;
-                        ZLIBHelper.decoderAsync.postMessage({ command: ZLIBHelper.DECODE, data: data }, [data]);
-                    }
-                    else {
-                        console.log('Warning! Another ZLIB decoding is running...');
-                    }
-                };
-                ZLIBHelper.decoder = new ZLIB_2.ZLIB();
-                ZLIBHelper.decoderAsync = new Worker('ZLIBWorker.min.js');
-                ZLIBHelper.ENCODE = 1;
-                ZLIBHelper.DECODE = 2;
-                return ZLIBHelper;
-            }());
-            exports_25("ZLIBHelper", ZLIBHelper);
-            ZLIBHelper.init();
-        }
-    }
-});
-System.register("src/nid/zlib/CRC32", [], function(exports_26, context_26) {
-    "use strict";
-    var __moduleName = context_26 && context_26.id;
+    var __moduleName = context_32 && context_32.id;
     var CRC32;
     return {
         setters:[],
@@ -2900,13 +3567,13 @@ System.register("src/nid/zlib/CRC32", [], function(exports_26, context_26) {
                 ];
                 return CRC32;
             }());
-            exports_26("CRC32", CRC32);
+            exports_32("CRC32", CRC32);
         }
     }
 });
-System.register("src/nid/zlib/ZLIBWorker", ["src/nid/zlib/ZLIB"], function(exports_27, context_27) {
+System.register("xdata/src/nid/zlib/ZLIBWorker", ["xdata/src/nid/zlib/ZLIB"], function(exports_33, context_33) {
     "use strict";
-    var __moduleName = context_27 && context_27.id;
+    var __moduleName = context_33 && context_33.id;
     var ZLIB_3;
     var ZLIBWorker, zlib_w;
     return {
@@ -2936,7 +3603,7 @@ System.register("src/nid/zlib/ZLIBWorker", ["src/nid/zlib/ZLIB"], function(expor
                 ZLIBWorker.DECODE = 2;
                 return ZLIBWorker;
             }());
-            exports_27("ZLIBWorker", ZLIBWorker);
+            exports_33("ZLIBWorker", ZLIBWorker);
             zlib_w = new ZLIBWorker();
         }
     }
