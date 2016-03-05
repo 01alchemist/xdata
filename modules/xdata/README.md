@@ -1,17 +1,23 @@
-TypeScript(JavaScript) DataArray
+XDATA
 ================================
-### Status : [![Build Status](https://api.travis-ci.org/01alchemist/DataArray.png)](https://travis-ci.org/01alchemist/DataArray)
+### Status : [![Build Status](https://api.travis-ci.org/01alchemist/xdata.png)](https://travis-ci.org/01alchemist/xdata)
 Extended ActionScript3 ByteArray API for JavaScript
 
 Developed by [Nidin Vinayakan](https://github.com/nidin)
-
-npm https://www.npmjs.com/package/data-array
 
 License
 ----
 [MIT](LICENSE)
 
-##Usage 
+###NPM
+    
+    npm install xdata
+
+npm registry [https://www.npmjs.com/package/xdata](https://www.npmjs.com/package/xdata)
+
+###Usage 
+
+    import {DataArray,ByteArray,BitArray} from "xdata/core"
 
 ###Classes
 - **_1. BitArray_**
