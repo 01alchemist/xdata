@@ -1,12 +1,12 @@
 {
-  "name": "ByteArray",
-  "version": "1.3.0",
-  "homepage": "https://github.com/nidin/TS-ByteArray",
+  "name": "xdata",
+  "version": "2.1.8",
+  "homepage": "https://github.com/01alchemist/xdata",
   "authors": [
-    "Nidin Vinayakan <nidinthb@gmail.com>"
+    "Nidin Vinayakan <01@01alchemist.com>"
   ],
-  "description": "ActionScript3 ByteArray API for JavaScript",
-  "main": "src/ByteArray.ts",
+  "description": "Extended ActionScript3 ByteArray API for JavaScript",
+  "main": "core.ts",
   "moduleType": [
     "es6"
   ],
