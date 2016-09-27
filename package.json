@@ -1,6 +1,6 @@
 {
   "name": "xdata",
-  "version": "2.1.16",
+  "version": "2.1.17",
   "description": "Extended ActionScript3 ByteArray API for JavaScript",
   "main": "core.ts",
   "directories": {

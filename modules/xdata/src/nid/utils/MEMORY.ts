@@ -6,8 +6,8 @@ export class MEMORY {
     static u8Index:number = 0;
     static u16Index:number = 0;
     static u32Index:number = 0;
-    static u8:Uint32Array;
-    static u16:Uint32Array;
+    static u8:Uint8Array;
+    static u16:Uint16Array;
     static u32:Uint32Array;
 
     static allocateUint8(len:number):void {
