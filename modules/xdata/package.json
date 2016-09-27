@@ -1,6 +1,6 @@
 {
   "name": "xdata",
-  "version": "2.1.15",
+  "version": "2.1.16",
   "description": "Extended ActionScript3 ByteArray API for JavaScript",
   "main": "core.ts",
   "directories": {
@@ -26,13 +26,5 @@
   "bugs": {
     "url": "https://github.com/01alchemist/xdata/issues"
   },
-  "homepage": "https://github.com/01alchemist/xdata",
-  "dependencies": {
-    "systemjs": "0.18.10",
-    "es6-promise": "^3.0.2",
-    "es6-shim": "^0.33.3"
-  },
-  "devDependencies": {
-    "typescript": "^1.8.7"
-  }
+  "homepage": "https://github.com/01alchemist/xdata"
 }
