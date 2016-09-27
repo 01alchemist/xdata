@@ -52,8 +52,8 @@ export class LzmaTest {
             console.log(outData.length);
         };
 
-        var fileInput = document.getElementById("fileBrowser");
-        var fileInput2 = document.getElementById("fileBrowser2");
+        var fileInput:HTMLInputElement = <HTMLInputElement>document.getElementById("fileBrowser");
+        var fileInput2:HTMLInputElement = <HTMLInputElement>document.getElementById("fileBrowser2");
         fileInput.onchange = function (e) {
             self.file = this.files[0];
             self.reader.readAsArrayBuffer(self.file);

@@ -901,7 +901,7 @@ export class ByteArray {
         if (this.data.byteLength < len) {
             var tmp:Uint8Array = new Uint8Array(new ArrayBuffer(len + this.BUFFER_EXT_SIZE));
             tmp.set(new Uint8Array(this.data.buffer));
-            this.data.buffer = tmp.buffer;
+            this.buffer = tmp.buffer;
         }
     }
 

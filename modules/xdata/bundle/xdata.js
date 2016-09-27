@@ -934,7 +934,7 @@ System.register("xdata/src/nid/utils/ByteArray", ["xdata/src/ctypes/Int64", "xda
                     if (this.data.byteLength < len) {
                         var tmp = new Uint8Array(new ArrayBuffer(len + this.BUFFER_EXT_SIZE));
                         tmp.set(new Uint8Array(this.data.buffer));
-                        this.data.buffer = tmp.buffer;
+                        this.buffer = tmp.buffer;
                     }
                 };
                 ByteArray.prototype.encodeUTF8 = function (str) {
