@@ -1,17 +1,21 @@
 {
   "name": "@01/xdata",
-  "version": "1.0.0",
+  "version": "3.0.1",
   "description": "Extended ActionScript3 ByteArray API for JavaScript",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "./core.js",
+    "./compression.js",
+    "./helpers.js"
   ],
+  "private": false,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "NODE_ENV=development webpack --watch",
     "build": "NODE_ENV=production webpack",
-    "publish": "npm publish"
+    "npm-publish": "npm publish"
   },
   "repository": {
     "type": "git",
