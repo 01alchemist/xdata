@@ -1,16 +1,17 @@
 {
-  "name": "xdata",
-  "version": "2.1.17",
+  "name": "@01/xdata",
+  "version": "1.0.0",
   "description": "Extended ActionScript3 ByteArray API for JavaScript",
-  "main": "core.ts",
-  "directories": {
-    "test": "test"
-  },
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build-dev": "tsc -p ./",
-    "build-dist": "tsc -p ./ -outFile modules/xdata/bundle/xdata.js",
-    "publish": "npm publish ./modules/xdata"
+    "dev": "NODE_ENV=development webpack --watch",
+    "build": "NODE_ENV=production webpack",
+    "publish": "npm publish"
   },
   "repository": {
     "type": "git",
@@ -31,12 +32,19 @@
     "url": "https://github.com/01alchemist/xdata/issues"
   },
   "homepage": "https://github.com/01alchemist/xdata",
-  "dependencies": {
-    "systemjs": "0.19.6",
-    "es6-promise": "^3.0.2",
-    "es6-shim": "^0.33.3"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "typescript": "^2.0.0"
+    "typescript": "3.6.3",
+    "webpack": "4.39.1",
+    "webpack-cli": "3.3.6",
+    "ts-loader": "6.0.4",
+    "tslint": "5.20.0",
+    "tslint-loader": "3.5.4",
+    "fs-extra": "8.1.0",
+    "chalk": "2.4.2",
+    "webpack-node-externals": "1.7.2",
+    "clean-webpack-plugin": "3.0.0",
+    "tslint-config-airbnb": "5.11.2",
+    "tslint-config-prettier": "1.18.0"
   }
 }

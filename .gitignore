@@ -3,3 +3,4 @@
 node_modules
 atlassian-ide-plugin.xml
 npm-debug.log
+.history
